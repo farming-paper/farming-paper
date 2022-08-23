@@ -1,42 +1,4 @@
-type Category = "1" | "2" | "3";
-type Tag = "1일차";
-
-interface BaseProblem {
-  weight?: number;
-  category: Category;
-  tags: Tag[];
-}
-
-interface ShortProblem extends BaseProblem {
-  type: "SHORT";
-  q: string;
-  correctA: string;
-}
-
-// 답이 여러개이고, 순서가 중요함. ", " 등으로 구분함.
-interface ShortOrderProblem extends BaseProblem {
-  type: "SHORT_ORDER";
-  q: string;
-  correctA: string[];
-}
-
-interface ShortMultiAnswerProblem extends BaseProblem {
-  type: "SHORT_MULTI";
-  q: string;
-  correctA: string[];
-}
-
-interface PickProblem extends BaseProblem {
-  type: "PICK";
-  q: string;
-  correctA: string;
-  wrongAs: string[];
-}
-type Problem =
-  | ShortProblem
-  | ShortOrderProblem
-  | ShortMultiAnswerProblem
-  | PickProblem;
+import { Problem } from "./types";
 
 export const problems: Problem[] = [
   {
