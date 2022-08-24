@@ -3,8 +3,8 @@ export type Tag = "1일차";
 
 export interface BaseProblem {
   weight?: number;
-  category: Category;
-  tags: Tag[];
+  category?: Category;
+  tags?: Tag[];
 }
 
 export interface ShortProblem extends BaseProblem {
