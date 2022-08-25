@@ -1,5 +1,5 @@
 export type Category = "1" | "2" | "3";
-export type Tag = "1일차";
+export type Tag = `${number}일차`;
 
 export interface BaseProblem {
   weight?: number;
@@ -32,8 +32,16 @@ export interface PickProblem extends BaseProblem {
   correctA: string;
   wrongAs: string[];
 }
+
+export interface PickDifferentProblem extends BaseProblem {
+  type: "PICK_DIFFERENT";
+  q: string;
+  pool: string[][];
+}
+
 export type Problem =
   | ShortProblem
   | ShortOrderProblem
   | ShortMultiAnswerProblem
+  | PickDifferentProblem
   | PickProblem;
