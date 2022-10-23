@@ -1,6 +1,6 @@
 import { Problem } from "./types";
 
-export const problems1: Problem[] = [
+export const problems: Problem[] = [
   {
     type: "SHORT",
     q: "데이터의 일반적인 특징 중 동일한 내용의 데이터가 중복되어 있지 않은 것",
@@ -225,9 +225,6 @@ export const problems1: Problem[] = [
     category: "1",
     tags: ["1일차"],
   },
-];
-
-export const problems2: Problem[] = [
   {
     type: "SHORT_MULTI",
     q: "빅데이터 가치 산정 어려움의 이유 - ___의 다양화 세 가지",
@@ -497,5 +494,35 @@ export const problems2: Problem[] = [
     correctA: ["통찰력 있는 분석", "설득력 있는 전달", "다분야 간 협력"],
     category: "1",
     tags: ["2일차"],
+  },
+  {
+    type: "SHORT",
+    q: "추론, 예측, 전망, 추정을 위한 정보의 근거가 될 수 있는 데이터의 특성을 데이터의 ___라고 한다.",
+    correctA: "데이터의 당위적 특성",
+    tags: ["핵심 서브노트 110제"],
+  },
+  {
+    type: "SHORT",
+    q: "고정된 틀이 존재하지 않고 연산이 불간으하며, 수집과 관리가 어려워 일반적으로 관계형 DB가 아닌 NoSQL DB에 저장되는 데이터는 무엇인가?",
+    correctA: "비정형 데이터",
+    tags: ["핵심 서브노트 110제"],
+  },
+  {
+    type: "SHORT",
+    q: "학습과 체험을 통해 개인에게 습득되어 있지만 겉으로 드러나지 않는 상태의 지식. 문자나 언어로 나타나지 않음.",
+    correctA: "암묵지",
+    tags: ["핵심 서브노트 110제"],
+  },
+  {
+    type: "SHORT_ORDER",
+    q: "개인에게 내면화된 암묵지가 조직의 지식으로 ___되기 위해서는, 표출화하고 이를 다시 개인의 지식으로 ___ 하는 과정을 거치게 된다.",
+    correctA: ["공통화", "연결화"],
+    tags: ["핵심 서브노트 110제"],
+  },
+  {
+    type: "SHORT",
+    q: "",
+    correctA: "",
+    tags: ["핵심 서브노트 110제"],
   },
 ];

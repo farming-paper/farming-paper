@@ -4,8 +4,8 @@
   "description": "",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "main": "vite-node ./main.ts"
+    "test": "vitest",
+    "main": "vite-node ./src/main.ts"
   },
   "keywords": [],
   "author": "",
@@ -14,6 +14,8 @@
     "vite-node": "^0.22.1"
   },
   "devDependencies": {
-    "typescript": "^4.7.4"
+    "@types/node": "^18.11.3",
+    "typescript": "^4.7.4",
+    "vitest": "^0.24.3"
   }
 }
