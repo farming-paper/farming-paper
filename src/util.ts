@@ -3,5 +3,9 @@ export function isSetEqual<T>(xs: Set<T>, ys: Set<T>): boolean {
 }
 
 export function isBagEqual<T>(xs: T[], ys: T[]): boolean {
-  return xs.length === ys.length && xs.every((x) => ys.includes(x));
+  return isSetEqual(new Set(xs), new Set(ys));
+}
+
+export function isArrayEqual<T>(xs: T[], ys: T[]): boolean {
+  return xs.length === ys.length && xs.every((x, i) => x === ys[i]);
 }
