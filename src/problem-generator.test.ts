@@ -2,8 +2,6 @@ import { expect, test } from "vitest";
 import { createProblemGenerator } from "./problem-generator";
 import { Problem } from "./problems/types";
 
-// Edit an assertion and save to see HMR in action
-
 test("문제가 하나 있을 시 동작", () => {
   const problems: Problem[] = [
     { type: "SHORT", q: "test q", correctA: "test a" },
