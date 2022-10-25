@@ -8,33 +8,33 @@ export interface BaseProblem {
 }
 
 export interface ShortProblem extends BaseProblem {
-  type: "SHORT";
+  type: "short";
   q: string;
   correctA: string;
 }
 
 // 답이 여러개이고, 순서가 중요함. ", " 등으로 구분함.
 export interface ShortOrderProblem extends BaseProblem {
-  type: "SHORT_ORDER";
+  type: "short_order";
   q: string;
   correctA: string[];
 }
 
 export interface ShortMultiAnswerProblem extends BaseProblem {
-  type: "SHORT_MULTI";
+  type: "short_multi";
   q: string;
   correctA: string[];
 }
 
 export interface PickProblem extends BaseProblem {
-  type: "PICK";
+  type: "pick";
   q: string;
   correctA: string;
   wrongAs: string[];
 }
 
 export interface PickDifferentProblem extends BaseProblem {
-  type: "PICK_DIFFERENT";
+  type: "pick_different";
   q: string;
   pool: string[][];
 }

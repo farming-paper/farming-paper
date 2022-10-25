@@ -2,7 +2,7 @@
 import { createProblemGenerator } from "./problem-generator";
 import { problems } from "./problems/adsp";
 import prompts from "prompts";
-import { isArrayEqual, isBagEqual } from "./util";
+import { chunk, getPromptsMessage, isArrayEqual, isBagEqual } from "./util";
 
 function isAbort(response: prompts.Answers<"answer">) {
   return typeof response.answer === "undefined";
@@ -13,11 +13,11 @@ while (true) {
   const problem = generator.gen();
 
   switch (problem.type) {
-    case "SHORT": {
+    case "short": {
       const response = await prompts({
         type: "text",
         name: "answer",
-        message: `${problem.q}\n`,
+        message: getPromptsMessage(problem.q),
       });
 
       if (isAbort(response)) {
@@ -32,11 +32,11 @@ while (true) {
       break;
     }
 
-    case "SHORT_MULTI": {
+    case "short_multi": {
       const response = await prompts({
         type: "list",
         name: "answer",
-        message: `${problem.q}\n`,
+        message: getPromptsMessage(problem.q),
       });
 
       if (isAbort(response)) {
@@ -48,13 +48,14 @@ while (true) {
       } else {
         console.log(`오답! (정답: ${problem.correctA.join(", ")})`);
       }
+      break;
     }
 
-    case "SHORT_ORDER": {
+    case "short_order": {
       const response = await prompts({
         type: "list",
         name: "answer",
-        message: `${problem.q}\n`,
+        message: getPromptsMessage(problem.q),
       });
 
       if (isAbort(response)) {
@@ -66,7 +67,15 @@ while (true) {
       } else {
         console.log(`오답! (정답: ${problem.correctA.join(", ")})`);
       }
+      break;
     }
+
+    case "pick_different":
+      console.log("not implemented: pick_different");
+      break;
+    case "pick":
+      console.log("not implemented: PICK");
+      break;
   }
 
   console.log("");
