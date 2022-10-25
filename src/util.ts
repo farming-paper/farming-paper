@@ -21,7 +21,7 @@ export function chunk(str: string, chunkSize = 40) {
 
 export function getPromptsMessage(problemMessage: string) {
   // return `${chunk(problemMessage).join("\n")}\n`;
-  return problemMessage + "\n";
+  return problemMessage + "\n>>";
 }
 
 export function shuffle<T>(array: T[]) {
@@ -37,8 +37,8 @@ export function shuffle<T>(array: T[]) {
 
     // And swap it with the current element.
     [result[currentIndex], result[randomIndex]] = [
-      result[randomIndex],
-      result[currentIndex],
+      result[randomIndex] as T,
+      result[currentIndex] as T,
     ];
   }
 

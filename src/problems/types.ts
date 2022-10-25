@@ -27,7 +27,7 @@ export interface ShortMultiAnswerQuestion extends BaseProblem {
 export interface PickQuestion extends BaseProblem {
   type: "pick";
   correct: string;
-  wrongAs: string[];
+  wrongs: string[];
 }
 
 export interface PickDifferentQuestion extends BaseProblem {

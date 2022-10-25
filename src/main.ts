@@ -26,24 +26,26 @@ const prompts = createPromptModule();
 
 while (true) {
   const generator = createProblemGenerator(problems);
-  const problem = generator.gen();
+  const { question, index } = generator.gen();
 
-  switch (problem.type) {
+  switch (question.type) {
     case "short": {
       const response = await prompts({
         type: "input",
         name: "answer",
-        message: getInputPromptsMessage(problem.message),
+        message: getInputPromptsMessage(question.message),
       });
 
       if (isAbort(response)) {
         process.exit();
       }
 
-      if (response.answer === problem.correct) {
+      if (response.answer === question.correct) {
         console.log("정답!");
+        generator.updateWeight(index, 0.1);
       } else {
-        console.log(`오답! (정답: ${problem.correct})`);
+        console.log(`오답! (정답: ${question.correct})`);
+        generator.updateWeight(index, 10);
       }
       break;
     }
@@ -52,7 +54,7 @@ while (true) {
       const response = await prompts({
         type: "input",
         name: "answer",
-        message: getInputPromptsMessage(problem.message),
+        message: getInputPromptsMessage(question.message),
       });
 
       if (isAbort(response)) {
@@ -63,10 +65,12 @@ while (true) {
         .split(",")
         .map((s) => s.trim());
 
-      if (isBagEqual(answerArray, problem.corrects)) {
+      if (isBagEqual(answerArray, question.corrects)) {
         console.log("정답!");
+        generator.updateWeight(index, 0.1);
       } else {
-        console.log(`오답! (정답: ${problem.corrects.join(", ")})`);
+        console.log(`오답! (정답: ${question.corrects.join(", ")})`);
+        generator.updateWeight(index, 10);
       }
       break;
     }
@@ -75,7 +79,7 @@ while (true) {
       const response = await prompts({
         type: "input",
         name: "answer",
-        message: getInputPromptsMessage(problem.message),
+        message: getInputPromptsMessage(question.message),
       });
 
       if (isAbort(response)) {
@@ -86,10 +90,12 @@ while (true) {
         .split(",")
         .map((s) => s.trim());
 
-      if (isArrayEqual(answerArray, problem.corrects)) {
+      if (isArrayEqual(answerArray, question.corrects)) {
         console.log("정답!");
+        generator.updateWeight(index, 0.1);
       } else {
-        console.log(`오답! (정답: ${problem.corrects.join(", ")})`);
+        console.log(`오답! (정답: ${question.corrects.join(", ")})`);
+        generator.updateWeight(index, 10);
       }
       break;
     }
@@ -99,21 +105,23 @@ while (true) {
       break;
 
     case "pick": {
-      let choices = [...problem.wrongAs];
-      choices.push(problem.correct);
+      let choices = [...question.wrongs];
+      choices.push(question.correct);
       choices = shuffle(choices);
 
       const response = await prompts({
         type: "list",
         name: "answer",
-        message: problem.message,
-        choices: choices,
+        message: question.message,
+        choices,
       });
 
-      if (response.answer === problem.correct) {
+      if (response.answer === question.correct) {
         console.log("정답!");
+        generator.updateWeight(index, 0.1);
       } else {
-        console.log(`오답! (정답: ${problem.correct})`);
+        console.log(`오답! (정답: ${question.correct})`);
+        generator.updateWeight(index, 10);
       }
       break;
     }

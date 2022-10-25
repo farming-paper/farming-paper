@@ -1110,14 +1110,7 @@ export const problems: Question[] = [
     type: "short",
     message:
       "___ 분포: 단위시간 혹은 단위공간 내에서 발생할 수 있는 사건의 발생 횟수에 대한 확률 분포",
-    correct: "포아송",
-    category: "3",
-  },
-  {
-    type: "short",
-    message:
-      "___ 분포: 단위시간 혹은 단위공간 내에서 발생할 수 있는 사건의 발생 횟수에 대한 확률 분포",
-    correct: "포아송",
+    correct: "푸아송",
     category: "3",
   },
   {
@@ -1457,7 +1450,7 @@ export const problems: Question[] = [
     type: "short",
     message:
       "___ 회귀는 종속변수가 특정 시간 동안 발생한 사건의 건수에 대한 도수 자료인 경우면서, 정규분포를 따르지 않거나 등분산성을 만족하지 못하는 경우 사용된다.",
-    correct: "포아송",
+    correct: "푸아송",
     category: "3",
   },
   {
@@ -1490,7 +1483,7 @@ export const problems: Question[] = [
   {
     type: "short",
     message:
-      "___ 이란 두 개의 확률 변수의 선형관계를 나타낸다. 하나의 확률 번슈의 증감에 따른 다른 확률 변수의 증감 경향에 대한 측도이다. 대부분의 시계열 자료들은 이것이 0이 아니다.",
+      "___ 이란 두 개의 확률 변수의 선형관계를 나타낸다. 하나의 확률 변수의 증감에 따른 다른 확률 변수의 증감 경향에 대한 측도이다. 대부분의 시계열 자료들은 이것이 0이 아니다.",
     correct: "공분산",
     category: "3",
   },
@@ -1586,7 +1579,7 @@ export const problems: Question[] = [
   {
     type: "short",
     message:
-      "___은 각 영역이 가지는 레이블의 분포가 유사하도록 영역을 추출해 교차검증을 실시한다. 주로 불균형 데이터를 분류하는 문제에서 사용된다.",
+      "___ 은 각 영역이 가지는 레이블의 분포가 유사하도록 영역을 추출해 교차검증을 실시한다. 주로 불균형 데이터를 분류하는 문제에서 사용된다.",
     correct: "계층별 k-Fold 교차검증",
     category: "3",
   },
@@ -1686,13 +1679,242 @@ export const problems: Question[] = [
     type: "pick",
     correct: "비선형적",
     message: "인공신경망은 ___인 문제를 분석하는 데 유용하다.",
-    wrongAs: ["선형적"],
+    wrongs: ["선형적"],
   },
   {
     type: "short",
     message:
       "___ 이란, 인공신경망의 출력값과 실제값의 오차가 최소가 되는 가중치와 편향을 찾는 알고리즘이다.",
     correct: "역전파 알고리즘",
+    category: "3",
+  },
+  {
+    type: "short",
+    message:
+      "___ 이란, 정답 라벨이 있는 데이터들 속에서 정답 라벨이 없는 데이터들을 어떻게 분류할 것인지에 대한 해결 방법으로 사용된다.",
+    correct: "k-NN 알고리즘",
+    category: "3",
+  },
+  {
+    type: "short",
+    message:
+      "___ 이론이란, 사전확률과 우도확률을 통해 사후확률을 추정하는 것과 관련된 이론이다. 주관적으로 확률을 해석한다.",
+    correct: "베이즈",
+    category: "3",
+  },
+  {
+    type: "short",
+    message: "___ 분류는 스팸 메일 필터링, 텍스트 분류 등에 사용할 수 있다.",
+    correct: "나이브 베이즈",
+    category: "3",
+  },
+  {
+    type: "short",
+    message:
+      "___ 알고리즘은 초평면을 이용하여 카테고리를 나누어 비확률적 이진 선형모델을 만든다. 지도학습에 주로 이용되며 특히 분류 성능이 뛰어나다.",
+    correct: "SVM",
+    category: "3",
+  },
+  {
+    type: "short",
+    message: "전체 관측치 중 올바르게 예측한 비율",
+    correct: "정분류율",
+    category: "3",
+  },
+  {
+    type: "short",
+    message: "(TP+TN)/(TP+TN+FP+FN)",
+    correct: "정분류율",
+    category: "3",
+  },
+  {
+    type: "short",
+    message: "전체 관측치 중 잘못 예측한 비율",
+    correct: "오분류율",
+    category: "3",
+  },
+  {
+    type: "short",
+    message: "(FP+FN)/(TP+TN+FP+FN)",
+    correct: "오분류율",
+    category: "3",
+  },
+  {
+    type: "short_multi",
+    message: "실제 TRUE 중 올바른 TRUE를 찾아낸 비율. (두 가지 이름)",
+    corrects: ["민감도", "재현율"],
+    category: "3",
+  },
+  {
+    type: "short_multi",
+    message: "TP/(TP+FN) (두 가지 이름)",
+    corrects: ["민감도", "재현율"],
+    category: "3",
+  },
+  {
+    type: "short",
+    message: "실제 FALSE 중 올바른 FALSE를 찾아낸 비율",
+    correct: "특이도",
+    category: "3",
+  },
+  {
+    type: "short",
+    message: "TN/(TN+FP)",
+    correct: "특이도",
+    category: "3",
+  },
+  {
+    type: "short",
+    message: "예측 TRUE 중 올바르게 TRUE를 찾아낸 비율",
+    correct: "정밀도",
+    category: "3",
+  },
+  {
+    type: "short",
+    message: "TP/(TP+FP)",
+    correct: "정밀도",
+    category: "3",
+  },
+  {
+    type: "short",
+    message: "정밀도와 재현율의 조화평균 값으로, 값이 높을 수록 좋다.",
+    correct: "F1 Score",
+    category: "3",
+  },
+  {
+    type: "short_order",
+    message:
+      "___ 란, 분류 분석 모형의 평가를 쉽게 비교할 수 있도록 시각화한 그래프로서, x 축에는 ___, y 축은 ___ 이고 아래 면적이 ___에 가까울 수록 성능이 우수하다.",
+    corrects: ["ROC 곡선", "FPR", "민감도", "1"],
+    category: "3",
+  },
+  {
+    type: "short",
+    message: "거리 측도 중 두 점 사이의 가장 짧은 거리는?",
+    correct: "유클리디안 거리",
+    category: "3",
+  },
+  {
+    type: "short",
+    message: "거리 측도 중 변수들 차이의 단순한 합으로 구한 것은?",
+    correct: "맨하탄 거리",
+    category: "3",
+  },
+  {
+    type: "short",
+    message: "변수 간 거리 차이 중 최댓값을 취한 것은?",
+    correct: "체비셰프 거리",
+    category: "3",
+  },
+  {
+    type: "short",
+    message: "변수 간 거리 차이 중 최댓값을 취한 것은?",
+    correct: "체비셰프 거리",
+    category: "3",
+  },
+  {
+    type: "short",
+    message:
+      "가장 가까운 거리를 가지는 관측치부터 결합해나가면서 계층적 트리 구조를 형성하고, 이를 통해 군집화를 수행하는 방법은?",
+    correct: "계층적 군집분석",
+    category: "3",
+  },
+  {
+    type: "short",
+    message: "군집 간 거리 측정 시, 가장 가까운 데이터끼리 계산하는 방법",
+    correct: "단일연결법",
+    category: "3",
+  },
+  {
+    type: "short",
+    message: "군집 간 거리 측정 시, 가장 먼 데이터끼리 계산하는 방법",
+    correct: "완전연결법",
+    category: "3",
+  },
+  {
+    type: "short",
+    message:
+      "군집 간 거리 측정 시, 데이터 간의 모든 거리를 평균내어 계산하는 방법",
+    correct: "평균연결법",
+    category: "3",
+  },
+  {
+    type: "short",
+    message: "각 군집의 중심점 사이의 거리로서 계산하는 방법",
+    correct: "중심연결법",
+    category: "3",
+  },
+  {
+    type: "short",
+    message: "군집 내 오차가 최소가 되는 데이터로 계산하는 방법",
+    correct: "와드연결법",
+    category: "3",
+  },
+  {
+    type: "short",
+    message:
+      "군집의 수를 사전에 정한 뒤 집단 내 동질성과 집단 간 이질성이 모두 높게 전체 데이터를 분할하는 알고리즘",
+    correct: "k-means 군집",
+    category: "3",
+  },
+  {
+    type: "pick",
+    message: "k-means 군집은 최적___.",
+    correct: "이 아닐 수도 있다",
+    wrongs: ["이다"],
+    category: "3",
+  },
+  {
+    type: "short",
+    message:
+      "혼합 분포 군집: ___ 알고리즘은 확률모델의 최대가능도를 갖는 모수와 함께 그 확률모델의 가중치를 추정하고자 한다.",
+    correct: "EM",
+    category: "3",
+  },
+  {
+    type: "short",
+    message:
+      "인공신경망 기반 차원축소와 군집화를 동시에 수행할 수 있는 알고리즘이다. 코호넨 맵이라고도 한다.",
+    correct: "자기조직화지도",
+    category: "3",
+  },
+  {
+    type: "short",
+    message:
+      "연관분석에서, 전체 거래 중에서 A, B 라는 두 개의 품목이 동시에 포함된 거래의 비율",
+    correct: "지지도",
+    category: "3",
+  },
+  {
+    type: "short",
+    message: "연관분석에서, 조건부확률로 나타낼 수 있는 것",
+    correct: "신뢰도",
+    category: "3",
+  },
+  {
+    type: "short",
+    message: "연관분석에서, 상관관계를 나타낼 수 있는 것",
+    correct: "향상도",
+    category: "3",
+  },
+  {
+    type: "short",
+    message:
+      "가능한 모든 경우의 수를 탐색하여 측정지표가 높게 나타나는 연관규칙을 찾는 방식은 ___ 알고리즘이다.",
+    correct: "apriori",
+    category: "3",
+  },
+  {
+    type: "short",
+    message:
+      "연관분석의 알고리즘에서 ___ 알고리즘이란, 지지도가 낮은 품목부터 차츰 올라가면서 빈도수가 높은 아이템 집합을 생성하는 상향식 알고리즘이다. 상대적으로 속도가 빠르며 연산 비용이 저렴하다.",
+    correct: "FP-Growth",
+    category: "3",
+  },
+  {
+    type: "short",
+    message: "연관분석은 품목 ___ 에 어려움이 있다.",
+    correct: "세분화",
     category: "3",
   },
 ];

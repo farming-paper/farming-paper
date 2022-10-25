@@ -7,11 +7,11 @@ test("문제가 하나 있을 시 동작", () => {
     { type: "short", message: "test q", correct: "test a" },
   ];
   const generator = createProblemGenerator(problems);
-  const problem1 = generator.gen();
-  const problem2 = generator.gen();
-  const problem3 = generator.gen();
-  const problem4 = generator.gen();
-  const problem5 = generator.gen();
+  const { question: problem1 } = generator.gen();
+  const { question: problem2 } = generator.gen();
+  const { question: problem3 } = generator.gen();
+  const { question: problem4 } = generator.gen();
+  const { question: problem5 } = generator.gen();
   expect(problem1.message).toEqual("test q");
   expect(problem2.message).toEqual("test q");
   expect(problem3.message).toEqual("test q");
@@ -30,11 +30,11 @@ test("가중치가 큰 것이 앞에 있을 때 잘 동작해야 함", () => {
     { type: "short", message: "one", correct: "test a" },
   ];
   const generator = createProblemGenerator(problems);
-  const problem1 = generator.gen();
-  const problem2 = generator.gen();
-  const problem3 = generator.gen();
-  const problem4 = generator.gen();
-  const problem5 = generator.gen();
+  const { question: problem1 } = generator.gen();
+  const { question: problem2 } = generator.gen();
+  const { question: problem3 } = generator.gen();
+  const { question: problem4 } = generator.gen();
+  const { question: problem5 } = generator.gen();
   expect(problem1.message).toEqual("big");
   expect(problem2.message).toEqual("big");
   expect(problem3.message).toEqual("big");
@@ -53,11 +53,11 @@ test("가중치가 큰 것이 뒤에 있을 때 잘 동작해야 함", () => {
     },
   ];
   const generator = createProblemGenerator(problems);
-  const problem1 = generator.gen();
-  const problem2 = generator.gen();
-  const problem3 = generator.gen();
-  const problem4 = generator.gen();
-  const problem5 = generator.gen();
+  const { question: problem1 } = generator.gen();
+  const { question: problem2 } = generator.gen();
+  const { question: problem3 } = generator.gen();
+  const { question: problem4 } = generator.gen();
+  const { question: problem5 } = generator.gen();
   expect(problem1.message).toEqual("big");
   expect(problem2.message).toEqual("big");
   expect(problem3.message).toEqual("big");
@@ -76,7 +76,7 @@ test("가중치 대로 나와야 함", () => {
   let three = 0;
   const generator = createProblemGenerator(problems);
   for (let i = 0; i < 1000; i++) {
-    const problem = generator.gen();
+    const { question: problem } = generator.gen();
     if (problem.message === "one") {
       one++;
     } else if (problem.message === "two") {
