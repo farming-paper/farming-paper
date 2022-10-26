@@ -16,12 +16,12 @@ export interface ShortQuestion extends BaseProblem {
 // 답이 여러개이고, 순서가 중요함. ", " 등으로 구분함.
 export interface ShortOrderQuestion extends BaseProblem {
   type: "short_order";
-  corrects: string[];
+  correct: string[];
 }
 
 export interface ShortMultiAnswerQuestion extends BaseProblem {
   type: "short_multi";
-  corrects: string[];
+  correct: string[];
 }
 
 export interface PickQuestion extends BaseProblem {

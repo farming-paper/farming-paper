@@ -16,12 +16,12 @@ export const problems: Question[] = [
   {
     type: "short_order",
     message: "한계지불의사금액은 ___곡선의 ___",
-    corrects: ["수요", "높이"],
+    correct: ["수요", "높이"],
   },
   {
     type: "short_order",
     message: "한계수용의사금액은 ___곡선의 ___",
-    corrects: ["공급", "높이"],
+    correct: ["공급", "높이"],
   },
   {
     type: "short",
@@ -56,7 +56,7 @@ export const problems: Question[] = [
   {
     type: "short_multi",
     message: "완전경쟁시장의 네 가지 조건",
-    corrects: ["가격수용자", "동질적 상품", "완전한 정보", "진입장벽의 부재"],
+    correct: ["가격수용자", "동질적 상품", "완전한 정보", "진입장벽의 부재"],
   },
   {
     type: "short",
