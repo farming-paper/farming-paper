@@ -2027,4 +2027,15 @@ export const problems: Question[] = [
     message: "시간 개념이 추가된 연관분석",
     correct: "순차패턴",
   },
+  {
+    type: "short",
+    message:
+      "순환 신경망. 언어 모델링, 음성 인식 등에 활용됨. 오래된 데이터에 대한 문맥 처리가 어렵다. ",
+    correct: "RNN",
+  },
+  {
+    type: "short",
+    message: "합성곱 신경망. 이미지 분류 등. ",
+    correct: "CNN",
+  },
 ];
