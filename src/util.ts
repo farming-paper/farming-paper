@@ -1,3 +1,5 @@
+import rfdc from "rfdc";
+
 export function isSetEqual<T>(xs: Set<T>, ys: Set<T>): boolean {
   return xs.size === ys.size && [...xs].every((x) => ys.has(x));
 }
@@ -44,3 +46,5 @@ export function shuffle<T>(array: T[]) {
 
   return result;
 }
+
+export const deepclone = rfdc();

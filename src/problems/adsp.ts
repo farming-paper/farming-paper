@@ -74,6 +74,7 @@ export const problems: Question[] = [
       "정보기술발전",
       "경제 산업적",
     ],
+    weight: 2,
     category: "1",
     tags: ["1일차"],
   },
@@ -175,13 +176,6 @@ export const problems: Question[] = [
     type: "short",
     message: "제조 부문에서 기업의 의사결정을 돕는 프로세스",
     correct: "BI",
-    category: "1",
-    tags: ["1일차"],
-  },
-  {
-    type: "short",
-    message: "데이터를 설명하는 데이터",
-    correct: "메타데이터",
     category: "1",
     tags: ["1일차"],
   },
@@ -448,28 +442,12 @@ export const problems: Question[] = [
     tags: ["2일차"],
   },
   {
-    type: "short",
-    message: "빅데이터 가치 패러다임의 첫번째",
-    correct: "디지털화",
+    type: "short_order",
+    message: "빅데이터 가치 패러다임의 변화 세 단계는?",
+    correct: ["디지털화", "연결", "에이전시"],
     category: "1",
     tags: ["2일차"],
-    weight: 0.6,
-  },
-  {
-    type: "short",
-    message: "빅데이터 가치 패러다임의 두번째",
-    correct: "연결",
-    category: "1",
-    tags: ["2일차"],
-    weight: 0.6,
-  },
-  {
-    type: "short",
-    message: "빅데이터 가치 패러다임의 세번째",
-    correct: "에이전시",
-    category: "1",
-    tags: ["2일차"],
-    weight: 0.6,
+    weight: 1.5,
   },
   {
     type: "short",
@@ -478,7 +456,6 @@ export const problems: Question[] = [
     correct: "디지털화",
     category: "1",
     tags: ["2일차"],
-    weight: 0.6,
   },
   {
     type: "short",
@@ -487,7 +464,6 @@ export const problems: Question[] = [
     correct: "연결",
     category: "1",
     tags: ["2일차"],
-    weight: 0.6,
   },
   {
     type: "short",
@@ -496,7 +472,6 @@ export const problems: Question[] = [
     correct: "에이전시",
     category: "1",
     tags: ["2일차"],
-    weight: 0.6,
   },
   {
     type: "pick_different",
@@ -534,9 +509,9 @@ export const problems: Question[] = [
     type: "short_multi",
     message: "소프트 스킬 일곱 가지",
     correct: [
-      "창의적 사고",
       "호기심",
       "논리적 비판",
+      "창의적 사고",
       "창의력",
       "스토리텔링",
       "시각화",
@@ -571,7 +546,6 @@ export const problems: Question[] = [
     message:
       "추론, 예측, 전망, 추정을 위한 정보의 근거가 될 수 있는 데이터의 특성을 데이터의 ___라고 한다.",
     correct: "당위적 특성",
-    tags: ["핵심 서브노트 110제"],
     category: "1",
   },
   {
@@ -579,7 +553,6 @@ export const problems: Question[] = [
     message:
       "고정된 틀이 존재하지 않고 연산이 불가능하며, 수집과 관리가 어려워 일반적으로 관계형 DB가 아닌 NoSQL DB에 저장되는 데이터는 무엇인가?",
     correct: "비정형 데이터",
-    tags: ["핵심 서브노트 110제"],
     category: "1",
   },
   {
@@ -587,7 +560,6 @@ export const problems: Question[] = [
     message:
       "학습과 체험을 통해 개인에게 습득되어 있지만 겉으로 드러나지 않는 상태의 지식. 문자나 언어로 나타나지 않음.",
     correct: "암묵지",
-    tags: ["핵심 서브노트 110제"],
     category: "1",
   },
   {
@@ -595,7 +567,6 @@ export const problems: Question[] = [
     message:
       "개인에게 내면화된 암묵지가 조직의 지식으로 ___되기 위해서는, 표출화하고 이를 다시 개인의 지식으로 ___ 하는 과정을 거치게 된다.",
     correct: ["공통화", "연결화"],
-    tags: ["핵심 서브노트 110제"],
     category: "1",
   },
   {
@@ -603,14 +574,12 @@ export const problems: Question[] = [
     message:
       "체계적으로 수집, 축적하여 다양한 용도와 방법으로 이용할 수 있게 정리한 정보의 집합체",
     correct: "DB",
-    tags: ["핵심 서브노트 110제"],
     category: "1",
   },
   {
     type: "short",
     message: "이용자가 쉽게 DB를 구축, 유지할 수 있게 하는 관리 소프트웨어는?",
     correct: "DBMS",
-    tags: ["핵심 서브노트 110제"],
     category: "1",
   },
   {
@@ -618,14 +587,12 @@ export const problems: Question[] = [
     message:
       "대량의 정보를 일정한 형식에 따라 컴퓨터 등의 정보처리기기가 읽고 쓸 수 있는 DB의 특성",
     correct: "기계 가독성",
-    tags: ["핵심 서브노트 110제"],
     category: "1",
   },
   {
     type: "short",
     message: "온라인으로 이용 가능한 DB의 특성",
     correct: "원격 조작성",
-    tags: ["핵심 서브노트 110제"],
     category: "1",
   },
   {
@@ -633,7 +600,6 @@ export const problems: Question[] = [
     message:
       "제품의 설계, 개발, 생산, 유통, 폐기에 이르기까지 제품의 라이프사이클 전반에 관련된 데이터를 통합하고 공유/교환할 수 있게 한 경영통합정보시스템",
     correct: "CALS",
-    tags: ["핵심 서브노트 110제"],
     category: "1",
   },
   {
@@ -641,14 +607,12 @@ export const problems: Question[] = [
     message:
       "학사 뿐 아니라 기타 교육행정 전 업무를 처리하는 시스템으로, 교육부 아래 각 시도별 교육청과 교육지원청들, 그리고 약 1만여 곳의 학교를 연계하는 대형 네트워크 시스템은?",
     correct: "NEIS",
-    tags: ["핵심 서브노트 110제"],
     category: "1",
   },
   {
     type: "short_multi",
     message: "더그 래니의 3V에 추가된 4V 모두 쓰시오 (소문자 영어로)",
     correct: ["value", "veracity", "visualization", "variability"],
-    tags: ["핵심 서브노트 110제"],
     category: "1",
   },
   {
@@ -656,7 +620,6 @@ export const problems: Question[] = [
     message:
       "데이터가 어떻게 사용되어 어떠한 이유로 피해자가 발생하게 되었는지 데이터 활용 로직인 알고리즘을 살펴보는 전문 인력",
     correct: "알고리즈미스트",
-    tags: ["핵심 서브노트 110제"],
     category: "1",
   },
   {
@@ -664,7 +627,6 @@ export const problems: Question[] = [
     message:
       "다음 상황에서 분석 주제는? 분석 대상이 무엇인지 알고 있음, 분석 방법을 알고 있음.",
     correct: "최적화",
-    tags: ["핵심 서브노트 110제"],
     category: "2",
   },
   {
@@ -672,7 +634,6 @@ export const problems: Question[] = [
     message:
       "다음 상황에서 분석 주제는? 분석 대상이 무엇인지 알고 있음, 분석 방법을 모름.",
     correct: "솔루션",
-    tags: ["핵심 서브노트 110제"],
     category: "2",
   },
   {
@@ -680,7 +641,6 @@ export const problems: Question[] = [
     message:
       "다음 상황에서 분석 주제는? 분석 대상이 무엇인지 모름, 분석 방법을 알고 있음.",
     correct: "발견",
-    tags: ["핵심 서브노트 110제"],
     category: "2",
   },
   {
@@ -688,28 +648,24 @@ export const problems: Question[] = [
     message:
       "다음 상황에서 분석 주제는? 분석 대상이 무엇인지 모름, 분석 방법을 모름.",
     correct: "통찰",
-    tags: ["핵심 서브노트 110제"],
     category: "2",
   },
   {
     type: "short_multi",
     message: "기업의 합리적 의사 결정을 방해하는 세 가지",
     correct: ["고정 관념", "편향된 생각", "프레이밍 효과"],
-    tags: ["핵심 서브노트 110제"],
     category: "2",
   },
   {
     type: "short_multi",
     message: "비즈니스 모델 탐색 기법에서 5가지로 단순화한 것들",
     correct: ["규제와 감사", "업무", "제품", "고객", "지원 인프라"],
-    tags: ["핵심 서브노트 110제"],
     category: "2",
   },
   {
-    type: "short",
-    message: "분석 과제 발굴시, 하향식 접근법 1단계: ___ 단계",
-    correct: "문제 탐색",
-    tags: ["핵심 서브노트 110제"],
+    type: "short_order",
+    message: "분석 과제 발굴시, 하향식 접근법 4단계 차례대로",
+    correct: ["문제 탐색", "문제 정의", "해결 방안 탐색", "타당성 검토"],
     category: "2",
   },
   {
@@ -717,37 +673,14 @@ export const problems: Question[] = [
     message:
       "분석 기회 발굴 범위 확장할 때의 4가지 영역: ___ 관점(문제 혹은 변화가 기업에 주는 영향 탐색), ___ 확대 관점(위협이 될 상황), ___ 탐색, ___의 재해석(기업 내부를 둘러보기)",
     correct: ["거시적", "경쟁자", "시장의 니즈", "역량"],
-    tags: ["핵심 서브노트 110제"],
     category: "2",
     weight: 2,
   },
   {
     type: "short",
     message:
-      "문제 탐색시, 분석을 적용했을 떄 업무 흐름을 개념적으로 설명한 것. 유사, 동종 업계의 탐색으로부터 정의됨",
+      "분석 과제 발굴 - 문제 탐색시, 분석을 적용했을 떄 업무 흐름을 개념적으로 설명한 것. 유사, 동종 업계의 탐색으로부터 정의됨",
     correct: "분석 유스케이스",
-    tags: ["핵심 서브노트 110제"],
-    category: "2",
-  },
-  {
-    type: "short",
-    message: "분석 과제 발굴시, 하향식 접근법 2단계: ___ 단계",
-    correct: "문제 정의",
-    tags: ["핵심 서브노트 110제"],
-    category: "2",
-  },
-  {
-    type: "short",
-    message: "분석 과제 발굴시, 하향식 접근법 3단계: ___ 단계",
-    correct: "해결 방안 탐색",
-    tags: ["핵심 서브노트 110제"],
-    category: "2",
-  },
-  {
-    type: "short",
-    message: "분석 과제 발굴시, 하향식 접근법 4단계: ___ 단계",
-    correct: "타당성 검토",
-    tags: ["핵심 서브노트 110제"],
     category: "2",
   },
   {
@@ -755,7 +688,6 @@ export const problems: Question[] = [
     message:
       "분석 과제 발굴 - 하향식 접근법 - 타당성 검토 단계에서의 두 가지 유형: ___ 타당성, ___ 및 ___ 타당성",
     correct: ["경제적", "데이터", "기술적"],
-    tags: ["핵심 서브노트 110제"],
     category: "2",
   },
   {
@@ -763,21 +695,18 @@ export const problems: Question[] = [
     message:
       "더블 다이아몬드, 발산과 수렴 단계를 거쳐 혁신적인 아이디어를 도출하는 방식은?",
     correct: "디자인씽킹",
-    tags: ["핵심 서브노트 110제"],
     category: "2",
   },
   {
     type: "short",
     message: "정답이 있는 데이터로 분석 모델을 학습시키는 것",
     correct: "지도학습",
-    tags: ["핵심 서브노트 110제"],
     category: "2",
   },
   {
     type: "short",
     message: "정답이 없는 데이터로 분석 모델을 학습시키는 것",
     correct: "비지도학습",
-    tags: ["핵심 서브노트 110제"],
     category: "2",
   },
   {
@@ -785,7 +714,6 @@ export const problems: Question[] = [
     message:
       "___ 접근법: 먼저 분석을 시도하고 그 결과를 확인하면서 조금씩 개선해나가는 방법",
     correct: "프로토타이핑",
-    tags: ["핵심 서브노트 110제"],
     category: "2",
   },
   {
@@ -793,7 +721,6 @@ export const problems: Question[] = [
     message:
       "분석 과제를 발굴한 후 작성하는 문서. 분석의 정의, 범위, 방법 등을 기술",
     correct: "분석과제 정의서",
-    tags: ["핵심 서브노트 110제"],
     category: "2",
   },
   {
@@ -806,7 +733,6 @@ export const problems: Question[] = [
       "시스템 구현",
       "평가 및 전개",
     ],
-    tags: ["핵심 서브노트 110제"],
     category: "2",
     weight: 2,
   },
@@ -815,7 +741,6 @@ export const problems: Question[] = [
     message:
       "빅데이터 분석 방법론 - 1단계 분석 기획에서의 태스크: 비즈니스 ___ 및 ___ 설정, 프로젝트 ___ 및 ___ 수립, 프로젝트 ___ 계획 수립",
     correct: ["이해", "범위", "정의", "계획", "위험"],
-    tags: ["핵심 서브노트 110제"],
     category: "2",
   },
   {
@@ -830,7 +755,6 @@ export const problems: Question[] = [
     message:
       "빅데이터 분석 방법론 - 데이터 준비에서의 태스크: 필요한 ___ 정의, ___ 설계, 데이터 ___ 및 ___ 검정",
     correct: ["데이터", "데이터 스토어", "수집", "정합성"],
-    tags: ["핵심 서브노트 110제"],
     category: "2",
   },
   {
@@ -838,7 +762,6 @@ export const problems: Question[] = [
     message:
       "빅데이터 분석 방법론 - 데이터 분석에서의 태스크: 분석용 데이터 준비, ___ 분석, ___ 분석, ___, ___ 평가 및 검증",
     correct: ["텍스트", "탐색적", "모델링", "모델"],
-    tags: ["핵심 서브노트 110제"],
     category: "2",
   },
   {
@@ -846,7 +769,6 @@ export const problems: Question[] = [
     message:
       "빅데이터 분석 방법론 - 4단계: ___(A) 구현 에서의 태스크: 설계 및 구현, (A) ___ 및 ___ ",
     correct: ["시스템", "테스트", "운영"],
-    tags: ["핵심 서브노트 110제"],
     category: "2",
   },
   {
@@ -854,7 +776,6 @@ export const problems: Question[] = [
     message:
       "빅데이터 분석 방법론 - 5단계: ___ 및 ___: 모델 ___, 프로젝트 평가 및 보고",
     correct: ["평가", "전개", "발전 계획"],
-    tags: ["핵심 서브노트 110제"],
     category: "2",
   },
   {
@@ -862,7 +783,6 @@ export const problems: Question[] = [
     message:
       "전통적인 분석 방법론 중 ___ 분석 방법론은 데이터로부터 통계적 패전이나 지식을 찾기 위해 체계적으로 정리한 데이터 마이닝 프로세스이다.",
     correct: "KDD",
-    tags: ["핵심 서브노트 110제"],
     category: "2",
   },
   {
@@ -870,7 +790,6 @@ export const problems: Question[] = [
     message:
       "전통적인 분석 방법론 중 ___ 분석 방법론은 4개의 레벨과 6개의 단계로 구성되어 있다. (좀 더 세분화가 되어 있다.)",
     correct: "CRISP-DM",
-    tags: ["핵심 서브노트 110제"],
     category: "2",
   },
   {
@@ -1097,7 +1016,7 @@ export const problems: Question[] = [
   {
     type: "short",
     message:
-      "___ 분포: 성공 확률이 p인 베르누이 시행에서 처음으로 성공이 나올 때까지 k번 실패학 확률의 분포",
+      "___ 분포: 성공 확률이 p인 베르누이 시행에서 처음으로 성공이 나올 때까지 k번 실패할 확률의 분포",
     correct: "기하",
     category: "3",
   },
@@ -1574,7 +1493,7 @@ export const problems: Question[] = [
   {
     type: "short",
     message:
-      "___은 표본을 다시 추출하는 방법의 일종이다. 복원추출을 하기 때문에 중복 추출이 허용된다.",
+      "___은 표본의 개수만큼 표본에서 다시 추출하는 방법의 일종이다. 복원추출을 하기 때문에 중복 추출이 허용된다.",
     correct: "붓스트랩",
     category: "3",
   },
@@ -1610,13 +1529,6 @@ export const problems: Question[] = [
     message:
       "오즈의 단점은 ___를 가질 수 없고 확률값과 오즈의 그래프는 ___을 띤다. 그래서 ___ 는 오즈에 로그값을 취한다.",
     correct: ["음수", "비대칭성", "로짓"],
-    category: "3",
-  },
-  {
-    type: "pick",
-    message: "의사결정나무는 과적합 발생 확률이 ___",
-    wrongs: ["낮다"],
-    correct: "높다",
     category: "3",
   },
   {
@@ -1844,7 +1756,8 @@ export const problems: Question[] = [
   },
   {
     type: "short",
-    message: "군집 내 오차가 최소가 되는 데이터로 계산하는 방법",
+    message:
+      "군집 내 오차(편차제곱합)가 최소가 되는 데이터로 거리를 계산하는 방법",
     correct: "와드연결법",
     category: "3",
   },
@@ -1898,6 +1811,13 @@ export const problems: Question[] = [
   {
     type: "short",
     message:
+      "랜덤 모델과 비교하여 해당 모델의 성과가 얼마나 향상되었는지 구간별로 파악하기 위한 그래프는?",
+    correct: "향상도 곡선",
+    category: "3",
+  },
+  {
+    type: "short",
+    message:
       "가능한 모든 경우의 수를 탐색하여 측정지표가 높게 나타나는 연관규칙을 찾는 방식은 ___ 알고리즘이다.",
     correct: "apriori",
     category: "3",
@@ -1946,5 +1866,165 @@ export const problems: Question[] = [
     message: "범주형 자료 간의 관계를 알아보고자 할 떄 사용되는 분석 방법이다.",
     correct: "교차분석",
     category: "3",
+  },
+  {
+    type: "short",
+    message: "데이터의 형식을 유지한 채 식별할 수 없는 임의의 값으로 대체",
+    correct: "데이터 마스킹",
+    category: "1",
+  },
+  {
+    type: "short",
+    message: "데이터의 값을 다른 값으로 변경하는 것은? ___ 처리",
+    correct: "가명",
+    category: "1",
+  },
+  {
+    type: "short",
+    message:
+      "각각의 데이터가 아닌 전체 데이터에 대한 총합 또는 평균으로 데이터를 보여주는 것은? ___ 처리.",
+    correct: "총계",
+    category: "1",
+  },
+  {
+    type: "short",
+    message: "데이터를 특정 값이 아닌 범위를 보여주는 것: 데이터 ___.",
+    correct: "범주화",
+    category: "1",
+  },
+  {
+    type: "short_order",
+    message: "분석 성숙도 평가 4단계 차례대로",
+    correct: ["도입", "활용", "확산", "최적화"],
+    category: "2",
+  },
+  {
+    type: "short_multi",
+    message: "데이터 거버넌스 구성요소 크게 세 가지",
+    correct: ["원칙", "조직", "프로세스"],
+    category: "2",
+  },
+  {
+    type: "short",
+    message: "데이터 분할의 목적은 ___을 방지하는 것이다.",
+    correct: "과적합",
+    category: "3",
+  },
+  {
+    type: "short",
+    message: "계층적 군집분석 R 함수 이름은?",
+    correct: "hclust",
+    category: "3",
+  },
+  {
+    type: "short",
+    message: "k-평균 군집 분석 R 함수 이름은?",
+    correct: "kmeans",
+    category: "3",
+  },
+  {
+    type: "short",
+    message: "주성분분석 R 함수 이름은?",
+    correct: "princomp",
+    category: "3",
+  },
+  {
+    type: "short",
+    message: "인공신경망 R 함수 이름은?",
+    correct: "neuralnet",
+    category: "3",
+  },
+  {
+    type: "short",
+    message: "의사결정나무 R 함수 이름은?",
+    correct: "ctree",
+    category: "3",
+  },
+  {
+    type: "short",
+    message:
+      "종속변수가 이산형인 의사결정나무에서 분류 기준이 카이제곱 통계량인 알고리즘은?",
+    correct: "CHAID",
+    category: "3",
+  },
+  {
+    type: "short",
+    message:
+      "종속변수가 이산형인 의사결정나무에서 분류 기준이 지니지수인 알고리즘은?",
+    correct: "CART",
+    category: "3",
+  },
+  {
+    type: "short",
+    message:
+      "종속변수가 이산형인 의사결정나무에서 분류 기준이 엔트로피 지수인 알고리즘은?",
+    correct: "C4.5",
+    category: "3",
+  },
+  {
+    type: "short",
+    message:
+      "종속변수가 연속형인 의사결정나무에서 분류 기준이 F 통계량인 알고리즘은?",
+    correct: "CHAID",
+    category: "3",
+  },
+  {
+    type: "short",
+    message:
+      "종속변수가 연속형인 의사결정나무에서 분류 기준이 분산감소량인 알고리즘은?",
+    correct: "CART",
+    category: "3",
+  },
+  {
+    type: "short",
+    message:
+      "K-평균 군집을 수행할 때 초깃값 SEED의 개수 K를 결정하기 위한 그래프는? ___ 그래프.",
+    correct: "제곱합",
+    category: "3",
+  },
+  {
+    type: "short",
+    message:
+      "혼합 분포 군집에서 분포(군집)의 수를 결정할 떄 최대 ___ 값을 갖는 분포의 수를 선택할 수 있다.",
+    correct: "BIC",
+    category: "3",
+  },
+  {
+    type: "short",
+    message:
+      "분석 프로젝트의 방법론 중 하나로, 모든 단계가 순차적으로 진행되는 가장 단순한 모델이다. 이전 단계가 완료된 이후 다음 단계로 진행가능한 하향식(Top-Down) 구조를 띤다. 필요한 경우 이전 단계로 돌아가 피드백 과정을 수행할 수 있다.",
+    correct: "폭포수 모델",
+    category: "1",
+  },
+  {
+    type: "short_multi",
+    message: '시계열의 구성요소 네 가지는? ("요인"이라는 단어 제외)',
+    correct: ["추세", "순환", "계절", "불규칙"],
+  },
+  {
+    type: "short_multi",
+    message: "데이터가 범주형일 때의 거리 측도는 ___ 거리, ___ 거리 등이 있다.",
+    correct: ["자카드", "코사인"],
+  },
+  {
+    type: "short",
+    message: "모델의 성능을 판단하기 위해 작성한 표의 이름은?",
+    correct: "이익도표",
+  },
+  {
+    type: "short",
+    message: "자바 기반 대용량 데이터 분산 처리 프레임워크는?",
+    correct: "하둡",
+  },
+  {
+    type: "short",
+    message:
+      "다양한 전문 지식을 종합한 학문으로 여러 데이터로부터 의미있는 정보를 추출하고 나아가서 그 결과를 효과적으로 전달하는 것을 포함하는 것은?",
+    correct: "정보전략계획",
+  },
+  {
+    type: "short",
+    message: "시간 개념이 추가된 연관분석",
+    correct: "순차패턴",
   },
 ];

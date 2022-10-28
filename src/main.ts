@@ -2,6 +2,7 @@ import { createProblemGenerator } from "./problem-generator";
 import { problems } from "./problems/adsp";
 import { createPromptModule } from "inquirer";
 import {
+  deepclone,
   getPromptsMessage as getInputPromptsMessage,
   isArrayEqual,
   isBagEqual,
@@ -13,12 +14,31 @@ function isAbort(response: { answer: any }) {
   return typeof response.answer === "undefined";
 }
 
-// const problems: Problem[] = [
+// const problems: Question[] = [
 //   {
-//     type: "pick",
-//     correctA: "비선형적",
-//     q: "인공신경망은 ___인 문제를 분석하는 데 유용하다.",
-//     wrongAs: ["선형적"],
+//     type: "pick_different",
+//     message: "데이터 사이언스 구성 요소",
+//     pool: [
+//       [
+//         "수학",
+//         "확률 모델",
+//         "머신러닝",
+//         "분석학",
+//         "패턴 인식과 학습",
+//         "불확실성 모델링",
+//       ],
+//       [
+//         "시그널 프로세싱",
+//         "프로그래밍",
+//         "데이터 엔지니어링",
+//         "데이터 웨어하우징",
+//         "고성능 컴퓨팅",
+//       ],
+//       ["커뮤니케이션", "프레젠테이션", "스토리텔링", "시각화"],
+//     ],
+//     category: "1",
+//     tags: ["2일차"],
+//     weight: 2,
 //   },
 // ];
 
@@ -101,7 +121,36 @@ while (true) {
     }
 
     case "pick_different":
-      console.log("not implemented: pick_different");
+      const pool = shuffle(deepclone(question.pool)).map((bag) => shuffle(bag));
+      let group = deepclone(pool[1])?.slice(0, 3);
+      const correct = pool[0]?.[0];
+      if (!correct || !group) {
+        console.error("pick_different error", pool);
+        break;
+      }
+
+      group.push(correct);
+      group = shuffle(group);
+
+      const response = await prompts({
+        type: "list",
+        name: "answer",
+        message: `[${question.message}] 다음 보기 중 다른 것 하나를 고르시오`,
+        choices: group,
+      });
+
+      if (isAbort(response)) {
+        process.exit();
+      }
+
+      if (response.answer === correct) {
+        console.log("정답!");
+        generator.updateWeight(index, 0.1);
+      } else {
+        console.log(`오답! (정답: ${correct})`);
+        generator.updateWeight(index, 10);
+      }
+
       break;
 
     case "pick": {
