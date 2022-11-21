@@ -537,7 +537,7 @@ export const problems: Question[] = [
   {
     type: "short_order",
     message: "외부 환경에서 본 인문학의 열풍: ",
-    correct: ["통찰력 있는 분석", "설득력 있는 전달", "다분야 간 협력"],
+    correct: ["통찰력 있는 분석", "설득력 있는 전달", "다분야간 협력"],
     category: "1",
     tags: ["2일차"],
   },
@@ -1445,21 +1445,21 @@ export const problems: Question[] = [
   {
     type: "short",
     message:
-      "시계열 모형 중 t라는 시점에서의 값 y_i는 이전 시점들 n개에 의해 설명될 수 있음을 의미하는 것은?",
-    correct: "자기회귀 모형",
+      "___ 모형: 시계열 모형 중 t라는 시점에서의 값 y_i는 이전 시점들 n개에 의해 설명될 수 있음을 의미하는 것은?",
+    correct: "자기회귀",
     category: "3",
   },
   {
     type: "short",
     message:
-      "시계열 모형 중 이전 시점의 백색잡음들의 선형결합으로 표현하는 것은?",
-    correct: "이동평균 모형",
+      "___ 모형: 시계열 모형 중 이전 시점의 백색잡음들의 선형결합으로 표현하는 것은?",
+    correct: "이동평균",
     category: "3",
   },
   {
     type: "short",
-    message: "비정상 시계열 자료를 다룰 수 있는 모형은?",
-    correct: "자기회귀누적이동평균 모형",
+    message: "___ 모형: 비정상 시계열 자료를 다룰 수 있는 모형은?",
+    correct: "자기회귀누적이동평균",
     category: "3",
   },
   {
@@ -1600,8 +1600,8 @@ export const problems: Question[] = [
   {
     type: "short",
     message:
-      "___ 이란, 정답 라벨이 있는 데이터들 속에서 정답 라벨이 없는 데이터들을 어떻게 분류할 것인지에 대한 해결 방법으로 사용된다.",
-    correct: "k-NN 알고리즘",
+      "___ 알고리즘이란, 정답 라벨이 있는 데이터들 속에서 정답 라벨이 없는 데이터들을 어떻게 분류할 것인지에 대한 해결 방법으로 사용된다.",
+    correct: "k-NN",
     category: "3",
   },
   {
@@ -1708,12 +1708,6 @@ export const problems: Question[] = [
     type: "short",
     message: "거리 측도 중 변수들 차이의 단순한 합으로 구한 것은?",
     correct: "맨하탄 거리",
-    category: "3",
-  },
-  {
-    type: "short",
-    message: "변수 간 거리 차이 중 최댓값을 취한 것은?",
-    correct: "체비셰프 거리",
     category: "3",
   },
   {
@@ -1992,8 +1986,8 @@ export const problems: Question[] = [
   {
     type: "short",
     message:
-      "분석 프로젝트의 방법론 중 하나로, 모든 단계가 순차적으로 진행되는 가장 단순한 모델이다. 이전 단계가 완료된 이후 다음 단계로 진행가능한 하향식(Top-Down) 구조를 띤다. 필요한 경우 이전 단계로 돌아가 피드백 과정을 수행할 수 있다.",
-    correct: "폭포수 모델",
+      "___ 모델: 분석 프로젝트의 방법론 중 하나로, 모든 단계가 순차적으로 진행되는 가장 단순한 모델이다. 이전 단계가 완료된 이후 다음 단계로 진행가능한 하향식(Top-Down) 구조를 띤다. 필요한 경우 이전 단계로 돌아가 피드백 과정을 수행할 수 있다.",
+    correct: "폭포수",
     category: "1",
   },
   {
