@@ -1,4 +1,4 @@
-import { Question } from "./problems/types";
+import { Question } from "../app/problems/types";
 
 export function createProblemGenerator(questions: Question[]) {
   let total = questions.reduce((acc, current) => {

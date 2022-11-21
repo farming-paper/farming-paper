@@ -1,6 +1,6 @@
 import { expect, test } from "vitest";
 import { createProblemGenerator } from "./problem-generator";
-import { Question } from "./problems/types";
+import { Question } from "../app/problems/types";
 
 test("문제가 하나 있을 시 동작", () => {
   const problems: Question[] = [

@@ -1,5 +1,5 @@
 import { createProblemGenerator } from "./problem-generator";
-import { problems } from "./problems/adsp";
+import { problems } from "../app/problems/adsp";
 import { createPromptModule } from "inquirer";
 import {
   deepclone,
@@ -8,7 +8,7 @@ import {
   isBagEqual,
   shuffle,
 } from "./util";
-import { Question } from "./problems/types";
+import { Question } from "../app/problems/types";
 
 function isAbort(response: { answer: any }) {
   return typeof response.answer === "undefined";
