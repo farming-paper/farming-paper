@@ -41,3 +41,13 @@ export type Question =
   | ShortMultiAnswerQuestion
   | PickDifferentQuestion
   | PickQuestion;
+
+export interface ISuccessArgs {}
+
+export interface IFailArgs {}
+
+export type QuestionInputProps<T extends Question = Question> = {
+  question: T;
+  onSuccess?: (args?: ISuccessArgs) => void;
+  onFail?: (args?: IFailArgs) => void;
+};

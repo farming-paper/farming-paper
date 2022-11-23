@@ -1,6 +1,6 @@
-import { Question } from "../app/problems/types";
+import type { Question } from "./question/types";
 
-export function createProblemGenerator(questions: Question[]) {
+export function createQuestionGenerator(questions: Question[]) {
   let total = questions.reduce((acc, current) => {
     return acc + (current.weight || 1);
   }, 0);

@@ -1,12 +1,12 @@
 import { expect, test } from "vitest";
-import { createProblemGenerator } from "./problem-generator";
-import { Question } from "../app/problems/types";
+import { createQuestionGenerator } from "./question-generator";
+import type { Question } from "./question/types";
 
 test("문제가 하나 있을 시 동작", () => {
   const problems: Question[] = [
     { type: "short", message: "test q", correct: "test a" },
   ];
-  const generator = createProblemGenerator(problems);
+  const generator = createQuestionGenerator(problems);
   const { question: problem1 } = generator.gen();
   const { question: problem2 } = generator.gen();
   const { question: problem3 } = generator.gen();
@@ -29,7 +29,7 @@ test("가중치가 큰 것이 앞에 있을 때 잘 동작해야 함", () => {
     },
     { type: "short", message: "one", correct: "test a" },
   ];
-  const generator = createProblemGenerator(problems);
+  const generator = createQuestionGenerator(problems);
   const { question: problem1 } = generator.gen();
   const { question: problem2 } = generator.gen();
   const { question: problem3 } = generator.gen();
@@ -52,7 +52,7 @@ test("가중치가 큰 것이 뒤에 있을 때 잘 동작해야 함", () => {
       correct: "test a",
     },
   ];
-  const generator = createProblemGenerator(problems);
+  const generator = createQuestionGenerator(problems);
   const { question: problem1 } = generator.gen();
   const { question: problem2 } = generator.gen();
   const { question: problem3 } = generator.gen();
@@ -74,7 +74,7 @@ test("가중치 대로 나와야 함", () => {
   let one = 0;
   let two = 0;
   let three = 0;
-  const generator = createProblemGenerator(problems);
+  const generator = createQuestionGenerator(problems);
   for (let i = 0; i < 1000; i++) {
     const { question: problem } = generator.gen();
     if (problem.message === "one") {

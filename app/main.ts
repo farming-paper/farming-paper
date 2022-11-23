@@ -1,6 +1,6 @@
-import { createProblemGenerator } from "./problem-generator";
-import { problems } from "../app/problems/adsp";
 import { createPromptModule } from "inquirer";
+import { createQuestionGenerator } from "./question-generator";
+import { questions } from "./question/data/adsp";
 import {
   deepclone,
   getPromptsMessage as getInputPromptsMessage,
@@ -8,9 +8,8 @@ import {
   isBagEqual,
   shuffle,
 } from "./util";
-import { Question } from "../app/problems/types";
 
-function isAbort(response: { answer: any }) {
+function isAbort(response: { answer: unknown }) {
   return typeof response.answer === "undefined";
 }
 
@@ -44,8 +43,9 @@ function isAbort(response: { answer: any }) {
 
 const prompts = createPromptModule();
 
+// eslint-disable-next-line no-constant-condition
 while (true) {
-  const generator = createProblemGenerator(problems);
+  const generator = createQuestionGenerator(questions);
   const { question, index } = generator.gen();
 
   switch (question.type) {
@@ -120,7 +120,7 @@ while (true) {
       break;
     }
 
-    case "pick_different":
+    case "pick_different": {
       const pool = shuffle(deepclone(question.pool)).map((bag) => shuffle(bag));
       let group = deepclone(pool[1])?.slice(0, 3);
       const correct = pool[0]?.[0];
@@ -152,7 +152,7 @@ while (true) {
       }
 
       break;
-
+    }
     case "pick": {
       let choices = [...question.wrongs];
       choices.push(question.correct);
