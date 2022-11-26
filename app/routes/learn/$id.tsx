@@ -3,7 +3,7 @@ import { Bars3Icon, BellIcon, XMarkIcon } from "@heroicons/react/24/outline";
 import type { LoaderArgs, TypedResponse } from "@remix-run/node";
 import { json } from "@remix-run/node";
 import { useLoaderData, useParams } from "@remix-run/react";
-import { Card } from "flowbite-react";
+import { Button, Card } from "flowbite-react";
 import { nanoid } from "nanoid";
 import { Fragment, useCallback, useState } from "react";
 import { twMerge } from "tailwind-merge";
@@ -328,21 +328,18 @@ export default function LearnId() {
           </div>
         </header>
         <main className="flex flex-col gap-10 mx-auto max-w-7xl sm:px-6 lg:px-8 sm:flex-row">
-          <div className="p-4 sm:max-w-3xl sm:px-0">
-            <QuestionInput
-              question={currentQuestion.question}
-              onSuccess={handleSuccessQuestion}
-              onFail={handleFailQuestion}
-            />
-            {JSON.stringify(currentQuestion)}
+          <div className="p-4 sm:w-[700px] sm:px-0">
+            <div className="mb-3">
+              <QuestionInput
+                question={currentQuestion.question}
+                onSuccess={handleSuccessQuestion}
+                onFail={handleFailQuestion}
+              />
+            </div>
             <div className="flex justify-end gap-3">
-              <button
-                type="button"
-                className="inline-flex items-center px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
-                onClick={refreshQuestion}
-              >
+              <Button color="gray" onClick={refreshQuestion}>
                 패스
-              </button>
+              </Button>
             </div>
           </div>
           <ul className="flex flex-col gap-3 px-4 sm:w-96 sm:px-0">
@@ -350,7 +347,8 @@ export default function LearnId() {
               return (
                 <Card
                   className={twMerge(
-                    result.isSuccess ? "border-green-200" : "border-red-200"
+                    "shadow-none",
+                    result.isSuccess ? "border-green-300" : "border-red-300"
                   )}
                   key={result.id}
                 >
