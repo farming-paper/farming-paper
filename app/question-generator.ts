@@ -1,4 +1,5 @@
 import type { Question } from "./question/types";
+import { deepclone } from "./util";
 
 export function createQuestionGenerator(questions: Question[]) {
   let total = questions.reduce((acc, current) => {
@@ -15,11 +16,11 @@ export function createQuestionGenerator(questions: Question[]) {
       }))) {
         rand -= question.weight || 1;
         if (rand <= 0) {
-          return { question, index };
+          return { question: deepclone(question), index };
         }
       }
       return {
-        question: questions[questions.length - 1] as Question,
+        question: deepclone(questions[questions.length - 1]) as Question,
         index: questions.length - 1,
       };
     },

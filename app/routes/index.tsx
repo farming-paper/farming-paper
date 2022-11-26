@@ -1,15 +1,8 @@
 import { ArrowRightIcon } from "@heroicons/react/24/outline";
-import { json } from "@remix-run/node";
-import { Link, useLoaderData } from "@remix-run/react";
+import { Link } from "@remix-run/react";
 import { Button } from "flowbite-react";
 
-export async function loader() {
-  return json({ name: "Hello, World!" });
-}
-
 export default function Index() {
-  const data = useLoaderData();
-
   return (
     <div
       style={{ fontFamily: "system-ui, sans-serif", lineHeight: "1.4" }}

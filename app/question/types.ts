@@ -42,12 +42,18 @@ export type Question =
   | PickDifferentQuestion
   | PickQuestion;
 
-export interface ISuccessArgs {}
+export interface IBaseProcessedArgs {
+  given: string;
+}
 
-export interface IFailArgs {}
+// eslint-disable-next-line @typescript-eslint/no-empty-interface
+export interface ISuccessArgs extends IBaseProcessedArgs {}
+
+// eslint-disable-next-line @typescript-eslint/no-empty-interface
+export interface IFailArgs extends IBaseProcessedArgs {}
 
 export type QuestionInputProps<T extends Question = Question> = {
   question: T;
-  onSuccess?: (args?: ISuccessArgs) => void;
-  onFail?: (args?: IFailArgs) => void;
+  onSuccess?: (args: ISuccessArgs) => void;
+  onFail?: (args: IFailArgs) => void;
 };

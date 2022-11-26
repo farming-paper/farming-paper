@@ -3,11 +3,18 @@ import { Bars3Icon, BellIcon, XMarkIcon } from "@heroicons/react/24/outline";
 import type { LoaderArgs, TypedResponse } from "@remix-run/node";
 import { json } from "@remix-run/node";
 import { useLoaderData, useParams } from "@remix-run/react";
-import { Fragment, useState } from "react";
+import { Card } from "flowbite-react";
+import { nanoid } from "nanoid";
+import { Fragment, useCallback, useState } from "react";
 import { twMerge } from "tailwind-merge";
 import { createQuestionGenerator } from "~/question-generator";
 import QuestionInput from "~/question/input-components/QuestionInput";
-import type { Question } from "~/question/types";
+import type {
+  IFailArgs,
+  ISuccessArgs,
+  PickDifferentQuestion,
+  Question,
+} from "~/question/types";
 import { getQuestionsById } from "~/question/utils";
 import { useConst } from "~/util";
 
@@ -22,7 +29,9 @@ export function loader({
   if (!id) {
     return json({ questions: [] });
   }
-  return json({ questions: getQuestionsById(id) });
+  return json({
+    questions: getQuestionsById(id),
+  });
 }
 
 const user = {
@@ -43,19 +52,108 @@ const userNavigation = [
   { name: "Sign out", href: "#" },
 ];
 
+export interface IQuestionResult {
+  id: string;
+  question: string;
+  given: string;
+  actual: string;
+  isSuccess: boolean;
+}
+
 export default function LearnId() {
   const { questions } = useLoaderData<ILearnIdPageData>();
   const { id } = useParams<{ id: string }>();
   const generator = useConst(() => createQuestionGenerator(questions));
+  const [results, setResults] = useState<IQuestionResult[]>([]);
 
   const [currentQuestion, setCurrentQuestion] = useState<{
     question: Question;
     index: number;
   }>(() => generator.gen());
 
-  // useEffect(() => {
-  //   setCurrentQuestion(generator.gen());
-  // }, [generator]);
+  const pushPickDifferentResult = useCallback(
+    ({
+      given,
+      isSuccess,
+      question,
+    }: {
+      question: PickDifferentQuestion;
+      given: string;
+      isSuccess: boolean;
+    }) => {
+      setResults((prev) => [
+        {
+          id: nanoid(),
+          question: question.message,
+          given,
+          actual: question.pool
+            .map((onePool) => `[${onePool.join(", ")}]`)
+            .join(" "),
+          isSuccess,
+        },
+        ...prev,
+      ]);
+    },
+    []
+  );
+
+  const pushResult = useCallback(
+    ({
+      given,
+      isSuccess,
+      question,
+    }: {
+      question: Question;
+      given: string;
+      isSuccess: boolean;
+    }) => {
+      if (question.type === "pick_different") {
+        return pushPickDifferentResult({ given, isSuccess, question });
+      }
+
+      setResults((prev) => [
+        {
+          id: nanoid(),
+          question: question.message,
+          given,
+          actual: Array.isArray(question.correct)
+            ? question.correct.join(", ")
+            : question.correct,
+          isSuccess,
+        },
+        ...prev,
+      ]);
+    },
+    [pushPickDifferentResult]
+  );
+
+  const refreshQuestion = useCallback(() => {
+    setCurrentQuestion(generator.gen());
+  }, [generator]);
+
+  const handleSuccessQuestion = useCallback(
+    ({ given }: ISuccessArgs) => {
+      const { question, index } = currentQuestion;
+
+      generator.updateWeight(index, 0.1);
+      pushResult({ given, isSuccess: true, question });
+
+      refreshQuestion();
+    },
+    [currentQuestion, generator, pushResult, refreshQuestion]
+  );
+
+  const handleFailQuestion = useCallback(
+    ({ given }: IFailArgs) => {
+      const { question, index } = currentQuestion;
+
+      generator.updateWeight(index, 10);
+      pushResult({ given, isSuccess: false, question });
+
+      refreshQuestion();
+    },
+    [currentQuestion, generator, pushResult, refreshQuestion]
+  );
 
   return (
     <div className="min-h-full">
@@ -229,30 +327,54 @@ export default function LearnId() {
             </h1>
           </div>
         </header>
-        <main>
-          <div className="mx-auto max-w-7xl sm:px-6 lg:px-8">
-            <QuestionInput question={currentQuestion.question} />
+        <main className="flex flex-col gap-10 mx-auto max-w-7xl sm:px-6 lg:px-8 sm:flex-row">
+          <div className="p-4 sm:max-w-3xl sm:px-0">
+            <QuestionInput
+              question={currentQuestion.question}
+              onSuccess={handleSuccessQuestion}
+              onFail={handleFailQuestion}
+            />
             {JSON.stringify(currentQuestion)}
-            {/* Replace with your content */}
-            {/* <div className="px-4 py-8 sm:px-0">
-              <div className="border-4 border-gray-200 border-dashed rounded-lg h-96" />
-            </div> */}
             <div className="flex justify-end gap-3">
               <button
                 type="button"
                 className="inline-flex items-center px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-md shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
+                onClick={refreshQuestion}
               >
                 패스
               </button>
-              <button
-                type="button"
-                className="inline-flex items-center px-4 py-2 text-sm font-medium text-white bg-indigo-600 border border-transparent rounded-md shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
-              >
-                확인
-              </button>
             </div>
-            {/* /End replace */}
           </div>
+          <ul className="flex flex-col gap-3 px-4 sm:w-96 sm:px-0">
+            {results.map((result) => {
+              return (
+                <Card
+                  className={twMerge(
+                    result.isSuccess ? "border-green-200" : "border-red-200"
+                  )}
+                  key={result.id}
+                >
+                  <div>{result.question}</div>
+                  <div>
+                    {result.isSuccess ? (
+                      <p className="text-green-500">{result.given}</p>
+                    ) : (
+                      <div>
+                        <p className="text-red-500">
+                          <span>입력: </span>
+                          <span>{result.given}</span>
+                        </p>
+                        <p>
+                          <span>정답: </span>
+                          <span>{result.actual}</span>
+                        </p>
+                      </div>
+                    )}
+                  </div>
+                </Card>
+              );
+            })}
+          </ul>
         </main>
       </div>
     </div>

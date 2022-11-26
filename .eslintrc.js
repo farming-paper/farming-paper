@@ -13,5 +13,10 @@ module.exports = {
   root: true,
   rules: {
     "@typescript-eslint/switch-exhaustiveness-check": "error",
+    "react/jsx-key": ["error", { checkFragmentShorthand: true }],
+
+    "no-useless-rename": "error",
+    "object-shorthand": "error",
   },
+  ignorePatterns: ["remix.config.js"],
 };

@@ -8,8 +8,6 @@ import ShortQuestionInput from "./ShortQuestionInput";
 const QuestionInput: React.FC<QuestionInputProps> = (args) => {
   const { question } = args;
 
-  console.log(args);
-
   switch (question.type) {
     case "pick":
       return <PickQuestionInput {...{ ...args, question }} />;
