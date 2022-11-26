@@ -19,5 +19,11 @@
     "noEmit": true,
     "isolatedModules": true
   },
-  "include": ["remix.env.d.ts", "**/*.ts", "**/*.tsx", ".eslintrc.cjs"]
+  "include": [
+    "remix.env.d.ts",
+    "**/*.ts",
+    "**/*.tsx",
+    ".eslintrc.cjs",
+    "tailwind.config.js"
+  ]
 }
