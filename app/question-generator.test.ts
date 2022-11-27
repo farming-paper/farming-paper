@@ -24,7 +24,7 @@ test("가중치가 큰 것이 앞에 있을 때 잘 동작해야 함", () => {
     {
       type: "short",
       message: "big",
-      weight: 99999999999999999,
+      weight: Number.MAX_VALUE,
       correct: "test a",
     },
     { type: "short", message: "one", correct: "test a" },
@@ -48,7 +48,7 @@ test("가중치가 큰 것이 뒤에 있을 때 잘 동작해야 함", () => {
     {
       type: "short",
       message: "big",
-      weight: 99999999999999999,
+      weight: Number.MAX_VALUE,
       correct: "test a",
     },
   ];

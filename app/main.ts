@@ -1,3 +1,5 @@
+/* eslint-disable no-console */
+
 import { createPromptModule } from "inquirer";
 import { createQuestionGenerator } from "./question-generator";
 import { questions } from "./question/data/adsp";

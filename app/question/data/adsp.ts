@@ -210,7 +210,7 @@ export const questions: Question[] = [
   {
     type: "short",
     message:
-      "빅데이터의 역할: 빅데이터는 ____의 석탄, 철! 생산성을 획기적으로 끌어올림.",
+      "빅데이터의 역할: 빅데이터는 ___의 석탄, 철! 생산성을 획기적으로 끌어올림.",
     correct: "산업혁명",
     category: "1",
     tags: ["1일차"],
@@ -1119,7 +1119,7 @@ export const questions: Question[] = [
   {
     type: "short_order",
     message:
-      "___(A)는 확률 분포의 비대칭 정도를 나타내는 척도이며, A가 0보다 __면 최빈값 < 중앙값 < 평균이다.",
+      "___(A)는 확률 분포의 비대칭 정도를 나타내는 척도이며, A가 0보다 ___면 최빈값 < 중앙값 < 평균이다.",
     correct: ["왜도", "크다"],
     category: "3",
   },

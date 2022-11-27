@@ -13,6 +13,7 @@ const PickDifferentQuestionInput: React.FC<
     let choices = deepclone(pool[1])?.slice(0, 3);
     const correct = pool[0]?.[0];
     if (!correct || !choices) {
+      // eslint-disable-next-line no-console
       console.error("pick_different error", pool);
       throw new Error("pick_different error");
     }

@@ -55,7 +55,6 @@ const ShortMultiAnswerQuestionInput: React.FC<
           onChange={(e) => setValue(e.target.value)}
           value={value}
           onKeyDown={(e) => {
-            console.log(e);
             if (e.key === "Enter" && !e.nativeEvent.isComposing) {
               onSubmit();
             }

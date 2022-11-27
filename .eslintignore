@@ -1,0 +1,4 @@
+remix.config.js
+node_modules
+build
+/api

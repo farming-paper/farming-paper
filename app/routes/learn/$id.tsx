@@ -5,10 +5,11 @@ import { json } from "@remix-run/node";
 import { useLoaderData, useParams } from "@remix-run/react";
 import { Button, Card } from "flowbite-react";
 import { nanoid } from "nanoid";
-import { Fragment, useCallback, useState } from "react";
+import { Fragment, useCallback, useEffect, useState } from "react";
 import { twMerge } from "tailwind-merge";
 import { createQuestionGenerator } from "~/question-generator";
 import QuestionInput from "~/question/input-components/QuestionInput";
+import { links as questionRenderLinks } from "~/question/Render";
 import type {
   IFailArgs,
   ISuccessArgs,
@@ -20,6 +21,10 @@ import { useConst } from "~/util";
 
 interface ILearnIdPageData {
   questions: Question[];
+}
+
+export function links() {
+  return [...questionRenderLinks()];
 }
 
 export function loader({
@@ -69,7 +74,18 @@ export default function LearnId() {
   const [currentQuestion, setCurrentQuestion] = useState<{
     question: Question;
     index: number;
-  }>(() => generator.gen());
+  }>({
+    index: -1,
+    question: {
+      type: "short",
+      correct: "",
+      message: "",
+    },
+  });
+
+  useEffect(() => {
+    setCurrentQuestion(generator.gen());
+  }, [generator]);
 
   const pushPickDifferentResult = useCallback(
     ({
@@ -336,6 +352,7 @@ export default function LearnId() {
                 onFail={handleFailQuestion}
               />
             </div>
+            {/* {JSON.stringify(currentQuestion)} */}
             <div className="flex justify-end gap-3">
               <Button color="gray" onClick={refreshQuestion}>
                 패스

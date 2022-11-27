@@ -8,15 +8,14 @@ module.exports = {
   parser: "@typescript-eslint/parser",
   plugins: ["@typescript-eslint"],
   parserOptions: {
-    project: ["./tsconfig.json"],
+    project: ["./tsconfig.eslint.json"],
   },
   root: true,
   rules: {
     "@typescript-eslint/switch-exhaustiveness-check": "error",
     "react/jsx-key": ["error", { checkFragmentShorthand: true }],
-
     "no-useless-rename": "error",
     "object-shorthand": "error",
+    "no-console": "error",
   },
-  ignorePatterns: ["remix.config.js"],
 };

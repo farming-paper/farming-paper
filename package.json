@@ -10,7 +10,8 @@
     "build": "npm run build:css && remix build",
     "dev": "concurrently \"npm run dev:css\" \"remix dev\"",
     "build:css": "tailwindcss -m -i ./styles/app.css -o app/styles/app.css",
-    "dev:css": "tailwindcss -w -i ./styles/app.css -o app/styles/app.css"
+    "dev:css": "tailwindcss -w -i ./styles/app.css -o app/styles/app.css",
+    "lint": "eslint ."
   },
   "keywords": [],
   "author": "",
@@ -27,7 +28,9 @@
     "flowbite": "^1.5.4",
     "flowbite-react": "^0.3.5",
     "inquirer": "^9.1.4",
+    "katex": "^0.16.3",
     "lucide-react": "^0.102.0",
+    "marked": "^4.2.3",
     "nanoid": "^4.0.0",
     "prop-types": "^15.8.1",
     "react": "^18.2.0",
@@ -41,6 +44,8 @@
     "@remix-run/dev": "^1.7.6",
     "@remix-run/eslint-config": "^1.7.6",
     "@remix-run/serve": "^1.7.6",
+    "@types/katex": "^0.14.0",
+    "@types/marked": "^4.0.7",
     "@types/node": "^18.11.9",
     "@types/react": "^18.0.25",
     "@types/react-dom": "^18.0.9",

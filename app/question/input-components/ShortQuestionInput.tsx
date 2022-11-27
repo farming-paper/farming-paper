@@ -1,5 +1,6 @@
 import { Button, Label, TextInput } from "flowbite-react";
 import { useCallback, useEffect, useRef, useState } from "react";
+import Render from "../Render";
 import type { QuestionInputProps, ShortQuestion } from "../types";
 
 const ShortQuestionInput: React.FC<QuestionInputProps<ShortQuestion>> = ({
@@ -37,7 +38,7 @@ const ShortQuestionInput: React.FC<QuestionInputProps<ShortQuestion>> = ({
         <Label htmlFor="base" value="문제" />
       </div>
       <div className="mb-4">
-        <div>{question.message}</div>
+        <Render>{question.message}</Render>
       </div>
       <div className="mb-2 ">
         <Label htmlFor="base" value="정답" />
@@ -53,6 +54,7 @@ const ShortQuestionInput: React.FC<QuestionInputProps<ShortQuestion>> = ({
           onChange={(e) => setValue(e.target.value)}
           value={value}
           onKeyDown={(e) => {
+            // eslint-disable-next-line no-console
             console.log(e);
             if (e.key === "Enter" && !e.nativeEvent.isComposing) {
               onSubmit();
