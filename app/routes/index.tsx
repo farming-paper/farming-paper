@@ -1,8 +1,27 @@
 import { ArrowRightIcon } from "@heroicons/react/24/outline";
 import { Link } from "@remix-run/react";
 import { Button } from "flowbite-react";
+import { useMemo, useState } from "react";
+import { getQuestionGroups } from "~/question/utils";
 
 export default function Index() {
+  const [questions] = useState(getQuestionGroups());
+
+  const links = useMemo(
+    () =>
+      [...questions.entries()].map(([key, { name }]) => (
+        <li key={key}>
+          <Link to={`/learn/${key}`}>
+            <Button color="gray">
+              {name}
+              <ArrowRightIcon className="w-4 h-4 ml-2"></ArrowRightIcon>
+            </Button>
+          </Link>
+        </li>
+      )),
+    [questions]
+  );
+
   return (
     <div
       style={{ fontFamily: "system-ui, sans-serif", lineHeight: "1.4" }}
@@ -11,16 +30,7 @@ export default function Index() {
       <h1 className="mb-5 text-lg font-medium text-gray-900 dark:text-white">
         문제를 풀 시간입니다.
       </h1>
-      <ul className="flex flex-wrap items-stretch w-full gap-5">
-        <li>
-          <Link to="/learn/adsp">
-            <Button color="gray">
-              ADSP
-              <ArrowRightIcon className="w-4 h-4 ml-2"></ArrowRightIcon>
-            </Button>
-          </Link>
-        </li>
-      </ul>
+      <ul className="flex flex-wrap items-stretch w-full gap-5">{links}</ul>
     </div>
   );
 }

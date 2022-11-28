@@ -1,6 +1,7 @@
 import { Label, ListGroup } from "flowbite-react";
 import { useCallback, useEffect, useMemo, useRef } from "react";
 import { deepclone, shuffle } from "~/util";
+import Render from "../Render";
 import type { PickDifferentQuestion, QuestionInputProps } from "../types";
 
 const PickDifferentQuestionInput: React.FC<
@@ -49,7 +50,10 @@ const PickDifferentQuestionInput: React.FC<
         <Label htmlFor="base" value="문제" />
       </div>
       <div className="mb-4">
-        <div>&quot;{question.message}&quot; 중 다른 것을 하나 고르세요.</div>
+        <div>
+          &quot;<Render>{question.message}</Render>&quot; 중 다른 것을 하나
+          고르세요.
+        </div>
       </div>
       <ListGroup>
         {choices.map((choice) => (

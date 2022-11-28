@@ -1,6 +1,7 @@
 import { Button, Label, TextInput } from "flowbite-react";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { isArrayEqual } from "~/util";
+import Render from "../Render";
 import type { QuestionInputProps, ShortOrderQuestion } from "../types";
 
 const ShortOrderQuestionInput: React.FC<
@@ -39,7 +40,7 @@ const ShortOrderQuestionInput: React.FC<
         <Label htmlFor="base" value="문제" />
       </div>
       <div className="mb-4">
-        <div>{question.message}</div>
+        <Render>{question.message}</Render>
       </div>
       <div className="mb-2 ">
         <Label htmlFor="base" value="정답" />

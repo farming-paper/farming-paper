@@ -1,12 +1,13 @@
 import { deepclone } from "~/util";
+import type { MapKey } from "~/util-type";
 import { questions as adspQuestions } from "./data/adsp";
-import type { Question } from "./types";
+import { questions as economicsQuestions } from "./data/economics";
 
-export function getQuestionsById(id: string): Question[] {
-  switch (id) {
-    case "adsp":
-      return deepclone(adspQuestions);
-    default:
-      return [];
-  }
+export function getQuestionGroups() {
+  return new Map([
+    ["adsp", { name: "ADSP", questions: deepclone(adspQuestions) }],
+    ["economics", { name: "경제학", questions: deepclone(economicsQuestions) }],
+  ] as const);
 }
+
+export type QuestionId = MapKey<ReturnType<typeof getQuestionGroups>>;

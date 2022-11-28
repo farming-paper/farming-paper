@@ -1,6 +1,6 @@
 import { Disclosure, Menu, Transition } from "@headlessui/react";
 import { Bars3Icon, BellIcon, XMarkIcon } from "@heroicons/react/24/outline";
-import type { LoaderArgs, TypedResponse } from "@remix-run/node";
+import type { LoaderArgs, MetaFunction, TypedResponse } from "@remix-run/node";
 import { json } from "@remix-run/node";
 import { useLoaderData, useParams } from "@remix-run/react";
 import { Button, Card } from "flowbite-react";
@@ -9,14 +9,15 @@ import { Fragment, useCallback, useEffect, useState } from "react";
 import { twMerge } from "tailwind-merge";
 import { createQuestionGenerator } from "~/question-generator";
 import QuestionInput from "~/question/input-components/QuestionInput";
-import { links as questionRenderLinks } from "~/question/Render";
+import Render, { links as questionRenderLinks } from "~/question/Render";
 import type {
   IFailArgs,
   ISuccessArgs,
   PickDifferentQuestion,
-  Question,
+  Question
 } from "~/question/types";
-import { getQuestionsById } from "~/question/utils";
+import type { QuestionId } from "~/question/utils";
+import { getQuestionGroups } from "~/question/utils";
 import { useConst } from "~/util";
 
 interface ILearnIdPageData {
@@ -27,15 +28,50 @@ export function links() {
   return [...questionRenderLinks()];
 }
 
+export const meta: MetaFunction = ({
+  data,
+}: {
+  data: ILearnIdPageData | undefined;
+}) => {
+  if (!data) {
+    return {
+      title: "No data",
+      description: "No data found",
+      viewport: "width=device-width, initial-scale=1",
+    };
+  }
+
+  return {
+    title: `문제`,
+    description: `문제를 푸세요.`,
+    // TODO: 디폴트 meta 로 이동.
+    viewport: "width=device-width, initial-scale=1",
+  };
+};
+
 export function loader({
   params,
 }: LoaderArgs): TypedResponse<ILearnIdPageData> {
   const id = params.id;
   if (!id) {
+    // throw new Response("What a joke! Not found.", {
+    //   status: 404,
+    // });
     return json({ questions: [] });
   }
+
+  const item = getQuestionGroups().get(id as QuestionId);
+
+  if (!item) {
+    return json({ questions: [] });
+  }
+
   return json({
-    questions: getQuestionsById(id),
+    questions: item.questions,
+    // 디버그 용도
+    // questions: item.questions.filter(
+    //   (q) => q.type === "short_order" && q.message.includes("$")
+    // ),
   });
 }
 
@@ -369,7 +405,7 @@ export default function LearnId() {
                   )}
                   key={result.id}
                 >
-                  <div>{result.question}</div>
+                  <Render>{result.question}</Render>
                   <div>
                     {result.isSuccess ? (
                       <p className="text-green-500">{result.given}</p>

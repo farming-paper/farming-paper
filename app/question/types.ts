@@ -1,5 +1,5 @@
 export type Category = "1" | "2" | "3";
-export type Tag = `${number}일차` | "핵심 서브노트 110제";
+export type Tag = `${number}일차` | "핵심 서브노트 110제" | string;
 
 export interface BaseQuestion {
   message: string;

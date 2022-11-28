@@ -1,6 +1,7 @@
 import { Label, ListGroup } from "flowbite-react";
 import { useCallback, useEffect, useMemo, useRef } from "react";
 import { shuffle } from "~/util";
+import Render from "../Render";
 import type { PickQuestion, QuestionInputProps } from "../types";
 
 const PickQuestionInput: React.FC<QuestionInputProps<PickQuestion>> = ({
@@ -43,7 +44,7 @@ const PickQuestionInput: React.FC<QuestionInputProps<PickQuestion>> = ({
         <Label htmlFor="base" value="문제" />
       </div>
       <div className="mb-4">
-        <div>{question.message}</div>
+        <Render>{question.message}</Render>
       </div>
       <ListGroup>
         {choices.map((choice) => (
