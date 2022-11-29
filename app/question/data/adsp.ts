@@ -679,7 +679,7 @@ export const questions: Question[] = [
   {
     type: "short",
     message:
-      "분석 과제 발굴 - 문제 탐색시, 분석을 적용했을 떄 업무 흐름을 개념적으로 설명한 것. 유사, 동종 업계의 탐색으로부터 정의됨",
+      "분석 과제 발굴 - 문제 탐색시, 분석을 적용했을 때 업무 흐름을 개념적으로 설명한 것. 유사, 동종 업계의 탐색으로부터 정의됨",
     correct: "분석 유스케이스",
     category: "2",
   },
@@ -1088,7 +1088,7 @@ export const questions: Question[] = [
   {
     type: "short",
     message:
-      "귀무가설을 판단하기 위해서, 표본조사를 실시하였을 떄 특정 수식에 의하여 포본들로부터 얻을 수 있는 값",
+      "귀무가설을 판단하기 위해서, 표본조사를 실시하였을 때 특정 수식에 의하여 포본들로부터 얻을 수 있는 값",
     correct: "검정통계량",
     category: "3",
   },
@@ -1857,7 +1857,7 @@ export const questions: Question[] = [
   },
   {
     type: "short",
-    message: "범주형 자료 간의 관계를 알아보고자 할 떄 사용되는 분석 방법이다.",
+    message: "범주형 자료 간의 관계를 알아보고자 할 때 사용되는 분석 방법이다.",
     correct: "교차분석",
     category: "3",
   },
@@ -1979,7 +1979,7 @@ export const questions: Question[] = [
   {
     type: "short",
     message:
-      "혼합 분포 군집에서 분포(군집)의 수를 결정할 떄 최대 ___ 값을 갖는 분포의 수를 선택할 수 있다.",
+      "혼합 분포 군집에서 분포(군집)의 수를 결정할 때 최대 ___ 값을 갖는 분포의 수를 선택할 수 있다.",
     correct: "BIC",
     category: "3",
   },
