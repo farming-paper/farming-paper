@@ -35,7 +35,7 @@ const ShortQuestionInput: React.FC<QuestionInputProps<ShortQuestion>> = ({
         </div>
       ) : null}
       <div className="mb-2 ">
-        <Label htmlFor="base" value="문제" />
+        <Label value="문제" />
       </div>
       <div className="mb-4">
         <Render>{question.message}</Render>
@@ -43,13 +43,13 @@ const ShortQuestionInput: React.FC<QuestionInputProps<ShortQuestion>> = ({
       <div className="mb-2 ">
         <Label htmlFor="base" value="정답" />
       </div>
-      <div className="flex gap-3">
+      <div className="flex items-center gap-3">
         <TextInput
           ref={inputRef}
           id="base"
           type="text"
           className="flex-1"
-          sizing="md"
+          sizing="lg"
           placeholder="정답을 입력하세요"
           onChange={(e) => setValue(e.target.value)}
           value={value}

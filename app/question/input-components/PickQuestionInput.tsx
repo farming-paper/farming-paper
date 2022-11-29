@@ -41,7 +41,7 @@ const PickQuestionInput: React.FC<QuestionInputProps<PickQuestion>> = ({
         </div>
       ) : null}
       <div className="mb-2 ">
-        <Label htmlFor="base" value="문제" />
+        <Label value="문제" />
       </div>
       <div className="mb-4">
         <Render>{question.message}</Render>
