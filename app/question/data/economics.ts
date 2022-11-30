@@ -66,7 +66,7 @@ export const questions: Question[] = [
   },
   {
     type: "short",
-    message: "가계라는 개별 경제주체의 경제적 선태의 문제는 ___경제학.",
+    message: "가계라는 개별 경제주체의 경제적 선택의 문제는 ___경제학.",
     correct: "미시",
     tags: ["거시경제학"],
   },
@@ -215,7 +215,7 @@ export const questions: Question[] = [
   {
     type: "short_order",
     message:
-      "소득 이외의 소비 결정요인: ___, ___, ___수준, 미래 경제상황에 대한 ___",
+      "소득 이외의 소비지출 결정요인: ___, ___, ___수준, 미래 경제상황에 대한 ___",
     correct: ["재산", "차입", "물가", "기대"],
     tags: ["거시경제학"],
   },
@@ -324,7 +324,7 @@ export const questions: Question[] = [
   {
     type: "short_order",
     message:
-      "___: ___ 상태에서의 실업률을 의미함. 바찰적 실업률 + 구조적 실업률. 실제로 측정할 수 ___음.",
+      "___: ___ 상태에서의 실업률을 의미함. 찰적 실업률 + 구조적 실업률. 실제로 측정할 수 ___음.",
     correct: ["자연실업률", "완전고용상태", "없음"],
     tags: ["거시경제학"],
   },
@@ -401,6 +401,14 @@ export const questions: Question[] = [
     correct: ["이자율"],
     tags: ["거시경제학"],
   },
+  {
+    type: "short_order",
+    message:
+      "투자지출의 변화요인: 경제주체들은 ___(투자의 한계비용)과 투자의 ___(투자의 한계편익)을 서로 비교함으로써.",
+    correct: ["이자율", "기대수익"],
+    tags: ["거시경제학"],
+  },
+
   {
     type: "short_order",
     message:
@@ -691,6 +699,25 @@ export const questions: Question[] = [
     message:
       "총공급곡선에서 단기-장기로 이어지는 그림에서, 물가가 올라가면 노동의 ___ 가 발생하여 임금이 ___ 하고, 원가가 상승하니 실질이윤이 줄어들어서 ___ GDP 까지 줄어든다.",
     correct: ["초과수요", "상승", "완전고용"],
+    tags: ["거시경제학"],
+  },
+  {
+    type: "short_order",
+    message:
+      "___ 이(가) 변하면, 총수요곡선 위에서 점으로서 실질 GDP 가 이동한다.",
+    correct: ["물가수준"],
+    tags: ["거시경제학"],
+  },
+  {
+    type: "short_order",
+    message: "총공급곡선의 변화 요인 : 단위당 ___ .",
+    correct: ["생산비용"],
+    tags: ["거시경제학"],
+  },
+  {
+    type: "short_order",
+    message: "단위상 생산비용의 변화요인 :  ___ (임금 등)의 가격, ___",
+    correct: ["생산요소"],
     tags: ["거시경제학"],
   },
 ];
