@@ -50,6 +50,11 @@ while (true) {
   const generator = createQuestionGenerator(questions);
   const { question, index } = generator.gen();
 
+  if (typeof question.message !== "string") {
+    console.error("message is not string", JSON.stringify(question));
+    process.exit();
+  }
+
   switch (question.type) {
     case "short": {
       const response = await prompts({
@@ -156,7 +161,7 @@ while (true) {
       break;
     }
     case "pick": {
-      let choices = [...question.wrongs];
+      let choices = [...question.options];
       choices.push(question.correct);
       choices = shuffle(choices);
 
@@ -176,6 +181,10 @@ while (true) {
       }
       break;
     }
+
+    default:
+      console.error("unknown question type", question);
+      process.exit();
   }
 
   console.log("");

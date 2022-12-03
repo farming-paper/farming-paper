@@ -1,14 +1,6 @@
-import type renderer from "react-test-renderer";
 import Render from "./Render";
 
 import { render } from "@testing-library/react";
-
-function toJson(component: renderer.ReactTestRenderer) {
-  const result = component.toJSON();
-  expect(result).toBeDefined();
-  expect(result).not.toBeInstanceOf(Array);
-  return result as renderer.ReactTestRendererJSON;
-}
 
 test("Simple Text", () => {
   const result = render(<Render>Simple Text</Render>);
@@ -16,8 +8,8 @@ test("Simple Text", () => {
   expect(result.container).toMatchSnapshot();
 });
 
-describe("Rendering Markdown", () => {
-  test("Heading", () => {
+describe("마크다운 렌더링", () => {
+  test("제목이 잘 표시되어야 함", () => {
     const result = render(
       <Render>{`# heading 1
   
@@ -29,7 +21,7 @@ describe("Rendering Markdown", () => {
     expect(result.container).toMatchSnapshot();
   });
 
-  test("bold", () => {
+  test("굵게가 잘 표시되어야 함", () => {
     const result = render(<Render>{`**bold**`}</Render>);
     expect(result.container).toMatchSnapshot();
 
@@ -37,15 +29,23 @@ describe("Rendering Markdown", () => {
   });
 });
 
-describe("Rendering Math", () => {
-  test("Inline Math", () => {
+describe("수학 렌더링 (KaTeX)", () => {
+  test("Inline Math 가 잘 렌더링되어야 함", () => {
     const result = render(<Render>{`$x^2$`}</Render>);
 
     expect(result.container).toMatchSnapshot();
   });
 
-  test("Block Math", () => {
+  test("Block Math 가 잘 렌더링되어야 함", () => {
     const result = render(<Render>{`$$x^2$$`}</Render>);
+
+    expect(result.container).toMatchSnapshot();
+  });
+});
+
+describe("배열 렌더링", () => {
+  test("일반 배열이 잘 렌더링되어야 함.", () => {
+    const result = render(<Render>{[`this is one`, "this is two"]}</Render>);
 
     expect(result.container).toMatchSnapshot();
   });

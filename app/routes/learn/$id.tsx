@@ -11,6 +11,7 @@ import { createQuestionGenerator } from "~/question-generator";
 import QuestionInput from "~/question/input-components/QuestionInput";
 import Render, { links as questionRenderLinks } from "~/question/Render";
 import type {
+  Content,
   IFailArgs,
   ISuccessArgs,
   PickDifferentQuestion,
@@ -95,7 +96,7 @@ const userNavigation = [
 
 export interface IQuestionResult {
   id: string;
-  question: string;
+  question: Content;
   given: string;
   actual: string;
   isSuccess: boolean;

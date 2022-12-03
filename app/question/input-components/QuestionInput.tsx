@@ -19,6 +19,9 @@ const QuestionInput: React.FC<QuestionInputProps> = (args) => {
       return <ShortMultiAnswerQuestionInput {...{ ...args, question }} />;
     case "short_order":
       return <ShortOrderQuestionInput {...{ ...args, question }} />;
+    case "pick_multi":
+    case "pick_order":
+      throw new Error("Not implemented yet");
   }
 };
 

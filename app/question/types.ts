@@ -1,8 +1,10 @@
 export type Category = "1" | "2" | "3";
 export type Tag = `${number}일차` | "핵심 서브노트 110제" | string;
 
+export type Content = string | string[];
+
 export interface BaseQuestion {
-  message: string;
+  message: Content;
   weight?: number;
   category?: Category;
   tags?: Tag[];
@@ -24,10 +26,22 @@ export interface ShortMultiAnswerQuestion extends BaseQuestion {
   correct: string[];
 }
 
+export interface PickOrderQuestion extends BaseQuestion {
+  type: "pick_order";
+  correct: string[];
+  otherChoices?: string[];
+}
+
 export interface PickQuestion extends BaseQuestion {
   type: "pick";
   correct: string;
-  wrongs: string[];
+  options: string[];
+}
+
+export interface PickMultiQuestion extends BaseQuestion {
+  type: "pick_multi";
+  correct: string[];
+  options: string[];
 }
 
 export interface PickDifferentQuestion extends BaseQuestion {
@@ -40,7 +54,9 @@ export type Question =
   | ShortOrderQuestion
   | ShortMultiAnswerQuestion
   | PickDifferentQuestion
-  | PickQuestion;
+  | PickQuestion
+  | PickMultiQuestion
+  | PickOrderQuestion;
 
 export interface IBaseProcessedArgs {
   given: string;

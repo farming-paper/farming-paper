@@ -1,6 +1,32 @@
 // Vitest Snapshot v1
 
-exports[`Rendering Markdown > Heading 1`] = `
+exports[`Simple Text 1`] = `
+<div>
+  <div>
+    <p>
+      Simple Text
+    </p>
+    
+
+  </div>
+</div>
+`;
+
+exports[`마크다운 렌더링 > 굵게가 잘 표시되어야 함 1`] = `
+<div>
+  <div>
+    <p>
+      <strong>
+        bold
+      </strong>
+    </p>
+    
+
+  </div>
+</div>
+`;
+
+exports[`마크다운 렌더링 > 제목이 잘 표시되어야 함 1`] = `
 <div>
   <div>
     <h1
@@ -28,21 +54,28 @@ exports[`Rendering Markdown > Heading 1`] = `
 </div>
 `;
 
-exports[`Rendering Markdown > bold 1`] = `
+exports[`배열 렌더링 > 일반 배열이 잘 렌더링되어야 함. 1`] = `
 <div>
   <div>
-    <p>
-      <strong>
-        bold
-      </strong>
-    </p>
-    
+    <div>
+      <p>
+        this is one
+      </p>
+      
 
+    </div>
+    <div>
+      <p>
+        this is two
+      </p>
+      
+
+    </div>
   </div>
 </div>
 `;
 
-exports[`Rendering Math > Block Math 1`] = `
+exports[`수학 렌더링 (KaTeX) > Block Math 가 잘 렌더링되어야 함 1`] = `
 <div>
   <div>
     <p>
@@ -143,7 +176,7 @@ exports[`Rendering Math > Block Math 1`] = `
 </div>
 `;
 
-exports[`Rendering Math > Inline Math 1`] = `
+exports[`수학 렌더링 (KaTeX) > Inline Math 가 잘 렌더링되어야 함 1`] = `
 <div>
   <div>
     <p>
@@ -232,18 +265,6 @@ exports[`Rendering Math > Inline Math 1`] = `
           </span>
         </span>
       </span>
-    </p>
-    
-
-  </div>
-</div>
-`;
-
-exports[`Simple Text 1`] = `
-<div>
-  <div>
-    <p>
-      Simple Text
     </p>
     
 

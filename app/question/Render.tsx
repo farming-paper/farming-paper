@@ -2,6 +2,8 @@
 import katex from "katex";
 import katexStyle from "katex/dist/katex.min.css";
 import { marked } from "marked";
+import React from "react";
+import type { Content } from "./types";
 
 const renderer = new marked.Renderer();
 
@@ -38,8 +40,16 @@ renderer.paragraph = (text) => {
 
 marked.use({ renderer });
 
-const Render: React.FC<{ children: string }> = ({ children }) => {
-  return <div dangerouslySetInnerHTML={{ __html: marked(children) }} />;
+const Render: React.FC<{ children: Content }> = ({ children }) => {
+  return typeof children === "string" ? (
+    <div dangerouslySetInnerHTML={{ __html: marked(children) }} />
+  ) : (
+    <div>
+      {children.map((child, index) => (
+        <div key={index} dangerouslySetInnerHTML={{ __html: marked(child) }} />
+      ))}
+    </div>
+  );
 };
 
-export default Render;
+export default React.memo(Render);

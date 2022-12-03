@@ -1588,7 +1588,7 @@ export const questions: Question[] = [
     type: "pick",
     correct: "비선형적",
     message: "인공신경망은 ___인 문제를 분석하는 데 유용하다.",
-    wrongs: ["선형적"],
+    options: ["선형적"],
   },
   {
     type: "short",
@@ -1766,7 +1766,7 @@ export const questions: Question[] = [
     type: "pick",
     message: "k-means 군집은 최적___.",
     correct: "이 아닐 수도 있다",
-    wrongs: ["이다"],
+    options: ["이다"],
     category: "3",
   },
   {

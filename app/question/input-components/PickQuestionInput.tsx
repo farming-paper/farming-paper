@@ -12,11 +12,11 @@ const PickQuestionInput: React.FC<QuestionInputProps<PickQuestion>> = ({
   const inputRef = useRef<HTMLInputElement>(null);
 
   const choices = useMemo(() => {
-    let choices = [...question.wrongs];
+    let choices = [...question.options];
     choices.push(question.correct);
     choices = shuffle(choices);
     return choices;
-  }, [question.correct, question.wrongs]);
+  }, [question.correct, question.options]);
 
   const onSubmit = useCallback(
     (submitted: string) => {

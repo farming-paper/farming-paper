@@ -8,5 +8,6 @@
     "source.organizeImports": true
   },
   "eslint.lintTask.enable": true,
-  "eslint.lintTask.options": "./.eslintrc.js"
+  "eslint.lintTask.options": "./.eslintrc.js",
+  "typescript.tsserver.experimental.enableProjectDiagnostics": true
 }
