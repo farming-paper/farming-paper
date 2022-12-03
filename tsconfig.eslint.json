@@ -25,6 +25,7 @@
     "**/*.tsx",
     ".eslintrc.js",
     "tailwind.config.js",
-    "server.js"
+    "server.js",
+    "tests/setup.js"
   ]
 }

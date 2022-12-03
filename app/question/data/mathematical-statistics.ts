@@ -59,4 +59,28 @@ export const questions: Question[] = [
     correct: ["불편추정량", "역수"],
     tags: ["수리통계학"],
   },
+  {
+    type: "short_order",
+    message: "___ : 제1종 오류를 범할 확률의 최대 한계",
+    correct: ["유의수준"],
+    tags: ["수리통계학"],
+  },
+  {
+    type: "short_order",
+    message: "___ : 제1종 오류를 범할 확률의 최대 한계",
+    correct: ["유의수준"],
+    tags: ["수리통계학"],
+  },
+  {
+    type: "short_order",
+    message: "확률밀도(질량)함수의 아래 넓이의 합은?",
+    correct: ["1"],
+    tags: ["수리통계학"],
+  },
+  {
+    type: "short_order",
+    message: "두 확률변수가 서로 독립일 때 상관계수 값은 ___ 이다",
+    correct: ["0"],
+    tags: ["수리통계학"],
+  },
 ];

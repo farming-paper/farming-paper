@@ -1,0 +1,252 @@
+// Vitest Snapshot v1
+
+exports[`Rendering Markdown > Heading 1`] = `
+<div>
+  <div>
+    <h1
+      id="heading-1"
+    >
+      heading 1
+    </h1>
+    
+
+    <h2
+      id="heading-2"
+    >
+      heading 2
+    </h2>
+    
+
+    <h3
+      id="heading-3"
+    >
+      heading 3
+    </h3>
+    
+
+  </div>
+</div>
+`;
+
+exports[`Rendering Markdown > bold 1`] = `
+<div>
+  <div>
+    <p>
+      <strong>
+        bold
+      </strong>
+    </p>
+    
+
+  </div>
+</div>
+`;
+
+exports[`Rendering Math > Block Math 1`] = `
+<div>
+  <div>
+    <p>
+      <span
+        class="katex-display"
+      >
+        <span
+          class="katex"
+        >
+          <span
+            class="katex-mathml"
+          >
+            <math
+              display="block"
+              xmlns="http://www.w3.org/1998/Math/MathML"
+            >
+              <semantics>
+                <mrow>
+                  <msup>
+                    <mi>
+                      x
+                    </mi>
+                    <mn>
+                      2
+                    </mn>
+                  </msup>
+                </mrow>
+                <annotation
+                  encoding="application/x-tex"
+                >
+                  x^2
+                </annotation>
+              </semantics>
+            </math>
+          </span>
+          <span
+            aria-hidden="true"
+            class="katex-html"
+          >
+            <span
+              class="base"
+            >
+              <span
+                class="strut"
+                style="height:0.8641em;"
+              />
+              <span
+                class="mord"
+              >
+                <span
+                  class="mord mathnormal"
+                >
+                  x
+                </span>
+                <span
+                  class="msupsub"
+                >
+                  <span
+                    class="vlist-t"
+                  >
+                    <span
+                      class="vlist-r"
+                    >
+                      <span
+                        class="vlist"
+                        style="height:0.8641em;"
+                      >
+                        <span
+                          style="top:-3.113em;margin-right:0.05em;"
+                        >
+                          <span
+                            class="pstrut"
+                            style="height:2.7em;"
+                          />
+                          <span
+                            class="sizing reset-size6 size3 mtight"
+                          >
+                            <span
+                              class="mord mtight"
+                            >
+                              2
+                            </span>
+                          </span>
+                        </span>
+                      </span>
+                    </span>
+                  </span>
+                </span>
+              </span>
+            </span>
+          </span>
+        </span>
+      </span>
+    </p>
+    
+
+  </div>
+</div>
+`;
+
+exports[`Rendering Math > Inline Math 1`] = `
+<div>
+  <div>
+    <p>
+      <span
+        class="katex"
+      >
+        <span
+          class="katex-mathml"
+        >
+          <math
+            xmlns="http://www.w3.org/1998/Math/MathML"
+          >
+            <semantics>
+              <mrow>
+                <msup>
+                  <mi>
+                    x
+                  </mi>
+                  <mn>
+                    2
+                  </mn>
+                </msup>
+              </mrow>
+              <annotation
+                encoding="application/x-tex"
+              >
+                x^2
+              </annotation>
+            </semantics>
+          </math>
+        </span>
+        <span
+          aria-hidden="true"
+          class="katex-html"
+        >
+          <span
+            class="base"
+          >
+            <span
+              class="strut"
+              style="height:0.8141em;"
+            />
+            <span
+              class="mord"
+            >
+              <span
+                class="mord mathnormal"
+              >
+                x
+              </span>
+              <span
+                class="msupsub"
+              >
+                <span
+                  class="vlist-t"
+                >
+                  <span
+                    class="vlist-r"
+                  >
+                    <span
+                      class="vlist"
+                      style="height:0.8141em;"
+                    >
+                      <span
+                        style="top:-3.063em;margin-right:0.05em;"
+                      >
+                        <span
+                          class="pstrut"
+                          style="height:2.7em;"
+                        />
+                        <span
+                          class="sizing reset-size6 size3 mtight"
+                        >
+                          <span
+                            class="mord mtight"
+                          >
+                            2
+                          </span>
+                        </span>
+                      </span>
+                    </span>
+                  </span>
+                </span>
+              </span>
+            </span>
+          </span>
+        </span>
+      </span>
+    </p>
+    
+
+  </div>
+</div>
+`;
+
+exports[`Simple Text 1`] = `
+<div>
+  <div>
+    <p>
+      Simple Text
+    </p>
+    
+
+  </div>
+</div>
+`;
