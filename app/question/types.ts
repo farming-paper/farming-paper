@@ -8,6 +8,7 @@ export interface BaseQuestion {
   weight?: number;
   category?: Category;
   tags?: Tag[];
+  ignoreWhitespace?: boolean;
 }
 
 export interface ShortQuestion extends BaseQuestion {

@@ -2,7 +2,7 @@ import { Disclosure, Menu, Transition } from "@headlessui/react";
 import { Bars3Icon, BellIcon, XMarkIcon } from "@heroicons/react/24/outline";
 import type { LoaderArgs, MetaFunction, TypedResponse } from "@remix-run/node";
 import { json } from "@remix-run/node";
-import { useLoaderData, useParams } from "@remix-run/react";
+import { useLoaderData } from "@remix-run/react";
 import { Button, Card } from "flowbite-react";
 import { nanoid } from "nanoid";
 import { Fragment, useCallback, useEffect, useState } from "react";
@@ -22,6 +22,7 @@ import { getQuestionGroups } from "~/question/utils";
 import { useConst } from "~/util";
 
 interface ILearnIdPageData {
+  name: string;
   questions: Question[];
 }
 
@@ -55,19 +56,21 @@ export function loader({
 }: LoaderArgs): TypedResponse<ILearnIdPageData> {
   const id = params.id;
   if (!id) {
-    // throw new Response("What a joke! Not found.", {
-    //   status: 404,
-    // });
-    return json({ questions: [] });
+    throw new Response("Not Found", {
+      status: 404,
+    });
   }
 
   const item = getQuestionGroups().get(id as QuestionId);
 
   if (!item) {
-    return json({ questions: [] });
+    throw new Response("Not Found", {
+      status: 404,
+    });
   }
 
-  return json({
+  return json<ILearnIdPageData>({
+    name: item.name,
     questions: item.questions,
     // 디버그 용도
     // questions: item.questions.filter(
@@ -103,8 +106,7 @@ export interface IQuestionResult {
 }
 
 export default function LearnId() {
-  const { questions } = useLoaderData<ILearnIdPageData>();
-  const { id } = useParams<{ id: string }>();
+  const { questions, name } = useLoaderData<ILearnIdPageData>();
   const generator = useConst(() => createQuestionGenerator(questions));
   const [results, setResults] = useState<IQuestionResult[]>([]);
 
@@ -376,7 +378,7 @@ export default function LearnId() {
         <header>
           <div className="px-4 mx-auto max-w-7xl sm:px-6 lg:px-8">
             <h1 className="text-3xl font-bold leading-tight tracking-tight text-gray-900">
-              {String(id).toUpperCase()}
+              {name}
             </h1>
           </div>
         </header>
