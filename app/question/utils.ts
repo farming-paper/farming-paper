@@ -2,6 +2,7 @@ import { deepclone } from "~/util";
 import type { MapKey } from "~/util-type";
 import { questions as adspQuestions } from "./data/adsp";
 import { questions as economicsQuestions } from "./data/economics";
+import { questions as enQuestions } from "./data/exercise-and-nutrition";
 import { questions as msQuestions } from "./data/mathematical-statistics";
 import { questions as plQuestions } from "./data/programming-linguistics";
 
@@ -13,6 +14,10 @@ export function getQuestionGroups() {
     [
       "programming-linguistics",
       { name: "프로그래밍언어론", questions: deepclone(plQuestions) },
+    ],
+    [
+      "exercise-nutrition",
+      { name: "운동과영양", questions: deepclone(enQuestions) },
     ],
   ] as const);
 }
