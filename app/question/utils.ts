@@ -5,6 +5,7 @@ import { questions as economicsQuestions } from "./data/economics";
 import { questions as enQuestions } from "./data/exercise-and-nutrition";
 import { questions as msQuestions } from "./data/mathematical-statistics";
 import { questions as plQuestions } from "./data/programming-linguistics";
+import { questions as sstQuestions } from "./data/sample-survey-theory";
 
 export function getQuestionGroups() {
   return new Map([
@@ -19,6 +20,7 @@ export function getQuestionGroups() {
       "exercise-nutrition",
       { name: "운동과영양", questions: deepclone(enQuestions) },
     ],
+    ["sst", { name: "표본조사론", questions: deepclone(sstQuestions) }],
   ] as const);
 }
 
