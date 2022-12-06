@@ -31,7 +31,7 @@ specifiers:
   inquirer: ^9.1.4
   jsdom: ^20.0.3
   katex: ^0.16.3
-  lucide-react: ^0.102.0
+  lucide-react: ^0.104.0
   marked: ^4.2.3
   nanoid: ^4.0.0
   postcss: ^8.4.19
@@ -61,7 +61,7 @@ dependencies:
   flowbite-react: 0.3.5_d2xq2etesdcgquyy3sh4sawveq
   inquirer: 9.1.4
   katex: 0.16.3
-  lucide-react: 0.102.0_sh5qlbywuemxd2y3xkrw2y2kr4
+  lucide-react: 0.104.0_sh5qlbywuemxd2y3xkrw2y2kr4
   marked: 4.2.3
   nanoid: 4.0.0
   prop-types: 15.8.1
@@ -6916,8 +6916,8 @@ packages:
       yallist: 4.0.0
     dev: true
 
-  /lucide-react/0.102.0_sh5qlbywuemxd2y3xkrw2y2kr4:
-    resolution: {integrity: sha512-h4BOwyZ0cxqKw1Ftk6aQ/Gp7vEFaaq+AbhZWRbqGJCnBKXnAsf0+M8JRoRJxMqhOAxvl5dRje+eWKCGvO0enTg==}
+  /lucide-react/0.104.0_sh5qlbywuemxd2y3xkrw2y2kr4:
+    resolution: {integrity: sha512-ShElF954XPuBmcH8tlLBI0jeav1lpsLLDDgpqjrMhwclAU8Q2+n3ile4FgJ48Qkf9zRLWQF3/Dj9MMr5cTauQg==}
     peerDependencies:
       prop-types: ^15.7.2
       react: ^16.5.1 || ^17.0.0 || ^18.0.0
