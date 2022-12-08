@@ -2,6 +2,7 @@ import type { LoaderArgs, MetaFunction, TypedResponse } from "@remix-run/node";
 import { json } from "@remix-run/node";
 import { useLoaderData } from "@remix-run/react";
 import { Button, Modal } from "flowbite-react";
+import { AnimatePresence, motion } from "framer-motion";
 import { nanoid } from "nanoid";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { twMerge } from "tailwind-merge";
@@ -26,6 +27,17 @@ interface ILearnIdPageData {
 export function links() {
   return [...questionRenderLinks()];
 }
+
+const motionProps = {
+  initial: { x: "100%", opacity: 0 },
+  animate: { x: 0, opacity: 1 },
+  exit: { x: "-100%", opacity: 0 },
+  transition: {
+    // x: { type: "spring", stiffness: 30, damping: 30 },
+    x: { type: "spring", duration: 0.25, bounce: 0.1 },
+    opacity: { duration: 0.2 },
+  },
+};
 
 export const meta: MetaFunction = ({
   data,
@@ -216,102 +228,119 @@ export default function LearnId() {
       {/* Nav가 들어갈 자리 */}
       <div className="py-10">
         <header>
-          <div className="flex items-end justify-between gap-3 px-4 mx-auto max-w-7xl sm:px-6 lg:px-8">
+          <div className="flex items-end justify-between gap-3 px-4 mx-auto max-w-7xl">
             <h1 className="text-3xl font-bold leading-tight tracking-tight text-gray-900">
               {name}
             </h1>
             <span className="text-sm text-gray-500">{i}번째</span>
           </div>
         </header>
-        <main className="flex flex-col mx-auto sm:gap-10 max-w-7xl sm:px-6 lg:px-8 sm:flex-row">
-          {phase === "question" ? (
-            <>
-              <div className="flex-1 p-4 mb-3 sm:px-0">
-                <QuestionInput
-                  question={currentQuestion.question}
-                  onSuccess={handleSuccessQuestion}
-                  onFail={handleFailQuestion}
-                />
-              </div>
-              <div className="p-4 border-l sm:p-6">
-                <div className="flex flex-col gap-3">
-                  <Button color="gray" onClick={refreshQuestion}>
-                    패스
-                  </Button>
-                  <Button color="gray" onClick={() => setShowAnswerModal(true)}>
-                    정답 보기
-                  </Button>
-                  <Modal
-                    show={showAnswerModal}
-                    onClose={() => setShowAnswerModal(false)}
-                  >
-                    <Modal.Header>정답</Modal.Header>
-                    <Modal.Body>
-                      <div className="space-y-6">
-                        <pre className="overflow-auto text-xs leading-relaxed text-gray-500 dark:text-gray-400">
-                          {JSON.stringify(currentQuestion.question, null, 2)}
-                        </pre>
-                      </div>
-                    </Modal.Body>
-                    {/* <Modal.Footer>
+        <main className="relative mx-auto max-w-7xl sm:px-6 lg:px-8 ">
+          <AnimatePresence initial={false}>
+            {phase === "question" ? (
+              <motion.div
+                className="absolute left-0 right-0 flex flex-col sm:flex-row"
+                key="question"
+                {...motionProps}
+              >
+                <div className="flex-1 p-4 mb-3 ">
+                  <QuestionInput
+                    question={currentQuestion.question}
+                    onSuccess={handleSuccessQuestion}
+                    onFail={handleFailQuestion}
+                  />
+                </div>
+                <div className="p-4 border-l">
+                  <div className="flex flex-col gap-3">
+                    <Button color="gray" onClick={refreshQuestion}>
+                      패스
+                    </Button>
+                    <Button
+                      color="gray"
+                      onClick={() => setShowAnswerModal(true)}
+                    >
+                      정답 보기
+                    </Button>
+                    <Modal
+                      show={showAnswerModal}
+                      onClose={() => setShowAnswerModal(false)}
+                    >
+                      <Modal.Header>정답</Modal.Header>
+                      <Modal.Body>
+                        <div className="space-y-6">
+                          <pre className="overflow-auto text-xs leading-relaxed text-gray-500 dark:text-gray-400">
+                            {JSON.stringify(currentQuestion.question, null, 2)}
+                          </pre>
+                        </div>
+                      </Modal.Body>
+                      {/* <Modal.Footer>
                       <Button onClick={onClick}>I accept</Button>
                       <Button color="gray" onClick={onClick}>
                         Decline
                       </Button>
                     </Modal.Footer> */}
-                  </Modal>
-                </div>
-              </div>
-            </>
-          ) : (
-            <div className="flex flex-col gap-3 p-4 mt-6 sm:p-0">
-              <h2
-                className={twMerge(
-                  "text-2xl mb-1 font-medium",
-                  result.isSuccess ? "text-green-600" : "text-red-600"
-                )}
-              >
-                {result.isSuccess ? "정답" : "오답"}
-              </h2>
-
-              <Render>{result.question}</Render>
-              <div>
-                {result.isSuccess ? (
-                  <p className="text-green-500">{result.given}</p>
-                ) : (
-                  <div>
-                    <p className="text-red-500">
-                      <span>입력: </span>
-                      <span>{result.given}</span>
-                    </p>
-                    <p>
-                      <span>정답: </span>
-                      <span>{result.actual}</span>
-                    </p>
+                    </Modal>
                   </div>
-                )}
-              </div>
-              <div className="flex flex-col gap-3 sm:flex-row">
-                <Button ref={nextButton} color="gray" onClick={handleNextClick}>
-                  다음
-                </Button>
-                {!result.isSuccess && (
-                  <Button color="gray" onClick={handleAgainClick}>
-                    다시 풀기
+                </div>
+              </motion.div>
+            ) : (
+              <motion.div
+                key="result"
+                {...motionProps}
+                className="absolute left-0 right-0 flex flex-col gap-3 p-4 mt-6"
+              >
+                <h2
+                  className={twMerge(
+                    "text-2xl mb-1 font-medium",
+                    result.isSuccess ? "text-green-600" : "text-red-600"
+                  )}
+                >
+                  {result.isSuccess ? "정답" : "오답"}
+                </h2>
+
+                <Render>{result.question}</Render>
+                <div>
+                  {result.isSuccess ? (
+                    <p className="text-green-500">{result.given}</p>
+                  ) : (
+                    <div>
+                      <p className="text-red-500">
+                        <span>입력: </span>
+                        <span>{result.given}</span>
+                      </p>
+                      <p>
+                        <span>정답: </span>
+                        <span>{result.actual}</span>
+                      </p>
+                    </div>
+                  )}
+                </div>
+                <div className="flex flex-col gap-3 sm:flex-row">
+                  <Button
+                    ref={nextButton}
+                    color="gray"
+                    onClick={handleNextClick}
+                  >
+                    다음
                   </Button>
-                )}
-                {result.isSuccess ? (
-                  <Button color="gray" onClick={handleRegardAsFailure}>
-                    오답으로 처리
-                  </Button>
-                ) : (
-                  <Button color="gray" onClick={handleRegardAsSuccess}>
-                    정답으로 처리
-                  </Button>
-                )}
-              </div>
-            </div>
-          )}
+                  {!result.isSuccess && (
+                    <Button color="gray" onClick={handleAgainClick}>
+                      다시 풀기
+                    </Button>
+                  )}
+                  {result.isSuccess ? (
+                    <Button color="gray" onClick={handleRegardAsFailure}>
+                      오답으로 처리
+                    </Button>
+                  ) : (
+                    <Button color="gray" onClick={handleRegardAsSuccess}>
+                      정답으로 처리
+                    </Button>
+                  )}
+                </div>
+              </motion.div>
+            )}
+          </AnimatePresence>
         </main>
       </div>
     </div>
