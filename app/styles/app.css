@@ -4364,10 +4364,6 @@ body {
     border-radius: 0.5rem;
   }
 
-  .sm\:p-0 {
-    padding: 0px;
-  }
-
   .sm\:px-6 {
     padding-left: 1.5rem;
     padding-right: 1.5rem;

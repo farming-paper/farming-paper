@@ -13,7 +13,7 @@ import type {
   Content,
   IFailArgs,
   ISuccessArgs,
-  Question,
+  Question
 } from "~/question/types";
 import type { QuestionId } from "~/question/utils";
 import { getQuestionGroups } from "~/question/utils";
@@ -210,14 +210,14 @@ export default function LearnId() {
   }, []);
 
   const handleRegardAsSuccess = useCallback(() => {
-    generator.updateWeight(currentQuestion.index, 100);
+    generator.updateWeight(currentQuestion.index, 0.01);
     refreshQuestion();
     setPhase("question");
     setI((prev) => prev + 1);
   }, [currentQuestion.index, generator, refreshQuestion]);
 
   const handleRegardAsFailure = useCallback(() => {
-    generator.updateWeight(currentQuestion.index, 0.01);
+    generator.updateWeight(currentQuestion.index, 100);
     refreshQuestion();
     setPhase("question");
     setI((prev) => prev + 1);

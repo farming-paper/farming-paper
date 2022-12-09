@@ -1,5 +1,5 @@
 import { Button, Label, TextInput } from "flowbite-react";
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useRef, useState } from "react";
 import { isBagEqual } from "~/util";
 import Render from "../Render";
 import type { QuestionInputProps, ShortMultiAnswerQuestion } from "../types";
@@ -22,12 +22,6 @@ const ShortMultiAnswerQuestionInput: React.FC<
 
     setValue("");
   }, [onFail, onSuccess, question.correct, value]);
-
-  useEffect(() => {
-    if (value === "") {
-      inputRef.current?.focus();
-    }
-  }, [value]);
 
   return (
     <div>
