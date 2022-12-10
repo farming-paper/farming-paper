@@ -423,14 +423,6 @@ export const questions: Question[] = [
   {
     type: "short_order",
     message: [
-      "___ 추출법: 모집단을 구성하는 집락들의 규모가 심하게 차이 날 경우에 동일한 확률로 뽑지 않고 각 집락의 규모측도에 비례하여 뽑는 방법",
-    ],
-    correct: ["확률비례"],
-    tags: ["표본조사론"],
-  },
-  {
-    type: "short_order",
-    message: [
       "___ : 조사항목과 상관관계가 높은 것을 채택하면 추정의 효율이 높아짐",
     ],
     correct: ["규모측도"],
