@@ -19,7 +19,7 @@ specifiers:
   '@types/react-dom': ^18.0.9
   '@typescript-eslint/eslint-plugin': ^5.44.0
   '@typescript-eslint/parser': ^5.44.0
-  '@vercel/analytics': ^0.1.5
+  '@vercel/analytics': ^0.1.6
   '@vercel/node': ^2.6.3
   '@vitejs/plugin-react': ^3.0.0
   autoprefixer: ^10.4.13
@@ -55,7 +55,7 @@ dependencies:
   '@remix-run/react': 1.7.6_biqbaboplfbrettd7655fr4n2y
   '@remix-run/vercel': 1.7.6_lplf4c5c6rnz4qhkbn46yx7ery
   '@types/inquirer': 9.0.3
-  '@vercel/analytics': 0.1.5_react@18.2.0
+  '@vercel/analytics': 0.1.6_react@18.2.0
   '@vercel/node': 2.6.3
   '@vitejs/plugin-react': 3.0.0_vite@3.2.4
   flowbite: 1.5.4
@@ -2729,8 +2729,8 @@ packages:
       eslint-visitor-keys: 3.3.0
     dev: true
 
-  /@vercel/analytics/0.1.5_react@18.2.0:
-    resolution: {integrity: sha512-/k9N8Ea3Yc5A52GlkjzUEbi2vE/izClrOf++ryBkxEfrZM/OZwtHkdNw/QExZ1h/B67RCZLK7bCOnKKrhG7gTg==}
+  /@vercel/analytics/0.1.6_react@18.2.0:
+    resolution: {integrity: sha512-zNd5pj3iDvq8IMBQHa1YRcIteiw6ZiPB8AsONHd8ieFXlNpLqhXfIYnf4WvTfZ7S1NSJ++mIM14aJnNac/VMXQ==}
     peerDependencies:
       react: ^16.8||^17||^18
     dependencies:
