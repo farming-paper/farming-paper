@@ -27,7 +27,7 @@
     "@vercel/node": "^2.6.3",
     "@vitejs/plugin-react": "^2.2.0",
     "flowbite": "^1.5.4",
-    "flowbite-react": "^0.3.5",
+    "flowbite-react": "^0.3.7",
     "framer-motion": "^7.6.19",
     "inquirer": "^9.1.4",
     "katex": "^0.16.3",

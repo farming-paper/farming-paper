@@ -26,7 +26,7 @@ specifiers:
   concurrently: ^7.6.0
   eslint: ^8.28.0
   flowbite: ^1.5.4
-  flowbite-react: ^0.3.5
+  flowbite-react: ^0.3.7
   framer-motion: ^7.6.19
   happy-dom: ^7.7.0
   inquirer: ^9.1.4
@@ -59,7 +59,7 @@ dependencies:
   '@vercel/node': 2.6.3
   '@vitejs/plugin-react': 2.2.0_vite@3.2.4
   flowbite: 1.5.4
-  flowbite-react: 0.3.5_d2xq2etesdcgquyy3sh4sawveq
+  flowbite-react: 0.3.7_d2xq2etesdcgquyy3sh4sawveq
   framer-motion: 7.6.19_biqbaboplfbrettd7655fr4n2y
   inquirer: 9.1.4
   katex: 0.16.3
@@ -5494,8 +5494,8 @@ packages:
     engines: {node: '>=0.4.0'}
     dev: true
 
-  /flowbite-react/0.3.5_d2xq2etesdcgquyy3sh4sawveq:
-    resolution: {integrity: sha512-X2unmmXmS7DZbGTk+C7jf0qrtpPu4i/yo8OeHHd1XO5V5TAUjhAyYIcy3RwKjKS+WC+Fj/rMHe5QKBF7E0ryoA==}
+  /flowbite-react/0.3.7_d2xq2etesdcgquyy3sh4sawveq:
+    resolution: {integrity: sha512-vnDlbuJubo66O5U4Fj9pkAhsaO+uWjR4qShlbIK+6qS+VbfZX5xaDNKHg98WkEhfyXsL8/03eSQZcuE073SvwA==}
     peerDependencies:
       flowbite: ^1
       react: ^18
