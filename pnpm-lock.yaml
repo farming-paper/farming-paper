@@ -31,7 +31,7 @@ specifiers:
   happy-dom: ^7.7.0
   inquirer: ^9.1.4
   jsdom: ^20.0.3
-  katex: ^0.16.3
+  katex: ^0.16.4
   lucide-react: ^0.104.0
   marked: ^4.2.3
   nanoid: ^4.0.0
@@ -62,7 +62,7 @@ dependencies:
   flowbite-react: 0.3.5_d2xq2etesdcgquyy3sh4sawveq
   framer-motion: 7.6.19_biqbaboplfbrettd7655fr4n2y
   inquirer: 9.1.4
-  katex: 0.16.3
+  katex: 0.16.4
   lucide-react: 0.104.0_sh5qlbywuemxd2y3xkrw2y2kr4
   marked: 4.2.3
   nanoid: 4.0.0
@@ -6816,8 +6816,8 @@ packages:
       object.assign: 4.1.4
     dev: true
 
-  /katex/0.16.3:
-    resolution: {integrity: sha512-3EykQddareoRmbtNiNEDgl3IGjryyrp2eg/25fHDEnlHymIDi33bptkMv6K4EOC2LZCybLW/ZkEo6Le+EM9pmA==}
+  /katex/0.16.4:
+    resolution: {integrity: sha512-WudRKUj8yyBeVDI4aYMNxhx5Vhh2PjpzQw1GRu/LVGqL4m1AxwD1GcUp0IMbdJaf5zsjtj8ghP0DOQRYhroNkw==}
     hasBin: true
     dependencies:
       commander: 8.3.0
