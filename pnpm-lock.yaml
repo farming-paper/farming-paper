@@ -13,7 +13,7 @@ specifiers:
   '@testing-library/react': ^13.4.0
   '@types/inquirer': ^9.0.3
   '@types/katex': ^0.14.0
-  '@types/marked': ^4.0.7
+  '@types/marked': ^4.0.8
   '@types/node': ^18.11.9
   '@types/react': ^18.0.25
   '@types/react-dom': ^18.0.9
@@ -33,7 +33,7 @@ specifiers:
   jsdom: ^20.0.3
   katex: ^0.16.3
   lucide-react: ^0.104.0
-  marked: ^4.2.3
+  marked: ^4.2.4
   nanoid: ^4.0.0
   postcss: ^8.4.19
   prop-types: ^15.8.1
@@ -64,7 +64,7 @@ dependencies:
   inquirer: 9.1.4
   katex: 0.16.3
   lucide-react: 0.104.0_sh5qlbywuemxd2y3xkrw2y2kr4
-  marked: 4.2.3
+  marked: 4.2.4
   nanoid: 4.0.0
   prop-types: 15.8.1
   react: 18.2.0
@@ -82,7 +82,7 @@ devDependencies:
   '@testing-library/jest-dom': 5.16.5
   '@testing-library/react': 13.4.0_biqbaboplfbrettd7655fr4n2y
   '@types/katex': 0.14.0
-  '@types/marked': 4.0.7
+  '@types/marked': 4.0.8
   '@types/node': 18.11.9
   '@types/react': 18.0.25
   '@types/react-dom': 18.0.9
@@ -2269,8 +2269,8 @@ packages:
       '@types/node': 18.11.9
     dev: true
 
-  /@types/marked/4.0.7:
-    resolution: {integrity: sha512-eEAhnz21CwvKVW+YvRvcTuFKNU9CV1qH+opcgVK3pIMI6YZzDm6gc8o2vHjldFk6MGKt5pueSB7IOpvpx5Qekw==}
+  /@types/marked/4.0.8:
+    resolution: {integrity: sha512-HVNzMT5QlWCOdeuBsgXP8EZzKUf0+AXzN+sLmjvaB3ZlLqO+e4u0uXrdw9ub69wBKFs+c6/pA4r9sy6cCDvImw==}
     dev: true
 
   /@types/mdast/3.0.10:
@@ -7062,8 +7062,8 @@ packages:
     engines: {node: '>=0.10.0'}
     dev: true
 
-  /marked/4.2.3:
-    resolution: {integrity: sha512-slWRdJkbTZ+PjkyJnE30Uid64eHwbwa1Q25INCAYfZlK4o6ylagBy/Le9eWntqJFoFT93ikUKMv47GZ4gTwHkw==}
+  /marked/4.2.4:
+    resolution: {integrity: sha512-Wcc9ikX7Q5E4BYDPvh1C6QNSxrjC9tBgz+A/vAhp59KXUgachw++uMvMKiSW8oA85nopmPZcEvBoex/YLMsiyA==}
     engines: {node: '>= 12'}
     hasBin: true
     dev: false
