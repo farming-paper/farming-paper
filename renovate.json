@@ -1,6 +1,6 @@
 {
   "$schema": "https://docs.renovatebot.com/renovate-schema.json",
-  "extends": ["config:base"],
+  "extends": ["config:base", "group:allNonMajor"],
   "rangeStrategy": "bump",
   "prHourlyLimit": 0,
   "prConcurrentLimit": 0
