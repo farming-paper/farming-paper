@@ -1,7 +1,7 @@
 lockfileVersion: 5.4
 
 specifiers:
-  '@headlessui/react': ^1.7.4
+  '@headlessui/react': ^1.7.5
   '@heroicons/react': ^2.0.13
   '@remix-run/dev': ^1.7.6
   '@remix-run/eslint-config': ^1.7.6
@@ -49,7 +49,7 @@ specifiers:
   vitest: ^0.25.2
 
 dependencies:
-  '@headlessui/react': 1.7.4_biqbaboplfbrettd7655fr4n2y
+  '@headlessui/react': 1.7.5_biqbaboplfbrettd7655fr4n2y
   '@heroicons/react': 2.0.13_react@18.2.0
   '@remix-run/node': 1.7.6_biqbaboplfbrettd7655fr4n2y
   '@remix-run/react': 1.7.6_biqbaboplfbrettd7655fr4n2y
@@ -1596,8 +1596,8 @@ packages:
     resolution: {integrity: sha512-k2Ty1JcVojjJFwrg/ThKi2ujJ7XNLYaFGNB/bWT9wGR+oSMJHMa5w+CUq6p/pVrKeNNgA7pCqEcjSnHVoqJQFw==}
     dev: true
 
-  /@headlessui/react/1.7.4_biqbaboplfbrettd7655fr4n2y:
-    resolution: {integrity: sha512-D8n5yGCF3WIkPsjEYeM8knn9jQ70bigGGb5aUvN6y4BGxcT3OcOQOKcM3zRGllRCZCFxCZyQvYJF6ZE7bQUOyQ==}
+  /@headlessui/react/1.7.5_biqbaboplfbrettd7655fr4n2y:
+    resolution: {integrity: sha512-UZSxOfA0CYKO7QDT5OGlFvesvlR1SKkawwSjwQJwt7XQItpzRKdE3ZUQxHcg4LEz3C0Wler2s9psdb872ynwrQ==}
     engines: {node: '>=10'}
     peerDependencies:
       react: ^16 || ^17 || ^18
