@@ -32,7 +32,7 @@ specifiers:
   inquirer: ^9.1.4
   jsdom: ^20.0.3
   katex: ^0.16.3
-  lucide-react: ^0.104.0
+  lucide-react: ^0.104.1
   marked: ^4.2.3
   nanoid: ^4.0.0
   postcss: ^8.4.19
@@ -63,7 +63,7 @@ dependencies:
   framer-motion: 7.6.19_biqbaboplfbrettd7655fr4n2y
   inquirer: 9.1.4
   katex: 0.16.3
-  lucide-react: 0.104.0_sh5qlbywuemxd2y3xkrw2y2kr4
+  lucide-react: 0.104.1_sh5qlbywuemxd2y3xkrw2y2kr4
   marked: 4.2.3
   nanoid: 4.0.0
   prop-types: 15.8.1
@@ -7167,8 +7167,8 @@ packages:
       yallist: 4.0.0
     dev: true
 
-  /lucide-react/0.104.0_sh5qlbywuemxd2y3xkrw2y2kr4:
-    resolution: {integrity: sha512-ShElF954XPuBmcH8tlLBI0jeav1lpsLLDDgpqjrMhwclAU8Q2+n3ile4FgJ48Qkf9zRLWQF3/Dj9MMr5cTauQg==}
+  /lucide-react/0.104.1_sh5qlbywuemxd2y3xkrw2y2kr4:
+    resolution: {integrity: sha512-BKvhulnLKmBj+6pqUN5ViYk4a5fabMgc4B0a4ZLUnbRqkDDWH3h7Iet6U4WbesJzjWauQrXUlEvQCe5XpFuRnw==}
     peerDependencies:
       prop-types: ^15.7.2
       react: ^16.5.1 || ^17.0.0 || ^18.0.0
