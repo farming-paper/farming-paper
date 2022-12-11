@@ -20,7 +20,7 @@ specifiers:
   '@typescript-eslint/eslint-plugin': ^5.44.0
   '@typescript-eslint/parser': ^5.44.0
   '@vercel/analytics': ^0.1.5
-  '@vercel/node': ^2.6.3
+  '@vercel/node': ^2.8.0
   '@vitejs/plugin-react': ^2.2.0
   autoprefixer: ^10.4.13
   concurrently: ^7.6.0
@@ -53,10 +53,10 @@ dependencies:
   '@heroicons/react': 2.0.13_react@18.2.0
   '@remix-run/node': 1.7.6_biqbaboplfbrettd7655fr4n2y
   '@remix-run/react': 1.7.6_biqbaboplfbrettd7655fr4n2y
-  '@remix-run/vercel': 1.7.6_lplf4c5c6rnz4qhkbn46yx7ery
+  '@remix-run/vercel': 1.7.6_ldwa5totof75qvkyrgfna3owpu
   '@types/inquirer': 9.0.3
   '@vercel/analytics': 0.1.5_react@18.2.0
-  '@vercel/node': 2.6.3
+  '@vercel/node': 2.8.0
   '@vitejs/plugin-react': 2.2.0_vite@3.2.4
   flowbite: 1.5.4
   flowbite-react: 0.3.5_d2xq2etesdcgquyy3sh4sawveq
@@ -1983,14 +1983,14 @@ packages:
       set-cookie-parser: 2.5.1
       source-map: 0.7.4
 
-  /@remix-run/vercel/1.7.6_lplf4c5c6rnz4qhkbn46yx7ery:
+  /@remix-run/vercel/1.7.6_ldwa5totof75qvkyrgfna3owpu:
     resolution: {integrity: sha512-GMRNYzEI0Yyjl0JO1HQcZvAffLljR5VEkTJ/UK6RB5xfjb8gbzrIGyqJfI8X2L9L1Y3vE6JghX6Aw0S1NF8oOw==}
     engines: {node: '>=14'}
     peerDependencies:
       '@vercel/node': ^1.8.3 || ^2.4.0
     dependencies:
       '@remix-run/node': 1.7.6_biqbaboplfbrettd7655fr4n2y
-      '@vercel/node': 2.6.3
+      '@vercel/node': 2.8.0
     transitivePeerDependencies:
       - react
       - react-dom
@@ -2573,20 +2573,20 @@ packages:
       react: 18.2.0
     dev: false
 
-  /@vercel/build-utils/5.5.8:
-    resolution: {integrity: sha512-DDgud8URl951OKbH9pwGs1MgR47UXSvNW1s+ftOjMKlw/qwDdCbIUclVKMcJc3MhLdnvRoo/a12f01b7dpwZDw==}
+  /@vercel/build-utils/5.7.0:
+    resolution: {integrity: sha512-hOcb7HxYza5LtZLcmh9VkShV3hLaLlZarLBqQmMR/oTlvgIybeW6LjrPpFiu2hCCf9VbkdBR1OFmDh8EydFswQ==}
     dev: false
 
   /@vercel/node-bridge/3.1.2:
     resolution: {integrity: sha512-dgcLXug0IqUeRsywf0G8IrhUFcgw+GYj+EZB4JneglKSofFBh3Xy/t7KfBUxLlKnoq6kyGYJvTmAVB1YBt11qw==}
     dev: false
 
-  /@vercel/node/2.6.3:
-    resolution: {integrity: sha512-zLwv+V9VnMi3Hxrg098sGU0v92+eocwFtD5ZIqVoCiIVEmv9s3TzK+nkF0dYIsy+IW/AV8rcG8qPbgtSHvapIA==}
+  /@vercel/node/2.8.0:
+    resolution: {integrity: sha512-Vji7/j1boSGNsPS3Zw5Av21dAQMUcuci9l9OI2JhJ7kG1NGT3+8k83Dy46ZI1Q9+5m+ibUxVVzfsS7Fr6oYVYA==}
     dependencies:
       '@edge-runtime/vm': 2.0.0
       '@types/node': 14.18.33
-      '@vercel/build-utils': 5.5.8
+      '@vercel/build-utils': 5.7.0
       '@vercel/node-bridge': 3.1.2
       '@vercel/static-config': 2.0.6
       edge-runtime: 2.0.0
