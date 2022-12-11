@@ -220,7 +220,7 @@ export const questions: Question[] = [
   {
     type: "short_order",
     message: ["P파: ___ 의 ___.", "QRS군: ___ 의 ___.", "T파: ___ 의 ___."],
-    correct: ["심방", "극", "심실", "탈분극", "심실", "재분극"],
+    correct: ["심방", "탈분극", "심실", "탈분극", "심실", "재분극"],
     tags: ["운동과영양"],
   },
   {
@@ -473,7 +473,7 @@ export const questions: Question[] = [
     tags: ["운동과영양"],
   },
   {
-    type: "short_order",
+    type: "short_multi",
     message: [
       "운동 처방의 작성 시 운동의 가부와 강도에 관한 안전 한계치 및 유효 한계치를 결정한 후, 개인에게 알맞은 ___, ___, ___, ___ 등을 포함한 운동처방 프로그램을 작성.",
     ],
@@ -1140,6 +1140,7 @@ export const questions: Question[] = [
       "고혈압: 수축기 혈압 ___ mmHg 이상 또는 이완기 ___ mmHg 이상 또는 혈압조절약 투약 중",
     ],
     correct: ["102", "90", "88", "80", "150", "40", "50", "100", "130", "85"],
+    weight: 10,
     tags: ["운동과영양"],
   },
   {
@@ -1304,6 +1305,7 @@ export const questions: Question[] = [
       "HDL ___ 이하",
     ],
     correct: ["240", "250", "160", "35"],
+    weight: 10,
     tags: ["운동과영양"],
   },
 ];
