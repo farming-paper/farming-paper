@@ -25,7 +25,7 @@ specifiers:
   autoprefixer: ^10.4.13
   concurrently: ^7.6.0
   eslint: ^8.28.0
-  flowbite: ^1.5.4
+  flowbite: ^1.5.5
   flowbite-react: ^0.3.5
   framer-motion: ^7.6.19
   happy-dom: ^7.7.0
@@ -58,8 +58,8 @@ dependencies:
   '@vercel/analytics': 0.1.5_react@18.2.0
   '@vercel/node': 2.6.3
   '@vitejs/plugin-react': 2.2.0_vite@3.2.4
-  flowbite: 1.5.4
-  flowbite-react: 0.3.5_d2xq2etesdcgquyy3sh4sawveq
+  flowbite: 1.5.5
+  flowbite-react: 0.3.5_4mjg54ei2dowsrsa2xhuiwvify
   framer-motion: 7.6.19_biqbaboplfbrettd7655fr4n2y
   inquirer: 9.1.4
   katex: 0.16.3
@@ -5494,7 +5494,7 @@ packages:
     engines: {node: '>=0.4.0'}
     dev: true
 
-  /flowbite-react/0.3.5_d2xq2etesdcgquyy3sh4sawveq:
+  /flowbite-react/0.3.5_4mjg54ei2dowsrsa2xhuiwvify:
     resolution: {integrity: sha512-X2unmmXmS7DZbGTk+C7jf0qrtpPu4i/yo8OeHHd1XO5V5TAUjhAyYIcy3RwKjKS+WC+Fj/rMHe5QKBF7E0ryoA==}
     peerDependencies:
       flowbite: ^1
@@ -5506,7 +5506,7 @@ packages:
       '@floating-ui/react-dom-interactions': 0.9.3_2zx2umvpluuhvlq44va5bta2da
       classnames: 2.3.2
       commitizen: 4.2.5
-      flowbite: 1.5.4
+      flowbite: 1.5.5
       react: 18.2.0
       react-dom: 18.2.0_react@18.2.0
       react-icons: 4.6.0_react@18.2.0
@@ -5518,8 +5518,8 @@ packages:
       - '@types/react'
     dev: false
 
-  /flowbite/1.5.4:
-    resolution: {integrity: sha512-A4VTeJE+aHSbwrMzWvpTADhNgX8Njpb3DqRL26pFkOupklPg8cmNstZK8cXrFnBPxomOiX/OazZnhQM1BIZADQ==}
+  /flowbite/1.5.5:
+    resolution: {integrity: sha512-LWJteH6zO+6BrnerH6GEU9OFpjWmkCWi9BD3XnJdBOVevNnt7u8gW+S+4keqD5OGpHu+QU860pLzNKeNlhlf6g==}
     dependencies:
       '@popperjs/core': 2.11.6
       mini-svg-data-uri: 1.4.4
