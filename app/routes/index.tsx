@@ -9,11 +9,11 @@ export default function Index() {
 
   const links = useMemo(
     () =>
-      [...questions.entries()].map(([key, { name }]) => (
+      [...questions.entries()].map(([key, { name, buttonContent }]) => (
         <li key={key}>
           <Link to={`/learn/${key}`}>
-            <Button color="gray">
-              {name}
+            <Button color="gray" className="font-normal">
+              {buttonContent ? buttonContent : name}
               <ArrowRightIcon className="w-4 h-4 ml-2"></ArrowRightIcon>
             </Button>
           </Link>

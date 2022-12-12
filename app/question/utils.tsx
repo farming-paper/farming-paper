@@ -1,6 +1,7 @@
 import { deepclone } from "~/util";
 import type { MapKey } from "~/util-type";
 import { questions as adspQuestions } from "./data/adsp";
+import { questions as demoQuestions } from "./data/demo";
 import { questions as economicsQuestions } from "./data/economics";
 import { questions as enQuestions } from "./data/exercise-and-nutrition";
 import { questions as msQuestions } from "./data/mathematical-statistics";
@@ -9,6 +10,14 @@ import { questions as sstQuestions } from "./data/sample-survey-theory";
 
 export function getQuestionGroups() {
   return new Map([
+    [
+      "demo",
+      {
+        name: "데모",
+        questions: deepclone(demoQuestions),
+        buttonContent: <span className="font-bold text-blue-700">데모</span>,
+      },
+    ],
     ["adsp", { name: "ADSP", questions: deepclone(adspQuestions) }],
     ["economics", { name: "경제학", questions: deepclone(economicsQuestions) }],
     ["statistics", { name: "수리통계학", questions: deepclone(msQuestions) }],
