@@ -2,10 +2,10 @@ import { Label, ListGroup } from "flowbite-react";
 import { useCallback, useEffect, useMemo, useRef } from "react";
 import { deepclone, shuffle } from "~/util";
 import Render from "../Render";
-import type { PickDifferentQuestion, QuestionInputProps } from "../types";
+import type { IPickDifferentQuestion, QuestionInputProps } from "../types";
 
 const PickDifferentQuestionInput: React.FC<
-  QuestionInputProps<PickDifferentQuestion>
+  QuestionInputProps<IPickDifferentQuestion>
 > = ({ question, onFail, onSuccess }) => {
   const inputRef = useRef<HTMLInputElement>(null);
 

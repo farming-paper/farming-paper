@@ -2,10 +2,10 @@ import { Button, Label, TextInput } from "flowbite-react";
 import { useCallback, useRef, useState } from "react";
 import { isBagEqual } from "~/util";
 import Render from "../Render";
-import type { QuestionInputProps, ShortMultiAnswerQuestion } from "../types";
+import type { IShortMultiAnswerQuestion, QuestionInputProps } from "../types";
 
 const ShortMultiAnswerQuestionInput: React.FC<
-  QuestionInputProps<ShortMultiAnswerQuestion>
+  QuestionInputProps<IShortMultiAnswerQuestion>
 > = ({ question, onFail, onSuccess }) => {
   const [value, setValue] = useState("");
 

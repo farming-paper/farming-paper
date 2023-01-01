@@ -1,9 +1,9 @@
 import { Button, Label, TextInput } from "flowbite-react";
 import { useCallback, useRef, useState } from "react";
 import Render from "../Render";
-import type { QuestionInputProps, ShortQuestion } from "../types";
+import type { IShortQuestion, QuestionInputProps } from "../types";
 
-const ShortQuestionInput: React.FC<QuestionInputProps<ShortQuestion>> = ({
+const ShortQuestionInput: React.FC<QuestionInputProps<IShortQuestion>> = ({
   question,
   onFail,
   onSuccess,

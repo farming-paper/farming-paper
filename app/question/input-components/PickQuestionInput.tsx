@@ -2,9 +2,9 @@ import { Label, ListGroup } from "flowbite-react";
 import { useCallback, useEffect, useMemo, useRef } from "react";
 import { shuffle } from "~/util";
 import Render from "../Render";
-import type { PickQuestion, QuestionInputProps } from "../types";
+import type { IPickQuestion, QuestionInputProps } from "../types";
 
-const PickQuestionInput: React.FC<QuestionInputProps<PickQuestion>> = ({
+const PickQuestionInput: React.FC<QuestionInputProps<IPickQuestion>> = ({
   question,
   onFail,
   onSuccess,

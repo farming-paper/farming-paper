@@ -3,7 +3,7 @@ export type Tag = `${number}일차` | "핵심 서브노트 110제" | string;
 
 export type Content = string | string[];
 
-export interface BaseQuestion {
+export interface IBaseQuestion {
   message: Content;
   weight?: number;
   category?: Category;
@@ -11,53 +11,53 @@ export interface BaseQuestion {
   ignoreWhitespace?: boolean;
 }
 
-export interface ShortQuestion extends BaseQuestion {
+export interface IShortQuestion extends IBaseQuestion {
   type: "short";
   correct: string;
 }
 
 // 답이 여러개이고, 순서가 중요함. ", " 등으로 구분함.
-export interface ShortOrderQuestion extends BaseQuestion {
+export interface IShortOrderQuestion extends IBaseQuestion {
   type: "short_order";
   correct: string[];
 }
 
-export interface ShortMultiAnswerQuestion extends BaseQuestion {
+export interface IShortMultiAnswerQuestion extends IBaseQuestion {
   type: "short_multi";
   correct: string[];
 }
 
-export interface PickOrderQuestion extends BaseQuestion {
+export interface IPickOrderQuestion extends IBaseQuestion {
   type: "pick_order";
   correct: string[];
   otherChoices?: string[];
 }
 
-export interface PickQuestion extends BaseQuestion {
+export interface IPickQuestion extends IBaseQuestion {
   type: "pick";
   correct: string;
   options: string[];
 }
 
-export interface PickMultiQuestion extends BaseQuestion {
+export interface IPickMultiQuestion extends IBaseQuestion {
   type: "pick_multi";
   correct: string[];
   options: string[];
 }
 
-export interface PickDifferentQuestion extends BaseQuestion {
+export interface IPickDifferentQuestion extends IBaseQuestion {
   type: "pick_different";
   pool: string[][];
 }
 
 export type Question =
-  | ShortQuestion
-  | ShortOrderQuestion
-  | ShortMultiAnswerQuestion
-  | PickDifferentQuestion
-  | PickQuestion
-  | PickMultiQuestion
-  | PickOrderQuestion;
+  | IShortQuestion
+  | IShortOrderQuestion
+  | IShortMultiAnswerQuestion
+  | IPickDifferentQuestion
+  | IPickQuestion
+  | IPickMultiQuestion
+  | IPickOrderQuestion;
 
 export interface IBaseProcessedArgs {
   given: string;
