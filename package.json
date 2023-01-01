@@ -6,7 +6,7 @@
   "sideEffects": false,
   "scripts": {
     "test": "vitest",
-    "main": "vite-node ./src/main.ts",
+    "main": "vite-node ./app/main.ts",
     "build": "npm run build:css && remix build",
     "dev": "concurrently -c bgBlue.bold,bgCyan.bold \"npm run dev:css\" \"remix dev\"",
     "build:css": "tailwindcss -m -i ./styles/app.css -o app/styles/app.css",
