@@ -25,10 +25,10 @@ export default function Index() {
   return (
     <div
       style={{ fontFamily: "system-ui, sans-serif", lineHeight: "1.4" }}
-      className="p-10"
+      className="p-4"
     >
-      <h1 className="mb-5 text-lg font-bold text-gray-900 dark:text-white">
-        파밍페이퍼 (가제)
+      <h1 className="mb-5 text-xl font-semibold text-gray-900 dark:text-white">
+        파밍페이퍼
       </h1>
       <p className="mb-2">
         문제를 풀 시간입니다. 아래 버튼을 눌러 문제를 푸세요.
