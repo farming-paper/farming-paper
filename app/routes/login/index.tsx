@@ -3,7 +3,6 @@ import type { LoaderArgs } from "@remix-run/server-runtime";
 import { json, redirect } from "@remix-run/server-runtime";
 import { createServerClient } from "@supabase/auth-helpers-remix";
 import { Button } from "antd";
-import { useEffect } from "react";
 import { getClientSideSupabaseConfig } from "~/config";
 import type { IOutletProps } from "~/types";
 
@@ -33,13 +32,8 @@ export const loader = async ({ request }: LoaderArgs) => {
   );
 };
 
-// app/routes/login.tsx
 export default function Login() {
   const props = useOutletContext<IOutletProps>();
-
-  useEffect(() => {
-    console.log("props", props);
-  }, [props]);
 
   const handleGoogleLogin = async () => {
     const { error } = await props.supabase.auth.signInWithOAuth({
