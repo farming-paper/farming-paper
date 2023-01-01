@@ -1,5 +1,5 @@
-import { Button, Label, TextInput } from "flowbite-react";
-import { useCallback, useRef, useState } from "react";
+import { Button, Input } from "antd";
+import { useCallback, useState } from "react";
 import { isBagEqual } from "~/util";
 import Render from "../Render";
 import type { IShortMultiAnswerQuestion, QuestionInputProps } from "../types";
@@ -8,8 +8,6 @@ const ShortMultiAnswerQuestionInput: React.FC<
   QuestionInputProps<IShortMultiAnswerQuestion>
 > = ({ question, onFail, onSuccess }) => {
   const [value, setValue] = useState("");
-
-  const inputRef = useRef<HTMLInputElement>(null);
 
   const onSubmit = useCallback(() => {
     const answerArray = value.split(",").map((s) => s.trim());
@@ -30,22 +28,18 @@ const ShortMultiAnswerQuestionInput: React.FC<
           {question.tags?.join(", ")}
         </div>
       ) : null}
-      <div className="mb-2 ">
-        <Label value="문제" />
-      </div>
+      <div className="mb-2 ">문제</div>
       <div className="mb-4">
         <Render>{question.message}</Render>
       </div>
       <div className="mb-2 ">
-        <Label htmlFor="base" value="정답" />
+        <label htmlFor="answer">정답</label>
       </div>
       <div className="flex items-center gap-3">
-        <TextInput
-          ref={inputRef}
-          id="base"
+        <Input
+          id="answer"
           type="text"
           className="flex-1"
-          sizing="lg"
           placeholder="정답을 입력하세요"
           onChange={(e) => setValue(e.target.value)}
           value={value}

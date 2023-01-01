@@ -1,19 +1,16 @@
-import { Outlet, useFetcher, useLoaderData } from "@remix-run/react";
+import { Outlet, useLoaderData } from "@remix-run/react";
 import type { LoaderArgs } from "@remix-run/server-runtime";
 import { json, redirect } from "@remix-run/server-runtime";
-import {
-  createBrowserClient,
-  createServerClient,
-} from "@supabase/auth-helpers-remix";
-import { useEffect, useState } from "react";
+import { createServerClient } from "@supabase/auth-helpers-remix";
+import { message } from "antd";
+import { useEffect, useRef } from "react";
 import BottomNav from "~/components/BottomNav";
 import { getClientSideSupabaseConfig } from "~/config";
-import type { Database } from "~/supabase/generated/supabase-types";
 
 export const loader = async ({ request }: LoaderArgs) => {
   const response = new Response();
-  const { anonKey, url } = getClientSideSupabaseConfig();
-  const supabase = createServerClient(url, anonKey, {
+  const { anonKey, url: supabaseUrl } = getClientSideSupabaseConfig();
+  const supabase = createServerClient(supabaseUrl, anonKey, {
     request,
     response,
   });
@@ -22,54 +19,34 @@ export const loader = async ({ request }: LoaderArgs) => {
     data: { session },
   } = await supabase.auth.getSession();
 
-  console.log("response", response);
+  const url = new URL(request.url);
+  const status = url.searchParams.get("status");
 
   if (!session) {
-    return redirect("/login", {
+    redirect("/login", {
       headers: response.headers,
     });
   }
 
-  return json(
-    { env: getClientSideSupabaseConfig(), session },
-    {
-      headers: response.headers,
-    }
-  );
+  return json({
+    isAlreadyLoggedIn: status === "already_logged_in",
+  });
 };
 
 const Authorized = () => {
-  const { env, session } = useLoaderData<typeof loader>();
-  const fetcher = useFetcher();
-
-  const [supabase] = useState(() =>
-    createBrowserClient<Database>(env.url, env.anonKey)
-  );
-
-  const serverAccessToken = session?.access_token;
+  const data = useLoaderData<typeof loader>();
+  const messaged = useRef(false);
 
   useEffect(() => {
-    const {
-      data: { subscription },
-    } = supabase.auth.onAuthStateChange((event, session) => {
-      if (session?.access_token !== serverAccessToken) {
-        // server and client are out of sync.
-        // Remix recalls active loaders after actions complete
-        fetcher.submit(null, {
-          method: "post",
-          action: "/handle-supabase-auth",
-        });
-      }
-    });
-
-    return () => {
-      subscription.unsubscribe();
-    };
-  }, [serverAccessToken, supabase, fetcher]);
+    if (data.isAlreadyLoggedIn && !messaged.current) {
+      message.info("이미 로그인되어 있습니다.");
+      messaged.current = true;
+    }
+  }, [data.isAlreadyLoggedIn]);
 
   return (
     <>
-      <Outlet context={{ supabase, session }} />
+      <Outlet />
       <BottomNav />
     </>
   );

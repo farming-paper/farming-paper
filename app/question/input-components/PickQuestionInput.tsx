@@ -1,4 +1,4 @@
-import { Label, ListGroup } from "flowbite-react";
+import { List } from "antd";
 import { useCallback, useEffect, useMemo, useRef } from "react";
 import { shuffle } from "~/util";
 import Render from "../Render";
@@ -40,19 +40,17 @@ const PickQuestionInput: React.FC<QuestionInputProps<IPickQuestion>> = ({
           {question.tags?.join(", ")}
         </div>
       ) : null}
-      <div className="mb-2 ">
-        <Label value="문제" />
-      </div>
+      <div className="mb-2 ">문제</div>
       <div className="mb-4">
         <Render>{question.message}</Render>
       </div>
-      <ListGroup>
-        {choices.map((choice) => (
-          <ListGroup.Item onClick={() => onSubmit(choice)} key={choice}>
-            {choice}
-          </ListGroup.Item>
-        ))}
-      </ListGroup>
+      <List
+        bordered
+        dataSource={choices}
+        renderItem={(choice) => (
+          <List.Item onClick={() => onSubmit(choice)}>{choice}</List.Item>
+        )}
+      />
     </div>
   );
 };

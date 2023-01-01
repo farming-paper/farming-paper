@@ -1,8 +1,37 @@
 import { useOutletContext } from "@remix-run/react";
-// import { Button } from "flowbite-react";
+import type { LoaderArgs } from "@remix-run/server-runtime";
+import { json, redirect } from "@remix-run/server-runtime";
+import { createServerClient } from "@supabase/auth-helpers-remix";
 import { Button } from "antd";
 import { useEffect } from "react";
+import { getClientSideSupabaseConfig } from "~/config";
 import type { IOutletProps } from "~/types";
+
+export const loader = async ({ request }: LoaderArgs) => {
+  const response = new Response();
+  const { anonKey, url } = getClientSideSupabaseConfig();
+  const supabase = createServerClient(url, anonKey, {
+    request,
+    response,
+  });
+
+  const {
+    data: { session },
+  } = await supabase.auth.getSession();
+
+  if (session) {
+    return redirect("/?status=already_logged_in", {
+      headers: response.headers,
+    });
+  }
+
+  return json(
+    { env: getClientSideSupabaseConfig(), session },
+    {
+      headers: response.headers,
+    }
+  );
+};
 
 // app/routes/login.tsx
 export default function Login() {

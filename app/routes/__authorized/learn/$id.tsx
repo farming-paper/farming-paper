@@ -1,7 +1,7 @@
 import type { LoaderArgs, MetaFunction, TypedResponse } from "@remix-run/node";
 import { json } from "@remix-run/node";
 import { useLoaderData } from "@remix-run/react";
-import { Button, Modal } from "flowbite-react";
+import { Button, Modal } from "antd";
 import { AnimatePresence, motion } from "framer-motion";
 import { nanoid } from "nanoid";
 import { useCallback, useEffect, useRef, useState } from "react";
@@ -13,7 +13,7 @@ import type {
   Content,
   IFailArgs,
   ISuccessArgs,
-  Question
+  Question,
 } from "~/question/types";
 import type { QuestionId } from "~/question/utils";
 import { getQuestionGroups } from "~/question/utils";
@@ -262,23 +262,16 @@ export default function LearnId() {
                       정답 보기
                     </Button>
                     <Modal
-                      show={showAnswerModal}
-                      onClose={() => setShowAnswerModal(false)}
+                      open={showAnswerModal}
+                      onOk={() => setShowAnswerModal(false)}
+                      onCancel={() => setShowAnswerModal(false)}
                     >
-                      <Modal.Header>정답</Modal.Header>
-                      <Modal.Body>
-                        <div className="space-y-6">
-                          <pre className="overflow-auto text-xs leading-relaxed text-gray-500 dark:text-gray-400">
-                            {JSON.stringify(currentQuestion.question, null, 2)}
-                          </pre>
-                        </div>
-                      </Modal.Body>
-                      {/* <Modal.Footer>
-                      <Button onClick={onClick}>I accept</Button>
-                      <Button color="gray" onClick={onClick}>
-                        Decline
-                      </Button>
-                    </Modal.Footer> */}
+                      <h2>정답</h2>
+                      <div className="space-y-6">
+                        <pre className="overflow-auto text-xs leading-relaxed text-gray-500 dark:text-gray-400">
+                          {JSON.stringify(currentQuestion.question, null, 2)}
+                        </pre>
+                      </div>
                     </Modal>
                   </div>
                 </div>

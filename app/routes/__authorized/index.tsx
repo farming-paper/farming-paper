@@ -1,6 +1,6 @@
 import { ArrowRightIcon } from "@heroicons/react/24/outline";
 import { Link } from "@remix-run/react";
-import { Button } from "flowbite-react";
+import { Button } from "antd";
 import { useMemo, useState } from "react";
 import { getQuestionGroups } from "~/question/utils";
 
@@ -12,9 +12,9 @@ export default function Index() {
       [...questions.entries()].map(([key, { name, buttonContent }]) => (
         <li key={key}>
           <Link to={`/learn/${key}`}>
-            <Button color="gray" className="font-normal">
+            <Button className="inline-flex items-center gap-2 font-normal">
               {buttonContent ? buttonContent : name}
-              <ArrowRightIcon className="w-4 h-4 ml-2"></ArrowRightIcon>
+              <ArrowRightIcon className="w-3 h-3"></ArrowRightIcon>
             </Button>
           </Link>
         </li>
@@ -33,7 +33,7 @@ export default function Index() {
       <p className="mb-2">
         문제를 풀 시간입니다. 아래 버튼을 눌러 문제를 푸세요.
       </p>
-      <ul className="flex flex-wrap items-stretch w-full gap-5 mb-5">
+      <ul className="flex flex-wrap items-stretch w-full gap-2 mb-5">
         {links}
       </ul>
       <Link
