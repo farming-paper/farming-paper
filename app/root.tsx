@@ -18,13 +18,15 @@ import { Analytics } from "@vercel/analytics/react";
 import antdResetStyles from "antd/dist/reset.css";
 import { useEffect, useState } from "react";
 import { getClientSideSupabaseConfig } from "./config";
-import styles from "./styles/app.css";
+import tailwindStyles from "./styles/app.css";
+import tailwindResetStyles from "./styles/tailwind.reset.css";
 import type { Database } from "./supabase/generated/supabase-types";
 
 export function links() {
   return [
-    { rel: "stylesheet", href: styles },
+    { rel: "stylesheet", href: tailwindResetStyles },
     { rel: "stylesheet", href: antdResetStyles },
+    { rel: "stylesheet", href: tailwindStyles },
   ];
 }
 
