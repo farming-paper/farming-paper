@@ -12,14 +12,14 @@ const ShortMultiAnswerQuestionInput: React.FC<
   const onSubmit = useCallback(() => {
     const answerArray = value.split(",").map((s) => s.trim());
 
-    if (isBagEqual(answerArray, question.correct)) {
+    if (isBagEqual(answerArray, question.corrects)) {
       onSuccess?.({ given: answerArray.join(", ") });
     } else {
       onFail?.({ given: answerArray.join(", ") });
     }
 
     setValue("");
-  }, [onFail, onSuccess, question.correct, value]);
+  }, [onFail, onSuccess, question.corrects, value]);
 
   return (
     <div>

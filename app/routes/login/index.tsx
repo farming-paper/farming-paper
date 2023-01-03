@@ -19,7 +19,8 @@ export const loader = async ({ request }: LoaderArgs) => {
   } = await supabase.auth.getSession();
 
   if (session) {
-    return redirect("/?status=already_logged_in", {
+    return redirect("/", {
+      // return redirect("/?status=already_logged_in", {
       headers: response.headers,
     });
   }
@@ -38,6 +39,9 @@ export default function Login() {
   const handleGoogleLogin = async () => {
     const { error } = await props.supabase.auth.signInWithOAuth({
       provider: "google",
+      options: {
+        redirectTo: window.location.origin,
+      },
     });
 
     if (error) {

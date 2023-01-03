@@ -52,7 +52,7 @@ export const questions: Question[] = [
     type: "short_order",
     message:
       "암묵지-형식지의 상호작용: 조직의 지식으로 ___를 위한 ___, 개인에게 ___ 및 습득되는 ___",
-    correct: ["공통화", "표출화", "연결", "내면화"],
+    corrects: ["공통화", "표출화", "연결", "내면화"],
     category: "1",
     tags: ["1일차"],
   },
@@ -60,14 +60,14 @@ export const questions: Question[] = [
     type: "short_order",
     message:
       "???피라미드. 객관적인 사실로부터 얻을 수 있는 것들을 차례대로. 답은 네 가지.",
-    correct: ["데이터", "정보", "지식", "지혜"],
+    corrects: ["데이터", "정보", "지식", "지혜"],
     category: "1",
     tags: ["1일차"],
   },
   {
     type: "short_multi",
     message: "데이터베이스의 다섯가지 측면 (측면이라는 말 제외)",
-    correct: [
+    corrects: [
       "정보의 축적 및 전달",
       "정보이용",
       "정보관리",
@@ -114,7 +114,7 @@ export const questions: Question[] = [
   {
     type: "short_multi",
     message: "트랜잭션 네 가지 특성",
-    correct: ["원자성", "일관성", "고립성", "지속성"],
+    corrects: ["원자성", "일관성", "고립성", "지속성"],
     category: "1",
     tags: ["1일차"],
   },
@@ -189,21 +189,21 @@ export const questions: Question[] = [
   {
     type: "short_multi",
     message: "빅데이터 특징 3V (소문자로)",
-    correct: ["volume", "variety", "velocity"],
+    corrects: ["volume", "variety", "velocity"],
     category: "1",
     tags: ["1일차"],
   },
   {
     type: "short_multi",
     message: "3V 에 하나로 추가하는 것은 ___ 또는 ___ 이다. (햔국어로)",
-    correct: ["가치", "정확성"],
+    corrects: ["가치", "정확성"],
     category: "1",
     tags: ["1일차"],
   },
   {
     type: "short_multi",
     message: "빅데이터가 만들어내는 변화 네 가지",
-    correct: ["사후처리", "전수조사", "양", "상관관계"],
+    corrects: ["사후처리", "전수조사", "양", "상관관계"],
     category: "1",
     tags: ["1일차"],
   },
@@ -259,21 +259,21 @@ export const questions: Question[] = [
     type: "short_order",
     message:
       "빅데이터 가치 산정 어려움의 이유 - 데이터 ___ 방식이 다양해지고, 기존에 없던 ___를 창출함에 따라 산정하기가 어렵고, ___의 발전으로 가치 있는 데이터와 없는 데이터의 경계를 나누기가 어려워졌다.",
-    correct: ["활용", "가치", "분석 기술"],
+    corrects: ["활용", "가치", "분석 기술"],
     category: "1",
     tags: ["2일차"],
   },
   {
     type: "short_multi",
     message: "미래의 빅데이터 활용에 필요한 3요소",
-    correct: ["데이터", "기술", "인력"],
+    corrects: ["데이터", "기술", "인력"],
     category: "1",
     tags: ["2일차"],
   },
   {
     type: "short_multi",
     message: "7가지 데이터 활용 기본 테크닉",
-    correct: [
+    corrects: [
       "연관규칙 학습",
       "유형분석",
       "유전 알고리즘",
@@ -344,7 +344,7 @@ export const questions: Question[] = [
   {
     type: "short_multi",
     message: "빅데이터 시대의 위기 요인 세 가지",
-    correct: ["사생활 침해", "책임 원칙 훼손", "데이터 오용"],
+    corrects: ["사생활 침해", "책임 원칙 훼손", "데이터 오용"],
     category: "1",
     tags: ["2일차"],
   },
@@ -405,7 +405,7 @@ export const questions: Question[] = [
   {
     type: "short_multi",
     message: "데이터 사이언스 구성 요소 세 가지",
-    correct: ["Analytics", "IT", "비즈니스 분석"],
+    corrects: ["Analytics", "IT", "비즈니스 분석"],
     category: "1",
     tags: ["2일차"],
   },
@@ -444,7 +444,7 @@ export const questions: Question[] = [
   {
     type: "short_order",
     message: "빅데이터 가치 패러다임의 변화 세 단계는?",
-    correct: ["디지털화", "연결", "에이전시"],
+    corrects: ["디지털화", "연결", "에이전시"],
     category: "1",
     tags: ["2일차"],
     weight: 1.5,
@@ -508,7 +508,7 @@ export const questions: Question[] = [
   {
     type: "short_multi",
     message: "소프트 스킬 일곱 가지",
-    correct: [
+    corrects: [
       "호기심",
       "논리적 비판",
       "창의적 사고",
@@ -523,21 +523,21 @@ export const questions: Question[] = [
   {
     type: "short_order",
     message: "하드 스킬 두 가지: ___에 대한 이론적 지식, ___에 대한 숙련",
-    correct: ["빅데이터", "분석 기술"],
+    corrects: ["빅데이터", "분석 기술"],
     category: "1",
     tags: ["2일차"],
   },
   {
     type: "short_multi",
     message: "가트너가 제시한 데이터 사이언티스트 역량 네 가지",
-    correct: ["데이터 관리", "분석 모델링", "비즈니스 분석", "소프트 스킬"],
+    corrects: ["데이터 관리", "분석 모델링", "비즈니스 분석", "소프트 스킬"],
     category: "1",
     tags: ["2일차"],
   },
   {
     type: "short_order",
     message: "외부 환경에서 본 인문학의 열풍: ",
-    correct: ["통찰력 있는 분석", "설득력 있는 전달", "다분야간 협력"],
+    corrects: ["통찰력 있는 분석", "설득력 있는 전달", "다분야간 협력"],
     category: "1",
     tags: ["2일차"],
   },
@@ -566,7 +566,7 @@ export const questions: Question[] = [
     type: "short_order",
     message:
       "개인에게 내면화된 암묵지가 조직의 지식으로 ___되기 위해서는, 표출화하고 이를 다시 개인의 지식으로 ___ 하는 과정을 거치게 된다.",
-    correct: ["공통화", "연결화"],
+    corrects: ["공통화", "연결화"],
     category: "1",
   },
   {
@@ -612,7 +612,7 @@ export const questions: Question[] = [
   {
     type: "short_multi",
     message: "더그 래니의 3V에 추가된 4V 모두 쓰시오 (소문자 영어로)",
-    correct: ["value", "veracity", "visualization", "variability"],
+    corrects: ["value", "veracity", "visualization", "variability"],
     category: "1",
   },
   {
@@ -653,26 +653,26 @@ export const questions: Question[] = [
   {
     type: "short_multi",
     message: "기업의 합리적 의사 결정을 방해하는 세 가지",
-    correct: ["고정 관념", "편향된 생각", "프레이밍 효과"],
+    corrects: ["고정 관념", "편향된 생각", "프레이밍 효과"],
     category: "2",
   },
   {
     type: "short_multi",
     message: "비즈니스 모델 탐색 기법에서 5가지로 단순화한 것들",
-    correct: ["규제와 감사", "업무", "제품", "고객", "지원 인프라"],
+    corrects: ["규제와 감사", "업무", "제품", "고객", "지원 인프라"],
     category: "2",
   },
   {
     type: "short_order",
     message: "분석 과제 발굴시, 하향식 접근법 4단계 차례대로",
-    correct: ["문제 탐색", "문제 정의", "해결 방안 탐색", "타당성 검토"],
+    corrects: ["문제 탐색", "문제 정의", "해결 방안 탐색", "타당성 검토"],
     category: "2",
   },
   {
     type: "short_order",
     message:
       "분석 기회 발굴 범위 확장할 때의 4가지 영역: ___ 관점(문제 혹은 변화가 기업에 주는 영향 탐색), ___ 확대 관점(위협이 될 상황), ___ 탐색, ___의 재해석(기업 내부를 둘러보기)",
-    correct: ["거시적", "경쟁자", "시장의 니즈", "역량"],
+    corrects: ["거시적", "경쟁자", "시장의 니즈", "역량"],
     category: "2",
     weight: 2,
   },
@@ -687,7 +687,7 @@ export const questions: Question[] = [
     type: "short_order",
     message:
       "분석 과제 발굴 - 하향식 접근법 - 타당성 검토 단계에서의 두 가지 유형: ___ 타당성, ___ 및 ___ 타당성",
-    correct: ["경제적", "데이터", "기술적"],
+    corrects: ["경제적", "데이터", "기술적"],
     category: "2",
   },
   {
@@ -726,7 +726,7 @@ export const questions: Question[] = [
   {
     type: "short_order",
     message: "빅데이터 분석 방법론 차례대로 5단계(Phase)",
-    correct: [
+    corrects: [
       "분석 기획",
       "데이터 준비",
       "데이터 분석",
@@ -740,42 +740,42 @@ export const questions: Question[] = [
     type: "short_order",
     message:
       "빅데이터 분석 방법론 - 1단계 분석 기획에서의 태스크: 비즈니스 ___ 및 ___ 설정, 프로젝트 ___ 및 ___ 수립, 프로젝트 ___ 계획 수립",
-    correct: ["이해", "범위", "정의", "계획", "위험"],
+    corrects: ["이해", "범위", "정의", "계획", "위험"],
     category: "2",
   },
   {
     type: "short_order",
     message:
       "목표 시점별 분석 기획 - ___ 중심적인 방식(빠르게 해결해야 하는 경우), ___ 방식 (지속적인 분석 내재화를 위한 경우)",
-    correct: ["과제", "마스터플랜"],
+    corrects: ["과제", "마스터플랜"],
     category: "2",
   },
   {
     type: "short_order",
     message:
       "빅데이터 분석 방법론 - 데이터 준비에서의 태스크: 필요한 ___ 정의, ___ 설계, 데이터 ___ 및 ___ 검정",
-    correct: ["데이터", "데이터 스토어", "수집", "정합성"],
+    corrects: ["데이터", "데이터 스토어", "수집", "정합성"],
     category: "2",
   },
   {
     type: "short_order",
     message:
       "빅데이터 분석 방법론 - 데이터 분석에서의 태스크: 분석용 데이터 준비, ___ 분석, ___ 분석, ___, ___ 평가 및 검증",
-    correct: ["텍스트", "탐색적", "모델링", "모델"],
+    corrects: ["텍스트", "탐색적", "모델링", "모델"],
     category: "2",
   },
   {
     type: "short_order",
     message:
       "빅데이터 분석 방법론 - 4단계: ___(A) 구현 에서의 태스크: 설계 및 구현, (A) ___ 및 ___ ",
-    correct: ["시스템", "테스트", "운영"],
+    corrects: ["시스템", "테스트", "운영"],
     category: "2",
   },
   {
     type: "short_order",
     message:
       "빅데이터 분석 방법론 - 5단계: ___ 및 ___: 모델 ___, 프로젝트 평가 및 보고",
-    correct: ["평가", "전개", "발전 계획"],
+    corrects: ["평가", "전개", "발전 계획"],
     category: "2",
   },
   {
@@ -830,7 +830,7 @@ export const questions: Question[] = [
     type: "short_order",
     message:
       "분석 마스터플랜 수립 시 분서과제의 우선 순위를 정할 때 그 기준 네 가지: ___ 중요도, ___ 성과, ___, 분석과제의 ___ 용이성",
-    correct: ["전략적", "비즈니스", "ROI", "실행"],
+    corrects: ["전략적", "비즈니스", "ROI", "실행"],
     category: "2",
     weight: 2,
   },
@@ -838,7 +838,7 @@ export const questions: Question[] = [
     type: "short_order",
     message:
       "기업 분류: ___형: 낮은 준비도, 낮은 성숙도 / ___형: 낮은 준비도, 높은 성숙도 / ___형: 높은 준비도, 높은 성숙도 / ___형: 높은 준비도, 낮은 성숙도",
-    correct: ["준비", "정착", "확산", "도입"],
+    corrects: ["준비", "정착", "확산", "도입"],
     category: "2",
     weight: 2,
   },
@@ -1120,7 +1120,7 @@ export const questions: Question[] = [
     type: "short_order",
     message:
       "___(A)는 확률 분포의 비대칭 정도를 나타내는 척도이며, A가 0보다 ___면 최빈값 < 중앙값 < 평균이다.",
-    correct: ["왜도", "크다"],
+    corrects: ["왜도", "크다"],
     category: "3",
   },
   {
@@ -1158,7 +1158,7 @@ export const questions: Question[] = [
   {
     type: "short_multi",
     message: "분산분석을 위한 세 가지 조건은?",
-    correct: ["정규성", "등분산성", "독립성"],
+    corrects: ["정규성", "등분산성", "독립성"],
     category: "3",
   },
   {
@@ -1224,7 +1224,7 @@ export const questions: Question[] = [
   {
     type: "short_multi",
     message: "회귀분석의 가정 다섯 가지",
-    correct: ["선형성", "독립성", "등분산성", "정규성", "비상관성"],
+    corrects: ["선형성", "독립성", "등분산성", "정규성", "비상관성"],
     category: "3",
   },
   {
@@ -1269,7 +1269,7 @@ export const questions: Question[] = [
     type: "short_order",
     message:
       "___ 값을 구해서 이게 ___ 를 넘는다면 보통 다중공선성이 있다고 판단할 수 있다.",
-    correct: ["분산팽창요인", "10"],
+    corrects: ["분산팽창요인", "10"],
     category: "3",
   },
   {
@@ -1336,7 +1336,7 @@ export const questions: Question[] = [
     type: "short_order",
     message:
       "회귀분석에서 과적합되면 계수의 크기도 ___ 하게 된다. 따라서 이를 방지하기 위해 ___ 를 사용한다.",
-    correct: ["과도", "정규화 선형회귀"],
+    corrects: ["과도", "정규화 선형회귀"],
     category: "3",
   },
   {
@@ -1391,7 +1391,7 @@ export const questions: Question[] = [
     type: "short_order",
     message:
       "___ 이란, 여러 개의 변수 중 서로 상관성이 높은 변수들의 ___으로 새로운 변수를 만들어 기존 변수를 요약 및 축소하는 분석 방법이다.",
-    correct: ["주성분분석", "선형결합"],
+    corrects: ["주성분분석", "선형결합"],
     category: "3",
   },
   {
@@ -1412,7 +1412,7 @@ export const questions: Question[] = [
     type: "short_order",
     message:
       "시계열 자료의 정상성 조건 중 평균은 ___ 해야 한다. 만약 그렇지 않다면 ___을 통해 정상화할 수 있다.",
-    correct: ["일정", "차분"],
+    corrects: ["일정", "차분"],
     category: "3",
   },
   {
@@ -1425,7 +1425,7 @@ export const questions: Question[] = [
   {
     type: "short_order",
     message: "시계열 자료의 정상성 조건 중 ___ 은 ___ 에만 의존해야 한다.",
-    correct: ["공분산", "시차"],
+    corrects: ["공분산", "시차"],
     category: "3",
   },
   {
@@ -1473,7 +1473,7 @@ export const questions: Question[] = [
     type: "short_order",
     message:
       "___용 데이터는 모델을 구축하기 위해 활용되며, ___용 데이터는 구축된 모델이 적합한지 검증하고 모형의 과대추정 및 과소추정을 방지하기 위해 활용되며, ___용 데이터는 최종적으로 구축된 모델의 성능을 평가하기 위함이다.",
-    correct: ["훈련", "검정", "평가"],
+    corrects: ["훈련", "검정", "평가"],
     category: "3",
   },
   {
@@ -1521,14 +1521,14 @@ export const questions: Question[] = [
     type: "short_order",
     message:
       "오즈의 단점은 ___를 가질 수 없고 확률값과 오즈의 그래프는 ___을 띤다. 그래서 ___ 는 오즈에 로그값을 취한다.",
-    correct: ["음수", "비대칭성", "로짓"],
+    corrects: ["음수", "비대칭성", "로짓"],
     category: "3",
   },
   {
     type: "short_order",
     message:
       "오즈의 단점은 ___를 가질 수 없고 확률값과 오즈의 그래프는 ___을 띤다. 그래서 ___ 는 오즈에 로그값을 취한다.",
-    correct: ["음수", "비대칭성", "로짓"],
+    corrects: ["음수", "비대칭성", "로짓"],
     category: "3",
   },
   {
@@ -1547,7 +1547,7 @@ export const questions: Question[] = [
   {
     type: "short_multi",
     message: "지니계수 계산법: 각 ___ 의 ___ 들을 합한 것을 ___ 에서 뺀다.",
-    correct: ["확률", "제곱", "1"],
+    corrects: ["확률", "제곱", "1"],
     category: "3",
   },
   {
@@ -1581,7 +1581,7 @@ export const questions: Question[] = [
   {
     type: "short_multi",
     message: "인공신경망은 세 가지의 층으로 구성된다.",
-    correct: ["입력층", "은닉층", "출력층"],
+    corrects: ["입력층", "은닉층", "출력층"],
     category: "3",
   },
   {
@@ -1651,13 +1651,13 @@ export const questions: Question[] = [
   {
     type: "short_multi",
     message: "실제 TRUE 중 올바른 TRUE를 찾아낸 비율. (두 가지 이름)",
-    correct: ["민감도", "재현율"],
+    corrects: ["민감도", "재현율"],
     category: "3",
   },
   {
     type: "short_multi",
     message: "TP/(TP+FN) (두 가지 이름)",
-    correct: ["민감도", "재현율"],
+    corrects: ["민감도", "재현율"],
     category: "3",
   },
   {
@@ -1694,7 +1694,7 @@ export const questions: Question[] = [
     type: "short_order",
     message:
       "___ 란, 분류 분석 모형의 평가를 쉽게 비교할 수 있도록 시각화한 그래프로서, x 축에는 ___, y 축은 ___ 이고 아래 면적이 ___에 가까울 수록 성능이 우수하다.",
-    correct: ["ROC 곡선", "FPR", "민감도", "1"],
+    corrects: ["ROC 곡선", "FPR", "민감도", "1"],
     category: "3",
   },
   {
@@ -1832,27 +1832,27 @@ export const questions: Question[] = [
   {
     type: "short_order",
     message: "암묵지 → ( ___ ) → ___ → ( ___ ) → ___ → ( ___ ) → 암묵지",
-    correct: ["형식화", "형식지", "체계화", "방법론", "내재화"],
+    corrects: ["형식화", "형식지", "체계화", "방법론", "내재화"],
     category: "3",
   },
   {
     type: "short_order",
     message:
       "데이터 거버넌스의 체계 순서: 데이터 ___, 데이터 ___, 데이터 ___, ___",
-    correct: ["표준화", "관리 체계", "저장소 관리", "표준화 활동"],
+    corrects: ["표준화", "관리 체계", "저장소 관리", "표준화 활동"],
   },
   {
     type: "short_order",
     message:
       "대부분의 군집분석 알고리즘은 개체간의 거리를 이용하는 데 반해, ___ 알고리즘은 개체들이 밀집한 정도에 기초해 군집을 형성한다. ___을 설정할 필요가 없다.",
-    correct: ["DBSCAN", "초기 군집의 수"],
+    corrects: ["DBSCAN", "초기 군집의 수"],
     category: "3",
   },
   {
     type: "short_order",
     message:
       "의사결정나무의 단점: ___ 사이의 중요도를 판단하기 쉽지 않고, ___ 근처의 자료에 대해 오차가 크며, ___ 발생 가능성이 높다.",
-    correct: ["독립변수", "분류 경계선", "과적합"],
+    corrects: ["독립변수", "분류 경계선", "과적합"],
     category: "3",
   },
   {
@@ -1889,13 +1889,13 @@ export const questions: Question[] = [
   {
     type: "short_order",
     message: "분석 성숙도 평가 4단계 차례대로",
-    correct: ["도입", "활용", "확산", "최적화"],
+    corrects: ["도입", "활용", "확산", "최적화"],
     category: "2",
   },
   {
     type: "short_multi",
     message: "데이터 거버넌스 구성요소 크게 세 가지",
-    correct: ["원칙", "조직", "프로세스"],
+    corrects: ["원칙", "조직", "프로세스"],
     category: "2",
   },
   {
@@ -1993,12 +1993,12 @@ export const questions: Question[] = [
   {
     type: "short_multi",
     message: '시계열의 구성요소 네 가지는? ("요인"이라는 단어 제외)',
-    correct: ["추세", "순환", "계절", "불규칙"],
+    corrects: ["추세", "순환", "계절", "불규칙"],
   },
   {
     type: "short_multi",
     message: "데이터가 범주형일 때의 거리 측도는 ___ 거리, ___ 거리 등이 있다.",
-    correct: ["자카드", "코사인"],
+    corrects: ["자카드", "코사인"],
   },
   {
     type: "short",

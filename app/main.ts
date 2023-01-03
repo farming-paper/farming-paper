@@ -92,11 +92,11 @@ while (true) {
         .split(",")
         .map((s) => s.trim());
 
-      if (isBagEqual(answerArray, question.correct)) {
+      if (isBagEqual(answerArray, question.corrects)) {
         console.log("정답!");
         generator.updateWeight(index, 0.1);
       } else {
-        console.log(`오답! (정답: ${question.correct.join(", ")})`);
+        console.log(`오답! (정답: ${question.corrects.join(", ")})`);
         generator.updateWeight(index, 10);
       }
       break;
@@ -117,11 +117,11 @@ while (true) {
         .split(",")
         .map((s) => s.trim());
 
-      if (isArrayEqual(answerArray, question.correct)) {
+      if (isArrayEqual(answerArray, question.corrects)) {
         console.log("정답!");
         generator.updateWeight(index, 0.1);
       } else {
-        console.log(`오답! (정답: ${question.correct.join(", ")})`);
+        console.log(`오답! (정답: ${question.corrects.join(", ")})`);
         generator.updateWeight(index, 10);
       }
       break;

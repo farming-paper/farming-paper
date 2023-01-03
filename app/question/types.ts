@@ -19,17 +19,17 @@ export interface IShortQuestion extends IBaseQuestion {
 // 답이 여러개이고, 순서가 중요함. ", " 등으로 구분함.
 export interface IShortOrderQuestion extends IBaseQuestion {
   type: "short_order";
-  correct: string[];
+  corrects: string[];
 }
 
 export interface IShortMultiAnswerQuestion extends IBaseQuestion {
   type: "short_multi";
-  correct: string[];
+  corrects: string[];
 }
 
 export interface IPickOrderQuestion extends IBaseQuestion {
   type: "pick_order";
-  correct: string[];
+  corrects: string[];
   otherChoices?: string[];
 }
 
@@ -41,7 +41,7 @@ export interface IPickQuestion extends IBaseQuestion {
 
 export interface IPickMultiQuestion extends IBaseQuestion {
   type: "pick_multi";
-  correct: string[];
+  corrects: string[];
   options: string[];
 }
 

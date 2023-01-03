@@ -17,6 +17,7 @@ module.exports = {
     "no-useless-rename": "error",
     "object-shorthand": "error",
     "no-console": "error",
+    curly: "error",
 
     "no-restricted-syntax": "off",
 

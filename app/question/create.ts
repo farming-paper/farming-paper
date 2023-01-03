@@ -46,7 +46,7 @@ export function createShortOrderQuestion(
   args?: PartialDeep<IShortOrderQuestion>
 ): IShortOrderQuestion {
   return {
-    correct: [],
+    corrects: [],
     ...args,
     type: "short_order",
     message: args?.message || "",
@@ -57,7 +57,7 @@ export function createShortMultiAnswerQuestion(
   args?: PartialDeep<IShortMultiAnswerQuestion>
 ): IShortMultiAnswerQuestion {
   return {
-    correct: [],
+    corrects: [],
     ...args,
     type: "short_multi",
     message: args?.message || "",
@@ -68,7 +68,7 @@ export function createPickOrderQuestion(
   args?: PartialDeep<IPickOrderQuestion>
 ): IPickOrderQuestion {
   return {
-    correct: [],
+    corrects: [],
     ...args,
     type: "pick_order",
     message: args?.message || "",
@@ -91,7 +91,7 @@ export function createPickMultiQuestion(
   args?: PartialDeep<IPickMultiQuestion>
 ): IPickMultiQuestion {
   return {
-    correct: [],
+    corrects: [],
     ...args,
     type: "pick_multi",
     message: args?.message || "",

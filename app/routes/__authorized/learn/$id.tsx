@@ -163,9 +163,9 @@ export default function LearnId() {
         id: nanoid(),
         question: question.message,
         given,
-        actual: Array.isArray(question.correct)
-          ? question.correct.join(", ")
-          : question.correct,
+        actual: Array.isArray(question.corrects)
+          ? question.corrects.join(", ")
+          : question.corrects,
         isSuccess,
       });
     },
