@@ -42,11 +42,3 @@ describe("수학 렌더링 (KaTeX)", () => {
     expect(result.container).toMatchSnapshot();
   });
 });
-
-describe("배열 렌더링", () => {
-  test("일반 배열이 잘 렌더링되어야 함.", () => {
-    const result = render(<Render>{[`this is one`, "this is two"]}</Render>);
-
-    expect(result.container).toMatchSnapshot();
-  });
-});

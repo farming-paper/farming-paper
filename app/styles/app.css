@@ -175,10 +175,6 @@
   height: 0.75rem
 }
 
-.h-4 {
-  height: 1rem
-}
-
 .min-h-\[100vh\] {
   min-height: 100vh
 }
@@ -213,10 +209,6 @@
 
 .w-3 {
   width: 0.75rem
-}
-
-.w-4 {
-  width: 1rem
 }
 
 .max-w-md {
@@ -375,10 +367,6 @@
 .bg-indigo-50 {
   --tw-bg-opacity: 1;
   background-color: rgb(238 242 255 / var(--tw-bg-opacity))
-}
-
-.bg-current {
-  background-color: currentColor
 }
 
 .bg-transparent {

@@ -4,7 +4,7 @@ import { json, redirect } from "@remix-run/server-runtime";
 import { createServerClient } from "@supabase/auth-helpers-remix";
 import { message } from "antd";
 import { useEffect, useRef } from "react";
-import BottomNav from "~/components/BottomNav";
+import BottomNav from "~/common/components/BottomNav";
 import { getClientSideSupabaseConfig } from "~/config";
 import type { IOutletProps } from "~/types";
 

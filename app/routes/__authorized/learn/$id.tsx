@@ -7,14 +7,10 @@ import { nanoid } from "nanoid";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { twMerge } from "tailwind-merge";
 import { createQuestionGenerator } from "~/question-generator";
+import { createQuestion } from "~/question/create";
 import QuestionInput from "~/question/input-components/QuestionInput";
 import Render, { links as questionRenderLinks } from "~/question/Render";
-import type {
-  Content,
-  IFailArgs,
-  ISuccessArgs,
-  Question,
-} from "~/question/types";
+import type { IFailArgs, ISuccessArgs, Question } from "~/question/types";
 import type { QuestionId } from "~/question/utils";
 import { getQuestionGroups } from "~/question/utils";
 import { useConst } from "~/util";
@@ -80,17 +76,13 @@ export function loader({
 
   return json<ILearnIdPageData>({
     name: item.name,
-    questions: item.questions,
-    // 디버그 용도
-    // questions: item.questions.filter(
-    //   (q) => q.type === "short_order" && q.message.includes("$")
-    // ),
+    questions: item.questions.map((q) => createQuestion(q)),
   });
 }
 
 export interface IQuestionResult {
   id: string;
-  question: Content;
+  question: string;
   given: string;
   actual: string;
   isSuccess: boolean;
@@ -119,6 +111,7 @@ export default function LearnId() {
   }>({
     index: -1,
     question: {
+      id: nanoid(),
       type: "short",
       correct: "",
       message: "",
@@ -163,9 +156,10 @@ export default function LearnId() {
         id: nanoid(),
         question: question.message,
         given,
-        actual: Array.isArray(question.corrects)
-          ? question.corrects.join(", ")
-          : question.corrects,
+        actual:
+          question.type === "short" || question.type === "pick"
+            ? question.correct
+            : question.corrects.join(", "),
         isSuccess,
       });
     },

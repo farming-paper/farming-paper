@@ -1,4 +1,5 @@
-import type { PartialDeep } from "type-fest";
+import { nanoid } from "nanoid";
+import type { PartialDeep } from "~/types";
 import type {
   IPickDifferentQuestion,
   IPickMultiQuestion,
@@ -31,14 +32,20 @@ export function createQuestion(args?: PartialDeep<Question>): Question {
   }
 }
 
+export function removeUndefined<T>(tags?: (T | undefined)[]): T[] {
+  return tags?.filter((tag): tag is T => Boolean(tag)) || [];
+}
+
 export function createShortQuestion(
   args?: PartialDeep<IShortQuestion>
 ): IShortQuestion {
   return {
+    id: nanoid(),
     correct: "",
     ...args,
     type: "short",
     message: args?.message || "",
+    tags: removeUndefined(args?.tags),
   };
 }
 
@@ -46,10 +53,12 @@ export function createShortOrderQuestion(
   args?: PartialDeep<IShortOrderQuestion>
 ): IShortOrderQuestion {
   return {
-    corrects: [],
+    id: nanoid(),
     ...args,
     type: "short_order",
     message: args?.message || "",
+    corrects: removeUndefined(args?.corrects),
+    tags: removeUndefined(args?.tags),
   };
 }
 
@@ -57,10 +66,12 @@ export function createShortMultiAnswerQuestion(
   args?: PartialDeep<IShortMultiAnswerQuestion>
 ): IShortMultiAnswerQuestion {
   return {
-    corrects: [],
+    id: nanoid(),
     ...args,
     type: "short_multi",
     message: args?.message || "",
+    corrects: removeUndefined(args?.corrects),
+    tags: removeUndefined(args?.tags),
   };
 }
 
@@ -68,10 +79,13 @@ export function createPickOrderQuestion(
   args?: PartialDeep<IPickOrderQuestion>
 ): IPickOrderQuestion {
   return {
-    corrects: [],
+    id: nanoid(),
     ...args,
     type: "pick_order",
     message: args?.message || "",
+    corrects: removeUndefined(args?.corrects),
+    tags: removeUndefined(args?.tags),
+    otherChoices: removeUndefined(args?.otherChoices),
   };
 }
 
@@ -79,11 +93,13 @@ export function createPickQuestion(
   args?: PartialDeep<IPickQuestion>
 ): IPickQuestion {
   return {
+    id: nanoid(),
     correct: "",
     ...args,
     type: "pick",
     message: args?.message || "",
-    options: args?.options || [],
+    options: removeUndefined(args?.options),
+    tags: removeUndefined(args?.tags),
   };
 }
 
@@ -91,11 +107,13 @@ export function createPickMultiQuestion(
   args?: PartialDeep<IPickMultiQuestion>
 ): IPickMultiQuestion {
   return {
-    corrects: [],
+    id: nanoid(),
     ...args,
     type: "pick_multi",
     message: args?.message || "",
-    options: args?.options || [],
+    tags: removeUndefined(args?.tags),
+    options: removeUndefined(args?.options),
+    corrects: removeUndefined(args?.corrects),
   };
 }
 
@@ -103,9 +121,11 @@ export function createPickDifferentQuestion(
   args?: PartialDeep<IPickDifferentQuestion>
 ): IPickDifferentQuestion {
   return {
-    pool: [],
+    id: nanoid(),
     ...args,
     type: "pick_different",
     message: args?.message || "",
+    pool: removeUndefined(args?.pool?.map((p) => removeUndefined(p))),
+    tags: removeUndefined(args?.tags),
   };
 }

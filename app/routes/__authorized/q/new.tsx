@@ -2,13 +2,12 @@ import { MinusCircleOutlined } from "@ant-design/icons";
 import { Form, useActionData, useFetcher } from "@remix-run/react";
 import type { ActionFunction } from "@remix-run/server-runtime";
 import { Button, Input, Select } from "antd";
-import { nanoid } from "nanoid";
 import { useEffect, useMemo } from "react";
 import type { FieldErrors, Resolver } from "react-hook-form";
-import { Controller, useFieldArray, useForm } from "react-hook-form";
+import { Controller, useForm } from "react-hook-form";
 import type { PartialDeep } from "type-fest";
-import ErrorLabel from "~/components/ErrorLabel";
-import Label from "~/components/Label";
+import ErrorLabel from "~/common/components/ErrorLabel";
+import Label from "~/common/components/Label";
 import { createQuestion } from "~/question/create";
 import type { Question } from "~/question/types";
 
@@ -83,14 +82,6 @@ const formResolver: Resolver<FormValues> = async (values) => {
   };
 };
 
-type Corrects = { corrects: { id: string; c: string }[] };
-
-const correctsResolver: Resolver<Corrects> = async (values) => {
-  return {
-    values,
-  };
-};
-
 export default function QuestionNew() {
   const {
     handleSubmit,
@@ -98,7 +89,6 @@ export default function QuestionNew() {
     control,
     watch,
     setValue,
-    register,
   } = useForm<FormValues>({
     resolver: formResolver,
     defaultValues: {
@@ -109,26 +99,11 @@ export default function QuestionNew() {
     },
   });
 
-  const { control: correctsControl, watch: correctsWatch } = useForm({
-    resolver: correctsResolver,
-    defaultValues: { corrects: [{ id: nanoid(), c: "" }] },
-  });
-
   const data = useActionData<FormValues>(); //we access the return value of the action here
 
   const fetcher = useFetcher();
 
   const values = watch();
-
-  const correctsFormValue = correctsWatch();
-
-  // useEffect(() => {
-  //   if (fetcher.type === "init") {
-  //     fetcher.load("/some/route");
-  //   }
-  // }, [fetcher]);
-
-  // fetcher.data; // the data from the loader
 
   useEffect(() => {
     console.log("data", data);
@@ -137,19 +112,10 @@ export default function QuestionNew() {
     console.log("values", values);
   }, [values]);
 
-  // const errors = useMemo(() => {
-  //   return {
-  //     message: validateMessage(data?.question?.message),
-  //   };
-  // }, [data?.question.message]);
-
   const onSubmit = useMemo(
     () =>
       handleSubmit(async (formData) => {
         const q = createQuestion(formData.question);
-        if (q.type === "short_order") {
-          q.corrects = correctsFormValue.corrects.map((correct) => correct.c);
-        }
         fetcher.submit(
           {
             formValues: JSON.stringify(q),
@@ -160,14 +126,7 @@ export default function QuestionNew() {
           }
         );
       }),
-    [correctsFormValue.corrects, fetcher, handleSubmit]
-  );
-
-  const { fields, append, prepend, remove, swap, move, insert } = useFieldArray(
-    {
-      control: correctsControl,
-      name: "corrects",
-    }
+    [fetcher, handleSubmit]
   );
 
   return (
@@ -219,11 +178,11 @@ export default function QuestionNew() {
           <div className="flex flex-col mb-4">
             <Label htmlFor="correct">정답</Label>
             <div className="flex flex-col gap-2 mb-2">
-              {fields.map((field, index) => (
-                <div key={field.id} className="flex gap-2">
+              {values.question.corrects?.map((q, index) => (
+                <div key={index} className="flex gap-2">
                   <Controller
-                    control={correctsControl}
-                    name={`corrects.${index}.c`}
+                    control={control}
+                    name={`question.corrects.${index}`}
                     render={({ field }) => {
                       return <Input {...field} />;
                     }}
@@ -232,7 +191,17 @@ export default function QuestionNew() {
                   <button
                     className="inline-flex items-center p-2 bg-transparent"
                     type="button"
-                    onClick={() => remove(index)}
+                    onClick={() => {
+                      if (
+                        values.question.type === "short_order" &&
+                        values.question.corrects
+                      ) {
+                        setValue(`question.corrects`, [
+                          ...values.question.corrects.slice(0, index),
+                          ...values.question.corrects.slice(index + 1),
+                        ]);
+                      }
+                    }}
                   >
                     <MinusCircleOutlined />
                   </button>
@@ -241,12 +210,14 @@ export default function QuestionNew() {
             </div>
             <div className="flex">
               <Button
-                onClick={() =>
-                  append({
-                    c: "",
-                    id: nanoid(),
-                  })
-                }
+                onClick={() => {
+                  if (values.question.type === "short_order") {
+                    setValue(`question.corrects`, [
+                      ...(values.question.corrects ?? []),
+                      "",
+                    ]);
+                  }
+                }}
               >
                 추가
               </Button>
@@ -275,10 +246,10 @@ export const action: ActionFunction = async ({ request }) => {
   // outputs { name: '', email: '', password: '', confirmPassword: '' }
 
   const formErrors = {
-    message: validateMessage(data?.question?.message),
+    message: validateMessage(formValues?.question?.message),
   };
 
-  //if there are errors, we return the form errors
+  // if there are errors, we return the form errors
   if (Object.values(formErrors).some(Boolean)) {
     return { formErrors };
   }

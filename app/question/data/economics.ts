@@ -1,6 +1,7 @@
+import type { PartialDeep } from "~/types";
 import type { Question } from "../types";
 
-export const questions: Question[] = [
+export const questions: PartialDeep<Question>[] = [
   {
     type: "short_order",
     message:
@@ -24,13 +25,11 @@ export const questions: Question[] = [
   },
   {
     type: "short_order",
-    message: [
-      "GDP는 사회적 후생을 완벽히 반영하지는 못한다. 그 이유는 다음과 같다.",
+    message: `"GDP는 사회적 후생을 완벽히 반영하지는 못한다. 그 이유는 다음과 같다.",
       "첫째, 물적자본의 ___이 정확히 측정하기 어렵기 때문에 순국내총생산이 자본량의 변화를 제대로 반영할 수가 없다.",
       "둘째, __ 외부에서 생산되었고 후생을 증가시키는 상품들의 가치가 포함되지 않는다.",
       "셋째, 경제활동이 야기하는 의도치 않은 부가적인 효과들을 포함하지 않기 때문에 GDP는 ___ 을 정확히 측정할 수가 없다. (예: ___)",
-      "마지막으로 1인당 국내총생산의 경우 ___ 상태, ___ 제도의 확립 정도를 반영하지 않기 때문에 개인들의 후생 수준을 정확히 평가하지 못하는 한계를 갖는다.",
-    ],
+      "마지막으로 1인당 국내총생산의 경우 ___ 상태, ___ 제도의 확립 정도를 반영하지 않기 때문에 개인들의 후생 수준을 정확히 평가하지 못하는 한계를 갖는다.",`,
     corrects: ["감가상각", "시장", "삶의 질", "환경오염", "분배", "복지"],
     tags: ["생활속의경제"],
   },
@@ -382,11 +381,11 @@ export const questions: Question[] = [
   },
   {
     type: "short_order",
-    message: [
+    message: `
       "처분가능소득과 민간소비는 매우 밀접한 ___의 관계.",
       "소득이 증가하면 소비가 증가하고, 소비의 증가분은 소득의 증가분보다 ___.",
       "소득이 증가할 수록 대체로 소득에서 소비가 차지하는 비중은 ___함.",
-    ],
+    `,
     corrects: ["양", "작음", "감소"],
     tags: ["거시경제학"],
   },

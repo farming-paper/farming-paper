@@ -2,6 +2,7 @@
 
 import { createPromptModule } from "inquirer";
 import { createQuestionGenerator } from "./question-generator";
+import { createQuestion } from "./question/create";
 import { questions } from "./question/data/adsp";
 import {
   deepclone,
@@ -47,7 +48,9 @@ const prompts = createPromptModule();
 
 // eslint-disable-next-line no-constant-condition
 while (true) {
-  const generator = createQuestionGenerator(questions);
+  const generator = createQuestionGenerator(
+    questions.map((q) => createQuestion(q))
+  );
   const { question, index } = generator.gen();
 
   if (typeof question.message !== "string") {

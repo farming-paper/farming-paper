@@ -1,4 +1,5 @@
 import type { Session, SupabaseClient } from "@supabase/auth-helpers-remix";
+import type { PartialDeep as PartialDeepTypeFest } from "type-fest";
 import type { Database } from "./supabase/generated/supabase-types";
 
 export interface IProfile {
@@ -14,3 +15,8 @@ export interface IOutletProps {
   session: Session | null;
   supabase: SupabaseClient<Database>;
 }
+
+export type PartialDeep<T> = PartialDeepTypeFest<
+  T,
+  { recurseIntoArrays: true }
+>;

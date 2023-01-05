@@ -1,12 +1,10 @@
 export type Category = "1" | "2" | "3";
 export type Tag = `${number}일차` | "핵심 서브노트 110제" | string;
 
-export type Content = string | string[];
-
 export interface IBaseQuestion {
-  message: Content;
+  id: string;
+  message: string;
   weight?: number;
-  category?: Category;
   tags?: Tag[];
   ignoreWhitespace?: boolean;
 }
@@ -45,6 +43,7 @@ export interface IPickMultiQuestion extends IBaseQuestion {
   options: string[];
 }
 
+/** unused */
 export interface IPickDifferentQuestion extends IBaseQuestion {
   type: "pick_different";
   pool: string[][];
