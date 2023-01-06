@@ -1,6 +1,6 @@
 import { CalendarIcon, ChevronRightIcon } from "@heroicons/react/24/outline";
 import { Link, useLoaderData, useNavigate, useParams } from "@remix-run/react";
-import type { LoaderArgs } from "@remix-run/server-runtime";
+import type { LoaderArgs, MetaFunction } from "@remix-run/server-runtime";
 import { json } from "@remix-run/server-runtime";
 import { Pagination } from "antd";
 import dayjs from "dayjs";
@@ -41,6 +41,14 @@ export async function loader({ request, params }: LoaderArgs) {
     total: questionsRes.count,
   });
 }
+
+export const meta: MetaFunction = ({ params }) => {
+  const page = Number.parseInt(params.page || "1");
+
+  return {
+    title: `문제 ${page}p | Farming Paper`,
+  };
+};
 
 export default function QuestionList() {
   const loaded = useLoaderData<typeof loader>();
