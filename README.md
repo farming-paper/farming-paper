@@ -2,7 +2,7 @@
 
 농사꾼이 농사를 지으며 자급자족하듯 스스로 문제를 만들어서 스스로 문제를 푸는 플랫폼입니다.
 
-🚀 서비스 배포 보기 : <https://learning-kappa.vercel.app>
+🚀 서비스 배포 보기 : <https://farming-paper.vercel.app>
 
 ## 주기능
 
