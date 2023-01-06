@@ -20,3 +20,9 @@ export type PartialDeep<T> = PartialDeepTypeFest<
   T,
   { recurseIntoArrays: true }
 >;
+
+export interface ITag {
+  desc?: string;
+  name?: string;
+  public_id: string;
+}

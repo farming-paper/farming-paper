@@ -1,27 +1,35 @@
 import { CalendarIcon, ChevronRightIcon } from "@heroicons/react/24/outline";
-import { Link, useLoaderData, useNavigate, useParams } from "@remix-run/react";
-import type { LoaderArgs, MetaFunction } from "@remix-run/server-runtime";
-import { json } from "@remix-run/server-runtime";
+import { Link, useLoaderData, useNavigate } from "@remix-run/react";
+import type { LoaderArgs } from "@remix-run/server-runtime";
+import { json, redirect } from "@remix-run/server-runtime";
 import { Pagination } from "antd";
 import dayjs from "dayjs";
+import type { PartialDeep } from "type-fest";
 import { getSessionWithProfile } from "~/auth/get-session";
 import { createQuestion } from "~/question/create";
 import type { Question } from "~/question/types";
 import { getServerSideSupabaseClient } from "~/supabase/client";
-import type { PartialDeep } from "~/types";
 
 const numberPerPage = 10;
 
-export async function loader({ request, params }: LoaderArgs) {
+export async function loader({ request }: LoaderArgs) {
+  const url = new URL(request.url);
+  const pageStr = url.searchParams.get("p");
+  if (!pageStr) {
+    url.searchParams.set("p", "1");
+    return redirect(url.pathname + url.search);
+  }
+
   const response = new Response();
-  const page = Number.parseInt(params.page || "1");
+  const page = Number.parseInt(pageStr) || 1;
   const { profile } = await getSessionWithProfile({ request, response });
   const db = getServerSideSupabaseClient();
 
   const questionsRes = await db
     .from("questions")
-    .select("*", { count: "exact" })
+    .select("*", { count: "estimated" })
     .eq("creator", profile.id)
+    .is("deleted_at", null)
     .order("updated_at", { ascending: false })
     .range((page - 1) * numberPerPage, page * numberPerPage - 1);
 
@@ -39,28 +47,19 @@ export async function loader({ request, params }: LoaderArgs) {
       content: createQuestion(q.content as PartialDeep<Question>),
     })),
     total: questionsRes.count,
+    page,
   });
 }
 
-export const meta: MetaFunction = ({ params }) => {
-  const page = Number.parseInt(params.page || "1");
-
-  return {
-    title: `문제 ${page}p | Farming Paper`,
-  };
-};
-
 export default function QuestionList() {
   const loaded = useLoaderData<typeof loader>();
-  const params = useParams();
-  const page = Number.parseInt(params.page || "1");
-  const nav = useNavigate();
+  const navigate = useNavigate();
 
   return (
     <div className="flex flex-col">
       <header className="flex items-end gap-4 mx-5 my-5">
         <h1 className="m-0 text-xl font-medium leading-none">문제 리스트</h1>
-        <p className="m-0 leading-none text-gray-400">{page}p</p>
+        <p className="m-0 leading-none text-gray-400">{loaded.page}p</p>
       </header>
       <ul className="divide-y divide-gray-200">
         {loaded.items.map((item) => (
@@ -104,11 +103,13 @@ export default function QuestionList() {
 
       <div className="flex flex-col items-center justify-center my-4">
         <Pagination
-          defaultCurrent={page}
+          defaultCurrent={loaded.page}
           pageSize={numberPerPage}
           total={loaded.total}
           onChange={(e) => {
-            nav(`/q/list/${e}`);
+            const dest = new URL(document.location.href);
+            dest.searchParams.set("p", e.toString());
+            navigate(`${dest.pathname}${dest.search}`);
           }}
         />
       </div>
