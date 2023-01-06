@@ -160,3 +160,22 @@ export const removeNullDeep = <T extends { [key: string]: any }>(
 
 //   return JSON.parse(body) as T;
 // }
+
+export async function getFormdataFromRequest<T>({
+  request,
+  keyName,
+}: {
+  request: Request;
+  keyName: string;
+}) {
+  const data = Object.fromEntries(await request.formData()) as {
+    [key in typeof keyName]: string;
+  };
+
+  const stringData = data[keyName];
+  if (!stringData) {
+    throw new Error(`No data on key ${keyName}`);
+  }
+
+  return JSON.parse(stringData) as T;
+}
