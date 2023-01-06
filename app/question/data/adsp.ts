@@ -7,40 +7,34 @@ export const questions: PartialDeep<Question>[] = [
     message:
       "데이터의 일반적인 특징 중 동일한 내용의 데이터가 중복되어 있지 않은 것",
     correct: "통합된 데이터",
-    tags: ["1일차"],
   },
   {
     type: "short",
     message: "데이터의 일반적인 특징 중 컴퓨터의 저장매체에 있는 것.",
     correct: "저장된 데이터",
-    tags: ["1일차"],
   },
   {
     type: "short",
     message:
       "데이터의 일반적인 특징 중 여러 사용자가 서로 다른 목적으로 접근할 수 있는 것",
     correct: "공용 데이터",
-    tags: ["1일차"],
   },
   {
     type: "short",
     message:
       "데이터의 일반적인 특징 중 새로운 데이터의 삽입, 기존 데이터의 수정, 삭제, 업데이트를 하여 항상 최신의 정확한 데이터 상태를 유지하는 것",
     correct: "변화하는 데이터",
-    tags: ["1일차"],
   },
   {
     type: "short",
     message:
       "학습과 체험을 통해 개인에게 습득되어 있지만 겉으로 드러나지 않는 상태의 지식",
     correct: "암묵지",
-    tags: ["1일차"],
   },
   {
     type: "short",
     message: "문서나 매뉴얼처럼 외부로 표출돼 여러 사람이 공유할 수 있는 지식",
     correct: "형식지",
-    tags: ["1일차"],
   },
 
   {
@@ -48,14 +42,12 @@ export const questions: PartialDeep<Question>[] = [
     message:
       "암묵지-형식지의 상호작용: 조직의 지식으로 ___를 위한 ___, 개인에게 ___ 및 습득되는 ___",
     corrects: ["공통화", "표출화", "연결", "내면화"],
-    tags: ["1일차"],
   },
   {
     type: "short_order",
     message:
       "???피라미드. 객관적인 사실로부터 얻을 수 있는 것들을 차례대로. 답은 네 가지.",
     corrects: ["데이터", "정보", "지식", "지혜"],
-    tags: ["1일차"],
   },
   {
     type: "short_multi",
@@ -68,177 +60,150 @@ export const questions: PartialDeep<Question>[] = [
       "경제 산업적",
     ],
     weight: 2,
-    tags: ["1일차"],
   },
   {
     type: "short",
     message:
       "DB의 ___ 측면: 이용자의 정보 요구에 따라 원하는 정보를 신속하고 정확하고 경제적으로 찾아내거나 획득 가능",
     correct: "정보이용",
-    tags: ["1일차"],
   },
   {
     type: "short",
     message:
       "DB의 ___ 측면: 정리, 저장, 검색, 관리, 체계적으로 축적, 추가나 갱신 용이한 측면",
     correct: "정보관리",
-    tags: ["1일차"],
   },
   {
     type: "short",
     message: "DB의 ___ 측면: 네트워크 기술의 발달을 견인할 수 있음.",
     correct: "정보기술발전",
-    tags: ["1일차"],
   },
   {
     type: "short",
     message: "DB의 ___ 측면: 국민의 편의를 증진하고 사회 활동의 효율성 제고",
     correct: "경제산업적",
-    tags: ["1일차"],
   },
   {
     type: "short",
     message: "데이터베이스에서 명령을 수행하는 하나의 단위",
     correct: "트랜잭션",
-    tags: ["1일차"],
   },
   {
     type: "short_multi",
     message: "트랜잭션 네 가지 특성",
     corrects: ["원자성", "일관성", "고립성", "지속성"],
-    tags: ["1일차"],
   },
   {
     type: "short",
     message:
       "영역별로 구축되던 단순 자동화 중심, 각각 거래 단위에 초점을 맞추는 데 목적이 있음 (예: 주문입력)",
     correct: "OLTP",
-    tags: ["1일차"],
   },
   {
     type: "short",
     message:
       "데이터마이닝 등의 기술이 등장하며, 단순한 정보의 수집과 공유에서 탈피하여 분석이 중심이 되는 것",
     correct: "OLAP",
-    tags: ["1일차"],
   },
   {
     type: "short",
     message:
       "기업에서 서비스 간 연계가 필요할 경우, 기하급수적으로 증가하는 연결 루트를 간소화하기 위해 중앙에서 관리하는 것",
     correct: "EAI",
-    tags: ["1일차"],
   },
   {
     type: "short",
     message:
       "기업이 보유할 수 있는 모든 지식을 통합 -> 문제 해결 능력 향상하기 위한 것",
     correct: "KMS",
-    tags: ["1일차"],
   },
   {
     type: "short",
     message: "공급을 관리하는 시스템",
     correct: "SCM",
-    tags: ["1일차"],
   },
   {
     type: "short",
     message: "고객을 관리하는 시스템",
     correct: "CRM",
-    tags: ["1일차"],
   },
   {
     type: "short",
     message:
       "제조 부문에서 자원에 대한 구매/생산을 효율적으로 하기 위한 시스템",
     correct: "ERP",
-    tags: ["1일차"],
   },
   {
     type: "short",
     message: "제조 부문에서 기업의 의사결정을 돕는 프로세스",
     correct: "BI",
-    tags: ["1일차"],
   },
   {
     type: "short",
     message: "데이터를 설명하는 데이터",
     correct: "메타데이터",
-    tags: ["1일차"],
   },
   {
     type: "short_multi",
     message: "빅데이터 특징 3V (소문자로)",
     corrects: ["volume", "variety", "velocity"],
-    tags: ["1일차"],
   },
   {
     type: "short_multi",
     message: "3V 에 하나로 추가하는 것은 ___ 또는 ___ 이다. (햔국어로)",
     corrects: ["가치", "정확성"],
-    tags: ["1일차"],
   },
   {
     type: "short_multi",
     message: "빅데이터가 만들어내는 변화 네 가지",
     corrects: ["사후처리", "전수조사", "양", "상관관계"],
-    tags: ["1일차"],
   },
   {
     type: "short",
     message:
       "빅데이터의 역할: 빅데이터는 ___의 석탄, 철! 생산성을 획기적으로 끌어올림.",
     correct: "산업혁명",
-    tags: ["1일차"],
   },
   {
     type: "short",
     message:
       "빅데이터의 역할: 빅데이터는 21세기 ___! 산업 전반의 생산성을 향상시키고 새로운 범주의 산업을 만들어낼 것임!",
     correct: "원유",
-    tags: ["1일차"],
   },
   {
     type: "short",
     message:
       "빅데이터의 역할: 빅데이터는 ___! 생물학에 큰 영향을 끼친 ___ 처럼 산업 발전에 큰 영향을 줄 것이다.",
     correct: "렌즈",
-    tags: ["1일차"],
   },
   {
     type: "short",
     message:
       "빅데이터의 역할: 빅데이터는 ___! (여러 사람이 공동으로 사용 가능한 구조물) 예: 페이스북, 카카오톡",
     correct: "플랫폼",
-    tags: ["1일차"],
   },
   {
     type: "short",
     message:
       "___ 이란 헤겔의 변증법에 기초를 둔 개념으로, 양적인 변화가 축적되면 질적인 변화도 이루어진다는 개념이다.",
     correct: "양질 전환의 법칙",
-    tags: ["1일차"],
   },
   {
     type: "short",
     message:
       "___ 이란 헤겔의 변증법에 기초를 둔 개념으로, 양적인 변화가 축적되면 질적인 변화도 이루어진다는 개념이다.",
     correct: "양질 전환의 법칙",
-    tags: ["1일차"],
   },
   {
     type: "short_order",
     message:
       "빅데이터 가치 산정 어려움의 이유 - 데이터 ___ 방식이 다양해지고, 기존에 없던 ___를 창출함에 따라 산정하기가 어렵고, ___의 발전으로 가치 있는 데이터와 없는 데이터의 경계를 나누기가 어려워졌다.",
     corrects: ["활용", "가치", "분석 기술"],
-    tags: ["2일차"],
   },
   {
     type: "short_multi",
     message: "미래의 빅데이터 활용에 필요한 3요소",
     corrects: ["데이터", "기술", "인력"],
-    tags: ["2일차"],
   },
   {
     type: "short_multi",
@@ -252,149 +217,127 @@ export const questions: PartialDeep<Question>[] = [
       "감정분석",
       "소셜 네트워크 분석",
     ],
-    tags: ["2일차"],
   },
   {
     type: "short",
     message:
       "7가지 데이터 활용 기본 테크닉 중 어떤 변인 간에 주목할 만한 상관 관계가 있는지를 찾아내는 방법",
     correct: "연관규칙 학습",
-    tags: ["2일차"],
   },
   {
     type: "short",
     message:
       "7가지 데이터 활용 기본 테크닉 중 새로운 사건이 속할 범주를 찾아내는 방법",
     correct: "유형분석",
-    tags: ["2일차"],
   },
   {
     type: "short",
     message:
       "7가지 데이터 활용 기본 테크닉 중 최적화가 필요한 문제의 해결책을 자연선택, 돌연변이 등과 같은 메커니즘을 통해 점진적으로 진화시켜 나가는 방법",
     correct: "유전 알고리즘",
-    tags: ["2일차"],
   },
   {
     type: "short",
     message:
       "7가지 데이터 활용 기본 테크닉 중, 컴퓨터가 데이터로부터 규칙을 찾고 이러한 규칙을 활용해 '예측'하는 데 초점을 둔 방법",
     correct: "기계학습",
-    tags: ["2일차"],
   },
   {
     type: "short",
     message:
       "7가지 데이터 활용 기본 테크닉 중, 독립변수를 조작하면서 종속변수가 어떻게 변하는지를 보며 수치형으로 이루어진 두 변인의 관계를 파악하는 방법",
     correct: "회귀분석",
-    tags: ["2일차"],
   },
   {
     type: "short",
     message:
       "7가지 데이터 활용 기본 테크닉 중, 특정 주제에 대해 말하거나 글을 쓴 사람의 감정을 분석하는 방법",
     correct: "감정분석",
-    tags: ["2일차"],
   },
   {
     type: "short",
     message:
       "7가지 데이터 활용 기본 테크닉 중, 온라인 공간에서 영향력 있는 사람을 찾아내어 기업의 효율적인 마케팅이나 범죄 수사에서 공범을 찾는 등 다양한 분야에서 활용될 수 있음.",
     correct: "소셜 네트워크 분석",
-    tags: ["2일차"],
   },
   {
     type: "short_multi",
     message: "빅데이터 시대의 위기 요인 세 가지",
     corrects: ["사생활 침해", "책임 원칙 훼손", "데이터 오용"],
-    tags: ["2일차"],
   },
   {
     type: "short",
     message:
       "조지 오웰의 <1984>, SNS에 여행 게시글을 올린 사용자를 대상으로 한 빈집털이 발생과 관련된 빅데이터 위기요인은?",
     correct: "사생활 침해",
-    tags: ["2일차"],
   },
   {
     type: "short",
     message:
       "영화 <마이너리티 리포트>, 신용카드 발급 여부 판단에 있어 불이익 발생 등과 관련된 빅데이터 위기요인은?",
     correct: "책임 원칙 훼손",
-    tags: ["2일차"],
   },
   {
     type: "short",
     message:
       "잘못된 지표의 사용 등으로 인해 잘못된 인사이트를 얻어 손실을 발생할 수 있다. 포드의 자동차 발명 당시 말(horse)이 이미 유효했던 사실, 스티브 잡스의 아이폰 발명 (이전에는 없었던 창조적인 물건에 대한 미래는 예측하기 힘듬) 등과 관련된 빅데이터 위기요인은?",
     correct: "데이터 오용",
-    tags: ["2일차"],
   },
   {
     type: "short",
     message: "사생활 침해의 통제 방안은 동의에서 ___으로",
     correct: "책임",
-    tags: ["2일차"],
   },
   {
     type: "short",
     message: "책임 원칙 훼손의 통제 방안은 ___ 책임 원칙 고수.",
     correct: "결과 기반",
-    tags: ["2일차"],
   },
   {
     type: "short",
     message:
       "데이터가 오용되었을 때에는, 데이터가 어떻게 사용되어 어떠한 이유로 피해자가 발생하게 되었는지 ___ 를 살펴봄으로써 피해자를 구제할 수 있다.",
     correct: "알고리즘",
-    tags: ["2일차"],
   },
   {
     type: "short",
     message:
       "___ 이란, 데이터 속에서 개인을 식별할 수 있는 요인을 숨김으로써 개인을 특정할 수 없도록 하는 기술이다.",
     correct: "개인정보 비식별 기술",
-    tags: ["2일차"],
   },
   {
     type: "short_multi",
     message: "데이터 사이언스 구성 요소 세 가지",
     corrects: ["Analytics", "IT", "비즈니스 분석"],
-    tags: ["2일차"],
   },
   {
     type: "short",
     message:
       "다른 이해 관계자들이 보완적인 상품, 서비스를 제공하는 생태계를 구축하고자 하는 비즈니스 모델은 ___ 비즈니스 모델이다.",
     correct: "플랫폼형",
-    tags: ["2일차"],
   },
   {
     type: "short",
     message:
       "기업이 부가가치를 생산하는 과정을 통합/세분화하여 시장 상황에 빠르게 대응할 수 있는 비즈니스 모델은 ___ 비즈니스 모델이다.",
     correct: "가치사슬형",
-    tags: ["2일차"],
   },
   {
     type: "short",
     message:
       "거래 사이트가 직접 거래하지 않고 공급자와 수요자들이 자유롭게 거래할 수 있도록 하는 비즈니스 모델은 ___ 비즈니스 모델이다.",
     correct: "대리인형",
-    tags: ["2일차"],
   },
   {
     type: "short",
     message:
       "다양한 공급자와 수요자들이 만나는 사이트를 운영하는 비즈니스 모델은 ___ 비즈니스 모델이다.",
     correct: "상거래형",
-    tags: ["2일차"],
   },
   {
     type: "short_order",
     message: "빅데이터 가치 패러다임의 변화 세 단계는?",
     corrects: ["디지털화", "연결", "에이전시"],
-    tags: ["2일차"],
     weight: 1.5,
   },
   {
@@ -402,21 +345,18 @@ export const questions: PartialDeep<Question>[] = [
     message:
       "빅데이터 가치 패러다임 중 운영체제, 워드/파워포인트 같은 오피스 프로그램과 같은 것",
     correct: "디지털화",
-    tags: ["2일차"],
   },
   {
     type: "short",
     message:
       "빅데이터 가치 패러다임 중 구글의 검색 알고리즘, 네이버의 콘텐츠 등과 관련된 것",
     correct: "연결",
-    tags: ["2일차"],
   },
   {
     type: "short",
     message:
       "빅데이터 가치 패러다임 중 복잡한 연결을 얼마나 효과적으로 관리하는 가의 이슈",
     correct: "에이전시",
-    tags: ["2일차"],
   },
   {
     type: "pick_different",
@@ -439,7 +379,6 @@ export const questions: PartialDeep<Question>[] = [
       ],
       ["커뮤니케이션", "프레젠테이션", "스토리텔링", "시각화"],
     ],
-    tags: ["2일차"],
     weight: 2,
   },
   {
@@ -454,25 +393,21 @@ export const questions: PartialDeep<Question>[] = [
       "시각화",
       "커뮤니케이션",
     ],
-    tags: ["2일차"],
   },
   {
     type: "short_order",
     message: "하드 스킬 두 가지: ___에 대한 이론적 지식, ___에 대한 숙련",
     corrects: ["빅데이터", "분석 기술"],
-    tags: ["2일차"],
   },
   {
     type: "short_multi",
     message: "가트너가 제시한 데이터 사이언티스트 역량 네 가지",
     corrects: ["데이터 관리", "분석 모델링", "비즈니스 분석", "소프트 스킬"],
-    tags: ["2일차"],
   },
   {
     type: "short_order",
     message: "외부 환경에서 본 인문학의 열풍: ",
     corrects: ["통찰력 있는 분석", "설득력 있는 전달", "다분야간 협력"],
-    tags: ["2일차"],
   },
   {
     type: "short",

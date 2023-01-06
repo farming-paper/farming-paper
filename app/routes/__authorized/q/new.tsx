@@ -1,5 +1,9 @@
-import { useFetcher } from "@remix-run/react";
-import type { ActionArgs, MetaFunction } from "@remix-run/server-runtime";
+import { useFetcher, useLoaderData } from "@remix-run/react";
+import type {
+  ActionArgs,
+  LoaderArgs,
+  MetaFunction,
+} from "@remix-run/server-runtime";
 import { json } from "@remix-run/server-runtime";
 import { Button, message } from "antd";
 import { nanoid } from "nanoid";
@@ -12,6 +16,8 @@ import questionFormResolver from "~/question/question-form-resolver";
 import type { Question } from "~/question/types";
 import { getServerSideSupabaseClient } from "~/supabase/client";
 import type { Json } from "~/supabase/generated/supabase-types";
+import type { ITag } from "~/types";
+import { removeNullDeep } from "~/util";
 
 export const meta: MetaFunction = () => {
   return {
@@ -19,7 +25,33 @@ export const meta: MetaFunction = () => {
   };
 };
 
+export async function loader({ request }: LoaderArgs) {
+  const response = new Response();
+  const { profile } = await getSessionWithProfile({ request, response });
+  const db = getServerSideSupabaseClient();
+
+  const tagsRes = await db.from("tags").select("*").eq("creator", profile.id);
+  if (tagsRes.error) {
+    throw new Response("Something went wrong while fetching tags", {
+      status: 500,
+    });
+  }
+
+  const tags: ITag[] = tagsRes.data.map((t) =>
+    removeNullDeep({
+      public_id: t.public_id,
+      desc: t.desc,
+      name: t.name || "",
+    })
+  );
+
+  return json({
+    tags,
+  });
+}
+
 export default function QuestionNew() {
+  const { tags } = useLoaderData<typeof loader>();
   const { handleSubmit, formState, control, watch, setValue, setFocus } =
     useForm({
       resolver: questionFormResolver,
@@ -100,6 +132,7 @@ export default function QuestionNew() {
         formState={formState}
         setValue={setValue}
         values={values}
+        existingTags={tags}
       />
       <div className="flex justify-end">
         <Button htmlType="submit" onClick={onSubmit} type="primary">

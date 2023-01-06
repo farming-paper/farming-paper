@@ -26,7 +26,7 @@ export async function loader({ request }: LoaderArgs) {
     tags: tagsRes.data.map((t): ITag => {
       return removeNullDeep({
         desc: t.desc,
-        name: t.name,
+        name: t.name || "",
         public_id: t.public_id,
       });
     }),

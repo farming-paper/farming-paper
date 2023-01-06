@@ -1,11 +1,9 @@
-export type Category = "1" | "2" | "3";
-export type Tag = `${number}일차` | "핵심 서브노트 110제" | string;
+import type { ITag } from "~/types";
 
 export interface IBaseQuestion {
   id: string;
   message: string;
   weight?: number;
-  tags?: Tag[];
   ignoreWhitespace?: boolean;
 }
 
@@ -76,10 +74,7 @@ export type QuestionInputProps<T extends Question = Question> = {
 
 export type QuestionRow = {
   content: Question;
-  created_at: string;
-  creator: number;
-  deleted_at?: string;
-  id: number;
-  public_id: string;
-  updated_at: string;
+  publicId: string;
+  updatedAt: string;
+  tags: ITag[];
 };

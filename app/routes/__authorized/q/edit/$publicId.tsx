@@ -15,7 +15,8 @@ import QuestionForm from "~/question/edit-components/QuestionForm";
 import questionFormResolver from "~/question/question-form-resolver";
 import type { Question, QuestionRow } from "~/question/types";
 import { getServerSideSupabaseClient } from "~/supabase/client";
-import type { Json } from "~/supabase/generated/supabase-types";
+import type { Database, Json } from "~/supabase/generated/supabase-types";
+import type { ITag } from "~/types";
 import { removeNullDeep } from "~/util";
 
 export const meta: MetaFunction = () => {
@@ -23,6 +24,79 @@ export const meta: MetaFunction = () => {
     title: "문제 편집 | Farming Paper",
   };
 };
+
+export async function getQuestionRow({
+  profileId,
+  publicId,
+}: {
+  profileId: number;
+  publicId: string;
+}) {
+  const db = getServerSideSupabaseClient();
+  const questionRes = await db
+    .from("questions")
+    .select("*")
+    .eq("creator", profileId)
+    .eq("public_id", publicId)
+    .single();
+
+  if (!questionRes.data) {
+    throw new Response("Not Found", {
+      status: 404,
+    });
+  }
+
+  const tags = await db
+    .from("tags_questions_relation")
+    .select("tag (*)")
+    .eq("q", questionRes.data.id);
+
+  if (!tags.data) {
+    throw new Response("Unknown Error", {
+      status: 500,
+    });
+  }
+
+  const row: QuestionRow = {
+    content: createQuestion(questionRes.data?.content as PartialDeep<Question>),
+    publicId: questionRes.data.public_id,
+    updatedAt: questionRes.data.updated_at,
+    tags: tags.data.map((t) => {
+      const tag = t.tag as Database["public"]["Tables"]["tags"]["Row"];
+      return removeNullDeep({
+        name: tag.name || "",
+        publicId: tag.public_id,
+        desc: tag.desc,
+      });
+    }),
+  };
+
+  return row;
+}
+
+export async function getAllTags({ profileId }: { profileId: number }) {
+  const db = getServerSideSupabaseClient();
+  const tagsRes = await db
+    .from("tags")
+    .select("name, public_id, desc")
+    .eq("creator", profileId);
+
+  if (!tagsRes.data) {
+    throw new Response("Unknown Error", {
+      status: 500,
+    });
+  }
+
+  const tags: ITag[] = tagsRes.data.map((t) => {
+    return removeNullDeep({
+      name: t.name || "",
+      publicId: t.public_id,
+      desc: t.desc,
+    });
+  });
+
+  return tags;
+}
 
 export async function loader({ request, params }: LoaderArgs) {
   const publicId = params.publicId;
@@ -34,27 +108,14 @@ export async function loader({ request, params }: LoaderArgs) {
   const response = new Response();
   const { profile } = await getSessionWithProfile({ request, response });
 
-  const db = getServerSideSupabaseClient();
-  const questionRes = await db
-    .from("questions")
-    .select("*")
-    .eq("creator", profile.id)
-    .eq("public_id", publicId)
-    .single();
-
-  if (!questionRes.data) {
-    throw new Response("Not Found", {
-      status: 404,
-    });
-  }
-
-  const row: QuestionRow = removeNullDeep({
-    ...questionRes.data,
-    content: createQuestion(questionRes.data.content as PartialDeep<Question>),
-  });
+  const [row, tags] = await Promise.all([
+    getQuestionRow({ profileId: profile.id, publicId }),
+    getAllTags({ profileId: profile.id }),
+  ]);
 
   return json({
-    data: row,
+    row,
+    tags,
   });
 }
 
@@ -65,7 +126,7 @@ export default function QuestionEdit() {
   const { handleSubmit, formState, control, watch, setValue, setFocus } =
     useForm({
       resolver: questionFormResolver,
-      defaultValues: { question: loaded.data.content },
+      defaultValues: { question: loaded.row.content, tags: loaded.row.tags },
     });
 
   const onSubmit = useMemo(
@@ -78,14 +139,18 @@ export default function QuestionEdit() {
           },
           {
             method: "post",
-            action: `/q/edit/${loaded.data.public_id}`,
+            action: `/q/edit/${loaded.row.publicId}`,
           }
         );
       }),
-    [createNewFetch, handleSubmit, loaded.data.public_id]
+    [createNewFetch, handleSubmit, loaded.row.publicId]
   );
 
   const values = watch();
+
+  useEffect(() => {
+    console.log("values", values);
+  }, [values]);
 
   useEffect(() => {
     if (createNewFetch?.data?.data) {
@@ -130,6 +195,7 @@ export default function QuestionEdit() {
         formState={formState}
         setValue={setValue}
         values={values}
+        existingTags={loaded.tags}
       />
       <div className="flex justify-end">
         <Button htmlType="submit" onClick={onSubmit} type="primary">

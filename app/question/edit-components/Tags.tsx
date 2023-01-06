@@ -1,11 +1,13 @@
 import { PlusOutlined } from "@ant-design/icons";
 import type { InputRef } from "antd";
 import { Input, Tag, Tooltip } from "antd";
+import { nanoid } from "nanoid";
 import React, { useEffect, useRef, useState } from "react";
+import type { ITag } from "~/types";
 
 const Tags: React.FC<{
-  value: string[] | undefined;
-  onChange: (arg: string[]) => void;
+  value: ITag[] | undefined;
+  onChange: (arg: ITag[]) => void;
 }> = ({ onChange, value }) => {
   const [inputVisible, setInputVisible] = useState(false);
   const [inputValue, setInputValue] = useState("");
@@ -17,8 +19,12 @@ const Tags: React.FC<{
     }
   }, [inputVisible]);
 
-  const handleClose = (removedTag: string) => {
-    const newTags = value?.filter((tag) => tag !== removedTag) || [];
+  useEffect(() => {
+    console.log("value", value);
+  }, [value]);
+
+  const handleClose = (removedTag: ITag) => {
+    const newTags = value?.filter((tag) => tag.name !== removedTag.name) || [];
     // console.log(newTags);
     onChange(newTags);
   };
@@ -32,8 +38,17 @@ const Tags: React.FC<{
   };
 
   const handleInputConfirm = () => {
-    if (inputValue && (value || []).indexOf(inputValue) === -1) {
-      onChange([...(value || []), inputValue]);
+    if (
+      inputValue &&
+      (value || []).findIndex((item) => item.name === inputValue) === -1
+    ) {
+      onChange([
+        ...(value || []),
+        {
+          name: inputValue,
+          publicId: nanoid(),
+        },
+      ]);
     }
     setInputVisible(false);
     setInputValue("");
@@ -42,20 +57,20 @@ const Tags: React.FC<{
   return (
     <div className="flex flex-wrap gap-1">
       {value?.map((tag) => {
-        const isLongTag = tag.length > 20;
+        const isLongTag = tag.name.length > 20;
 
         const tagElem = (
           <Tag
             className="m-0 select-none"
-            key={tag}
+            key={tag.publicId}
             closable
             onClose={() => handleClose(tag)}
           >
-            <span>{isLongTag ? `${tag.slice(0, 20)}...` : tag}</span>
+            <span>{isLongTag ? `${tag.name.slice(0, 20)}...` : tag.name}</span>
           </Tag>
         );
         return isLongTag ? (
-          <Tooltip title={tag} key={tag}>
+          <Tooltip title={tag.name} key={tag.publicId}>
             {tagElem}
           </Tooltip>
         ) : (

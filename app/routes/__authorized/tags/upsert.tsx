@@ -22,16 +22,16 @@ export async function action({ request }: ActionArgs) {
     const updateTagRes = await db
       .from("tags")
       .update({ name: tag.name, desc: tag.desc })
-      .eq("public_id", tag.public_id)
+      .eq("public_id", tag.publicId)
       .eq("creator", profile.id)
       .select("*")
       .single();
 
     if (updateTagRes.data) {
       const updatedTag: ITag = removeNullDeep({
-        public_id: updateTagRes.data.public_id,
+        publicId: updateTagRes.data.public_id,
         desc: updateTagRes.data.desc,
-        name: updateTagRes.data.name,
+        name: updateTagRes.data.name || "",
       });
       return updatedTag;
     }
@@ -54,9 +54,9 @@ export async function action({ request }: ActionArgs) {
         });
       }
       const newTag: ITag = removeNullDeep({
-        public_id: createdRes.data.public_id,
+        publicId: createdRes.data.public_id,
         desc: createdRes.data.desc,
-        name: createdRes.data.name,
+        name: createdRes.data.name || "",
       });
 
       return newTag;

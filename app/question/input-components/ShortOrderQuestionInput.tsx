@@ -23,11 +23,11 @@ const ShortOrderQuestionInput: React.FC<
 
   return (
     <div>
-      {question.tags && question.tags.length > 0 ? (
+      {/* {question.tags && question.tags.length > 0 ? (
         <div className="mb-2 text-sm text-gray-500">
           {question.tags?.join(", ")}
         </div>
-      ) : null}
+      ) : null} */}
       <div className="mb-2 ">문제 </div>
       <div className="mb-4">
         <Render>{question.message}</Render>

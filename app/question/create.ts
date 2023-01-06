@@ -45,7 +45,7 @@ export function createShortQuestion(
     ...args,
     type: "short",
     message: args?.message || "",
-    tags: removeUndefined(args?.tags),
+    // tags: removeUndefined(args?.tags),
   };
 }
 
@@ -58,7 +58,7 @@ export function createShortOrderQuestion(
     type: "short_order",
     message: args?.message || "",
     corrects: removeUndefined(args?.corrects),
-    tags: removeUndefined(args?.tags),
+    // tags: removeUndefined(args?.tags),
   };
 }
 
@@ -71,7 +71,7 @@ export function createShortMultiAnswerQuestion(
     type: "short_multi",
     message: args?.message || "",
     corrects: removeUndefined(args?.corrects),
-    tags: removeUndefined(args?.tags),
+    // tags: removeUndefined(args?.tags),
   };
 }
 
@@ -84,7 +84,7 @@ export function createPickOrderQuestion(
     type: "pick_order",
     message: args?.message || "",
     corrects: removeUndefined(args?.corrects),
-    tags: removeUndefined(args?.tags),
+    // tags: removeUndefined(args?.tags),
     otherChoices: removeUndefined(args?.otherChoices),
   };
 }
@@ -99,7 +99,7 @@ export function createPickQuestion(
     type: "pick",
     message: args?.message || "",
     options: removeUndefined(args?.options),
-    tags: removeUndefined(args?.tags),
+    // tags: removeUndefined(args?.tags),
   };
 }
 
@@ -111,7 +111,7 @@ export function createPickMultiQuestion(
     ...args,
     type: "pick_multi",
     message: args?.message || "",
-    tags: removeUndefined(args?.tags),
+    // tags: removeUndefined(args?.tags),
     options: removeUndefined(args?.options),
     corrects: removeUndefined(args?.corrects),
   };
@@ -126,6 +126,6 @@ export function createPickDifferentQuestion(
     type: "pick_different",
     message: args?.message || "",
     pool: removeUndefined(args?.pool?.map((p) => removeUndefined(p))),
-    tags: removeUndefined(args?.tags),
+    // tags: removeUndefined(args?.tags),
   };
 }
