@@ -11,7 +11,7 @@ export async function loader({ request }: LoaderArgs) {
   const db = getServerSideSupabaseClient();
   const tagsRes = await db
     .from("tags")
-    .select("desc, name, public_id", { count: "estimated" })
+    .select("desc, name, public_id, id", { count: "estimated" })
     .order("updated_at", { ascending: false })
     .neq("deleted_at", null)
     .eq("creator", profile.id);
@@ -25,9 +25,10 @@ export async function loader({ request }: LoaderArgs) {
   return json({
     tags: tagsRes.data.map((t): ITag => {
       return removeNullDeep({
+        id: t.id,
         desc: t.desc,
         name: t.name || "",
-        public_id: t.public_id,
+        publicId: t.public_id,
       });
     }),
   });

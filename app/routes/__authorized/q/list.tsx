@@ -1,14 +1,15 @@
-import { CalendarIcon, ChevronRightIcon } from "@heroicons/react/24/outline";
+import { CalendarOutlined } from "@ant-design/icons";
+import { ChevronRightIcon } from "@heroicons/react/24/outline";
 import { Link, useLoaderData, useNavigate } from "@remix-run/react";
 import type { LoaderArgs } from "@remix-run/server-runtime";
 import { json, redirect } from "@remix-run/server-runtime";
-import { Pagination } from "antd";
-import dayjs from "dayjs";
+import { Pagination, Tooltip } from "antd";
 import type { PartialDeep } from "type-fest";
 import { getSessionWithProfile } from "~/auth/get-session";
 import { createQuestion } from "~/question/create";
 import type { Question } from "~/question/types";
 import { getServerSideSupabaseClient } from "~/supabase/client";
+import { dayjs } from "~/util";
 
 const numberPerPage = 10;
 
@@ -78,13 +79,19 @@ export default function QuestionList() {
                     </div>
                     <div className="flex mt-2">
                       <div className="flex items-center text-sm text-gray-500">
-                        <CalendarIcon
-                          className="mr-1.5 h-5 w-5 flex-shrink-0 text-gray-400"
+                        <CalendarOutlined
+                          className="mr-1.5 h-4 w-4 flex-shrink-0 text-gray-400"
                           aria-hidden="true"
                         />
-                        <span>
-                          {dayjs(item.updated_at).format("YYYY-MM-DD HH:mm:ss")}
-                        </span>
+                        <Tooltip
+                          title={dayjs(item.updated_at).format(
+                            "YYYY년 MM월 DD일 HH:mm:ss"
+                          )}
+                        >
+                          <span className="leading-none">
+                            {dayjs(item.updated_at).fromNow()}
+                          </span>
+                        </Tooltip>
                       </div>
                     </div>
                   </div>

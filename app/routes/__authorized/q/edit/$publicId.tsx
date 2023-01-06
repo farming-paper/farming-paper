@@ -15,7 +15,7 @@ import QuestionForm from "~/question/edit-components/QuestionForm";
 import questionFormResolver from "~/question/question-form-resolver";
 import type { Question, QuestionRow } from "~/question/types";
 import { getServerSideSupabaseClient } from "~/supabase/client";
-import type { Database, Json } from "~/supabase/generated/supabase-types";
+import type { Json } from "~/supabase/generated/supabase-types";
 import { createTag } from "~/tag/create";
 import type { DatagaseTag, ITag } from "~/types";
 import { getFormdataFromRequest, removeNullDeep } from "~/util";
@@ -63,8 +63,9 @@ export async function getQuestionRow({
     publicId: questionRes.data.public_id,
     updatedAt: questionRes.data.updated_at,
     tags: tags.data.map((t) => {
-      const tag = t.tag as Database["public"]["Tables"]["tags"]["Row"];
+      const tag = t.tag as DatagaseTag;
       return removeNullDeep({
+        id: tag.id,
         name: tag.name || "",
         publicId: tag.public_id,
         desc: tag.desc,
@@ -79,7 +80,7 @@ export async function getAllTags({ profileId }: { profileId: number }) {
   const db = getServerSideSupabaseClient();
   const tagsRes = await db
     .from("tags")
-    .select("name, public_id, desc")
+    .select("name, public_id, desc, id")
     .eq("creator", profileId);
 
   if (!tagsRes.data) {
@@ -90,6 +91,7 @@ export async function getAllTags({ profileId }: { profileId: number }) {
 
   const tags: ITag[] = tagsRes.data.map((t) => {
     return removeNullDeep({
+      id: t.id,
       name: t.name || "",
       publicId: t.public_id,
       desc: t.desc,
@@ -268,26 +270,11 @@ export const action = async ({ request, params }: ActionArgs) => {
     .map((tag) => tag.id);
 
   // 새로운 태그 중 원래 있는 태그에 없는 태그들을 삭제합니다. (순수하게 추가할 태그만 남깁니다.)
-  const addingTagPublicIds = editingData.tags
+  const addingTagIds = editingData.tags
     .filter(
       (newTag) => !existingTags.some((tag) => tag.public_id === newTag.publicId)
     )
-    .map((tag) => tag.publicId);
-
-  // 추가할 태그(editingData)는 id 값을 DB에서 가져와야 합니다.
-  const addingTagIdsRes = await db
-    .from("tags")
-    .select("id")
-    .in("public_id", addingTagPublicIds);
-
-  if (!addingTagIdsRes.data) {
-    return json({
-      data: null,
-      error: addingTagIdsRes.error?.message || "",
-    });
-  }
-
-  const addingTagIds = addingTagIdsRes.data.map((t) => t.id);
+    .map((tag) => tag.id);
 
   const [removeResult, addResult] = await Promise.all([
     db

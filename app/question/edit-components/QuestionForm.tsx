@@ -110,7 +110,7 @@ const QuestionForm: React.FC<{
                   type="text"
                   onClick={() => {
                     if (
-                      values.question.type === "short_order" &&
+                      values.question?.type === "short_order" &&
                       values.question.corrects
                     ) {
                       setValue(`question.corrects`, [
@@ -127,7 +127,7 @@ const QuestionForm: React.FC<{
           <div className="flex">
             <Button
               onClick={() => {
-                if (values.question.type === "short_order") {
+                if (values.question?.type === "short_order") {
                   setValue(`question.corrects`, [
                     ...(values.question.corrects ?? []),
                     "",
@@ -153,7 +153,7 @@ const QuestionForm: React.FC<{
               <Tags
                 existingTags={existingTags}
                 onChange={onChange}
-                value={value.map((v) => createTag(v))}
+                value={value?.map((v) => createTag(v))}
               />
             );
           }}

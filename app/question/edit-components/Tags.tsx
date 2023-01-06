@@ -61,7 +61,7 @@ const Tags: React.FC<{
 
         onChange([
           ...(value || []),
-          { name: inputValue, publicId: "upserting..." },
+          { name: inputValue, publicId: "upserting...", id: -1 },
         ]);
 
         message.loading({

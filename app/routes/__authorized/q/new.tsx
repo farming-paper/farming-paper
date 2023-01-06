@@ -10,14 +10,15 @@ import { nanoid } from "nanoid";
 import { useEffect, useMemo } from "react";
 import { useForm } from "react-hook-form";
 import { getSessionWithProfile } from "~/auth/get-session";
-import { createQuestion } from "~/question/create";
+import { createQuestion, removeUndefined } from "~/question/create";
 import QuestionForm from "~/question/edit-components/QuestionForm";
 import questionFormResolver from "~/question/question-form-resolver";
 import type { Question } from "~/question/types";
 import { getServerSideSupabaseClient } from "~/supabase/client";
 import type { Json } from "~/supabase/generated/supabase-types";
+import { createTag } from "~/tag/create";
 import type { ITag } from "~/types";
-import { removeNullDeep } from "~/util";
+import { getFormdataFromRequest, removeNullDeep } from "~/util";
 
 export const meta: MetaFunction = () => {
   return {
@@ -39,7 +40,8 @@ export async function loader({ request }: LoaderArgs) {
 
   const tags: ITag[] = tagsRes.data.map((t) =>
     removeNullDeep({
-      public_id: t.public_id,
+      id: t.id,
+      publicId: t.public_id,
       desc: t.desc,
       name: t.name || "",
     })
@@ -61,6 +63,7 @@ export default function QuestionNew() {
           message: "",
           corrects: [""],
         },
+        tags: [],
       },
     });
   const createNewFetch = useFetcher<typeof action>();
@@ -68,10 +71,12 @@ export default function QuestionNew() {
   const onSubmit = useMemo(
     () =>
       handleSubmit(async (formData) => {
-        const q = createQuestion(formData.question);
         createNewFetch.submit(
           {
-            formValues: JSON.stringify(q),
+            formValues: JSON.stringify({
+              question: createQuestion(formData.question),
+              tags: removeUndefined(formData.tags).map(createTag),
+            }),
           },
           {
             method: "post",
@@ -88,7 +93,7 @@ export default function QuestionNew() {
     if (createNewFetch?.data?.data) {
       message.success({
         key: "creating",
-        content: "성공적으로 생성되었습니다.",
+        content: "문제가 성공적으로 생성되었습니다.",
       });
     } else if (createNewFetch?.data?.error) {
       message.error({ key: "creating", content: "문제 생성이 실패했습니다." });
@@ -144,11 +149,10 @@ export default function QuestionNew() {
 }
 
 export const action = async ({ request }: ActionArgs) => {
-  const data = Object.fromEntries(await request.formData()) as {
-    formValues: string;
-  };
-
-  const question = JSON.parse(data.formValues) as Question;
+  const { question, tags } = await getFormdataFromRequest<{
+    question: Question;
+    tags: ITag[];
+  }>({ request, keyName: "formValues" });
 
   const response = new Response();
   const { profile } = await getSessionWithProfile({
@@ -173,10 +177,27 @@ export const action = async ({ request }: ActionArgs) => {
       data: null,
       error: "inserted.data is null",
     });
-  } else {
+  }
+
+  const tagRelationRes = await db
+    .from("tags_questions_relation")
+    .upsert(
+      tags.map((t) => ({
+        q: inserted.data.id,
+        tag: t.id,
+      }))
+    )
+    .select("*");
+
+  if (tagRelationRes.error) {
     return json({
-      data: inserted.data,
-      error: null,
+      data: null,
+      error: tagRelationRes.error.message,
     });
   }
+
+  return json({
+    data: inserted.data,
+    error: null,
+  });
 };

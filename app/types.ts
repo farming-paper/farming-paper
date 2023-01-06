@@ -22,6 +22,7 @@ export type PartialDeep<T> = PartialDeepTypeFest<
 >;
 
 export interface ITag {
+  id: number;
   desc?: string;
   name: string;
   publicId: string;

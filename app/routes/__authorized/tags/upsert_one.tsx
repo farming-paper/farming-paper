@@ -31,6 +31,7 @@ export async function action({ request }: ActionArgs) {
 
   if (updateTagRes.data) {
     const updatedTag: ITag = removeNullDeep({
+      id: updateTagRes.data.id,
       publicId: updateTagRes.data.public_id,
       desc: updateTagRes.data.desc,
       name: updateTagRes.data.name || "",
@@ -48,7 +49,7 @@ export async function action({ request }: ActionArgs) {
         name: tag.name,
         desc: tag.desc,
       })
-      .select("public_id, desc, name")
+      .select("public_id, desc, name, id")
       .single();
 
     if (createdRes.error) {
@@ -62,6 +63,7 @@ export async function action({ request }: ActionArgs) {
     }
 
     const newTag: ITag = removeNullDeep({
+      id: createdRes.data.id,
       publicId: createdRes.data.public_id,
       desc: createdRes.data.desc,
       name: createdRes.data.name || "",

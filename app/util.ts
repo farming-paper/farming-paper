@@ -1,5 +1,11 @@
+import dayjsLib from "dayjs";
+import "dayjs/locale/ko"; // import locale
+import relativeTime from "dayjs/plugin/relativeTime"; // import plugin
 import React from "react";
 import rfdc from "rfdc";
+
+dayjsLib.extend(relativeTime); // use plugin
+dayjsLib.locale("ko"); // use locale
 
 export function isSetEqual<T>(xs: Set<T>, ys: Set<T>): boolean {
   return xs.size === ys.size && [...xs].every((x) => ys.has(x));
@@ -179,3 +185,5 @@ export async function getFormdataFromRequest<T>({
 
   return JSON.parse(stringData) as T;
 }
+
+export const dayjs = dayjsLib;

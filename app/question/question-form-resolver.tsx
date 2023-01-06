@@ -3,14 +3,14 @@ import type { ITag, PartialDeep } from "~/types";
 import type { Question } from "./types";
 
 export type QuestionFormValues = {
-  question: PartialDeep<Question>;
-  tags: PartialDeep<ITag[]>;
+  question?: PartialDeep<Question>;
+  tags?: PartialDeep<ITag[]>;
 };
 
 const questionFormResolver: Resolver<QuestionFormValues> = async (values) => {
   const errors: FieldErrors<QuestionFormValues> = {};
 
-  if (!values.question.message) {
+  if (!values.question?.message) {
     if (!errors.question) {
       errors.question = {};
     }

@@ -86,11 +86,6 @@
   margin-right: auto
 }
 
-.my-2 {
-  margin-top: 0.5rem;
-  margin-bottom: 0.5rem
-}
-
 .mx-5 {
   margin-left: 1.25rem;
   margin-right: 1.25rem
@@ -104,6 +99,11 @@
 .my-4 {
   margin-top: 1rem;
   margin-bottom: 1rem
+}
+
+.my-2 {
+  margin-top: 0.5rem;
+  margin-bottom: 0.5rem
 }
 
 .ml-3 {
@@ -210,6 +210,10 @@
   height: 1.25rem
 }
 
+.h-4 {
+  height: 1rem
+}
+
 .min-h-\[100vh\] {
   min-height: 100vh
 }
@@ -248,6 +252,10 @@
 
 .w-5 {
   width: 1.25rem
+}
+
+.w-4 {
+  width: 1rem
 }
 
 .min-w-0 {
@@ -447,16 +455,12 @@
   background-color: rgb(238 242 255 / var(--tw-bg-opacity))
 }
 
-.bg-white\/80 {
-  background-color: rgb(255 255 255 / 0.8)
+.bg-white\/50 {
+  background-color: rgb(255 255 255 / 0.5)
 }
 
 .bg-transparent {
   background-color: transparent
-}
-
-.bg-white\/50 {
-  background-color: rgb(255 255 255 / 0.5)
 }
 
 .p-1 {
@@ -501,6 +505,10 @@
   padding-bottom: 1rem
 }
 
+.pb-24 {
+  padding-bottom: 6rem
+}
+
 .pt-1 {
   padding-top: 0.25rem
 }
@@ -527,10 +535,6 @@
 
 .pb-1 {
   padding-bottom: 0.25rem
-}
-
-.pb-24 {
-  padding-bottom: 6rem
 }
 
 .text-center {
@@ -700,12 +704,6 @@
 
 .filter {
   filter: var(--tw-blur) var(--tw-brightness) var(--tw-contrast) var(--tw-grayscale) var(--tw-hue-rotate) var(--tw-invert) var(--tw-saturate) var(--tw-sepia) var(--tw-drop-shadow)
-}
-
-.backdrop-blur-md {
-  --tw-backdrop-blur: blur(12px);
-  -webkit-backdrop-filter: var(--tw-backdrop-blur) var(--tw-backdrop-brightness) var(--tw-backdrop-contrast) var(--tw-backdrop-grayscale) var(--tw-backdrop-hue-rotate) var(--tw-backdrop-invert) var(--tw-backdrop-opacity) var(--tw-backdrop-saturate) var(--tw-backdrop-sepia);
-          backdrop-filter: var(--tw-backdrop-blur) var(--tw-backdrop-brightness) var(--tw-backdrop-contrast) var(--tw-backdrop-grayscale) var(--tw-backdrop-hue-rotate) var(--tw-backdrop-invert) var(--tw-backdrop-opacity) var(--tw-backdrop-saturate) var(--tw-backdrop-sepia)
 }
 
 .backdrop-blur {
