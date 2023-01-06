@@ -1,33 +1,25 @@
-import { MinusCircleOutlined } from "@ant-design/icons";
-import { Form, useActionData, useFetcher } from "@remix-run/react";
+import { MinusOutlined } from "@ant-design/icons";
+import { Form, useFetcher } from "@remix-run/react";
 import type { ActionFunction } from "@remix-run/server-runtime";
+import { json } from "@remix-run/server-runtime";
 import { Button, Input, Select } from "antd";
+import { nanoid } from "nanoid";
 import { useEffect, useMemo } from "react";
 import type { FieldErrors, Resolver } from "react-hook-form";
 import { Controller, useForm } from "react-hook-form";
 import type { PartialDeep } from "type-fest";
+import { getSessionWithProfile } from "~/auth/get-session";
 import ErrorLabel from "~/common/components/ErrorLabel";
 import Label from "~/common/components/Label";
 import { createQuestion } from "~/question/create";
+import Tags from "~/question/edit-components/Tags";
 import type { Question } from "~/question/types";
+import { getServerSideSupabaseClient } from "~/supabase/client";
+import type { Json } from "~/supabase/generated/supabase-types";
 
 type FormValues = {
   question: PartialDeep<Question>;
 };
-
-function validateMessage(message: string | string[] | undefined) {
-  if (typeof message === "string" && message.length > 0) {
-    return true;
-  }
-  if (
-    Array.isArray(message) &&
-    message.filter((message) => Boolean(message)).length > 0
-  ) {
-    return true;
-  }
-
-  return "필수 입력입니다.";
-}
 
 const questionTypeOptions = [
   {
@@ -95,21 +87,20 @@ export default function QuestionNew() {
       question: {
         type: "short_order",
         message: "",
+        corrects: [""],
       },
     },
   });
-
-  const data = useActionData<FormValues>(); //we access the return value of the action here
 
   const fetcher = useFetcher();
 
   const values = watch();
 
   useEffect(() => {
-    console.log("data", data);
-  }, [data]);
+    console.log("fetcher.data", fetcher.data);
+  }, [fetcher.data]);
   useEffect(() => {
-    console.log("values", values);
+    console.log("values.question", values.question);
   }, [values]);
 
   const onSubmit = useMemo(
@@ -188,9 +179,9 @@ export default function QuestionNew() {
                     }}
                   />
 
-                  <button
-                    className="inline-flex items-center p-2 bg-transparent"
-                    type="button"
+                  <Button
+                    className="inline-flex items-center justify-center p-2 bg-transparent "
+                    type="text"
                     onClick={() => {
                       if (
                         values.question.type === "short_order" &&
@@ -202,9 +193,8 @@ export default function QuestionNew() {
                         ]);
                       }
                     }}
-                  >
-                    <MinusCircleOutlined />
-                  </button>
+                    icon={<MinusOutlined />}
+                  ></Button>
                 </div>
               ))}
             </div>
@@ -225,6 +215,18 @@ export default function QuestionNew() {
           </div>
         )}
 
+        <div className="flex flex-col mb-4">
+          <Label htmlFor="tags">태그</Label>
+          <Controller
+            control={control}
+            name="question.tags"
+            render={({ field }) => {
+              const { onChange, value } = field;
+              return <Tags onChange={onChange} value={value} />;
+            }}
+          />
+        </div>
+
         <div className="flex justify-end">
           <Button htmlType="submit" type="primary">
             만들기
@@ -241,18 +243,38 @@ export const action: ActionFunction = async ({ request }) => {
   };
 
   console.log(data.formValues);
-  const formValues = JSON.parse(data.formValues) as { question: Question };
-  console.log("formValues", formValues);
-  // outputs { name: '', email: '', password: '', confirmPassword: '' }
+  const question = JSON.parse(data.formValues) as Question;
+  console.log("formValues", question);
 
-  const formErrors = {
-    message: validateMessage(formValues?.question?.message),
-  };
+  const response = new Response();
+  const { session, profile } = await getSessionWithProfile({
+    request,
+    response,
+  });
 
-  // if there are errors, we return the form errors
-  if (Object.values(formErrors).some(Boolean)) {
-    return { formErrors };
+  console.log("session", session, profile);
+
+  const db = getServerSideSupabaseClient();
+
+  const inserted = await db
+    .from("questions")
+    .insert({
+      creator: profile.id,
+      public_id: nanoid(),
+      content: question as unknown as Json,
+    })
+    .select("*")
+    .single();
+
+  if (!inserted.data) {
+    return json({
+      data: null,
+      error: "inserted.data is null",
+    });
+  } else {
+    return json({
+      data: inserted.data,
+      error: null,
+    });
   }
-
-  return { message: "success" };
 };
