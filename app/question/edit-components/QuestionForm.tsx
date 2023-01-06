@@ -1,12 +1,11 @@
 import { MinusOutlined } from "@ant-design/icons";
-import { Form, useFetcher } from "@remix-run/react";
+import { Form } from "@remix-run/react";
 import { Button, Input, Select } from "antd";
-import { useEffect } from "react";
 import type { Control, FormState, UseFormSetValue } from "react-hook-form";
 import { Controller } from "react-hook-form";
 import ErrorLabel from "~/common/components/ErrorLabel";
 import Label from "~/common/components/Label";
-import type { action as upsertTagsAction } from "~/routes/__authorized/tags/upsert";
+import { createTag } from "~/tag/create";
 import type { ITag } from "~/types";
 import type { QuestionFormValues } from "../question-form-resolver";
 import Tags from "./Tags";
@@ -49,26 +48,6 @@ const QuestionForm: React.FC<{
   values: QuestionFormValues;
   existingTags: ITag[];
 }> = ({ control, formState: { errors }, setValue, values, existingTags }) => {
-  const upsertTagsFetcher = useFetcher<typeof upsertTagsAction>();
-
-  // upsertTagsFetcher.submit(
-  //   {
-  //     tags: JSON.stringify(q),
-  //   },
-  //   {
-  //     method: "post",
-  //     action: `/q/new`,
-  //   }
-  // );
-
-  useEffect(() => {
-    console.log("existingTags", existingTags);
-  }, [existingTags]);
-
-  useEffect(() => {
-    console.log("values QuestionForm", values);
-  }, [values]);
-
   return (
     <Form>
       <div className="flex flex-col mb-4">
@@ -170,7 +149,13 @@ const QuestionForm: React.FC<{
           render={({ field }) => {
             const { onChange, value } = field;
 
-            return <Tags onChange={onChange} value={value} />;
+            return (
+              <Tags
+                existingTags={existingTags}
+                onChange={onChange}
+                value={value.map((v) => createTag(v))}
+              />
+            );
           }}
         />
       </div>

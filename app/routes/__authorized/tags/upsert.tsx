@@ -3,13 +3,13 @@ import { json } from "@remix-run/server-runtime";
 import { nanoid } from "nanoid";
 import { getSessionWithProfile } from "~/auth/get-session";
 import { getServerSideSupabaseClient } from "~/supabase/client";
-import type { ITag } from "~/types";
+import type { ITag, PartialDeep } from "~/types";
 import { getFormdataFromRequest, removeNullDeep } from "~/util";
 
 export async function action({ request }: ActionArgs) {
   const response = new Response();
   const [tags, { profile }] = await Promise.all([
-    getFormdataFromRequest<ITag[]>({
+    getFormdataFromRequest<PartialDeep<ITag>[]>({
       request,
       keyName: "tags",
     }),
@@ -18,7 +18,7 @@ export async function action({ request }: ActionArgs) {
 
   const db = getServerSideSupabaseClient();
 
-  async function upsertTag(tag: ITag) {
+  async function upsertTag(tag: PartialDeep<ITag>) {
     const updateTagRes = await db
       .from("tags")
       .update({ name: tag.name, desc: tag.desc })

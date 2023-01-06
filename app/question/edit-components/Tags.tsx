@@ -1,27 +1,29 @@
 import { PlusOutlined } from "@ant-design/icons";
+import { useFetcher } from "@remix-run/react";
 import type { InputRef } from "antd";
-import { Input, Tag, Tooltip } from "antd";
-import { nanoid } from "nanoid";
-import React, { useEffect, useRef, useState } from "react";
+import { Input, message, Tag, Tooltip } from "antd";
+import React, { useCallback, useEffect, useRef, useState } from "react";
+import type { action as upsertTagOneAction } from "~/routes/__authorized/tags/upsert_one";
 import type { ITag } from "~/types";
+import { deepclone } from "~/util";
 
 const Tags: React.FC<{
+  existingTags: ITag[];
   value: ITag[] | undefined;
   onChange: (arg: ITag[]) => void;
-}> = ({ onChange, value }) => {
+}> = ({ onChange, value, existingTags }) => {
   const [inputVisible, setInputVisible] = useState(false);
   const [inputValue, setInputValue] = useState("");
   const inputRef = useRef<InputRef>(null);
+  const [upsertedTag, setUpsertedTag] = useState<ITag | null>(null);
+
+  const upsertTagFetcher = useFetcher<typeof upsertTagOneAction>();
 
   useEffect(() => {
     if (inputVisible) {
       inputRef.current?.focus();
     }
   }, [inputVisible]);
-
-  useEffect(() => {
-    console.log("value", value);
-  }, [value]);
 
   const handleClose = (removedTag: ITag) => {
     const newTags = value?.filter((tag) => tag.name !== removedTag.name) || [];
@@ -37,22 +39,72 @@ const Tags: React.FC<{
     setInputValue(e.target.value);
   };
 
-  const handleInputConfirm = () => {
+  const handleInputConfirm = useCallback(() => {
     if (
       inputValue &&
       (value || []).findIndex((item) => item.name === inputValue) === -1
     ) {
-      onChange([
-        ...(value || []),
-        {
-          name: inputValue,
-          publicId: nanoid(),
-        },
-      ]);
+      const found = existingTags.find((item) => item.name === inputValue);
+
+      if (found) {
+        onChange([...(value || []), deepclone(found)]);
+      } else {
+        upsertTagFetcher.submit(
+          {
+            tag: JSON.stringify({ name: inputValue }),
+          },
+          {
+            method: "post",
+            action: `/tags/upsert_one`,
+          }
+        );
+
+        onChange([
+          ...(value || []),
+          { name: inputValue, publicId: "upserting..." },
+        ]);
+
+        message.loading({
+          key: "addingTag",
+          content: `"${inputValue}" 태그를 추가하는 중입니다...`,
+        });
+      }
     }
     setInputVisible(false);
     setInputValue("");
-  };
+  }, [existingTags, inputValue, onChange, upsertTagFetcher, value]);
+
+  useEffect(() => {
+    const newTag = upsertTagFetcher.data?.data;
+    if (newTag) {
+      setUpsertedTag(newTag);
+      message.success({
+        key: "addingTag",
+        duration: 2,
+        content: `"${newTag.name}" 태그가 추가되었습니다.`,
+      });
+    } else if (upsertTagFetcher.data?.error) {
+      message.error({
+        key: "addingTag",
+        content: `"${upsertTagFetcher.data.error.name}" 태그를 추가하는 중에 오류가 발생했습니다.`,
+      });
+      // eslint-disable-next-line no-console
+      console.error("upsertTagFetcher.data.error", upsertTagFetcher.data.error);
+    }
+  }, [upsertTagFetcher.data?.data, upsertTagFetcher.data?.error]);
+
+  useEffect(() => {
+    if (upsertedTag) {
+      const newTags = (value || []).map((tag) => {
+        if (tag.name === upsertedTag.name) {
+          return upsertedTag;
+        }
+        return tag;
+      });
+      onChange(newTags);
+      setUpsertedTag(null);
+    }
+  }, [onChange, upsertedTag, value]);
 
   return (
     <div className="flex flex-wrap gap-1">

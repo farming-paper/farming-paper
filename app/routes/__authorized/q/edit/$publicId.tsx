@@ -10,14 +10,15 @@ import { useEffect, useMemo } from "react";
 import { useForm } from "react-hook-form";
 import type { PartialDeep } from "type-fest";
 import { getSessionWithProfile } from "~/auth/get-session";
-import { createQuestion } from "~/question/create";
+import { createQuestion, removeUndefined } from "~/question/create";
 import QuestionForm from "~/question/edit-components/QuestionForm";
 import questionFormResolver from "~/question/question-form-resolver";
 import type { Question, QuestionRow } from "~/question/types";
 import { getServerSideSupabaseClient } from "~/supabase/client";
 import type { Database, Json } from "~/supabase/generated/supabase-types";
-import type { ITag } from "~/types";
-import { removeNullDeep } from "~/util";
+import { createTag } from "~/tag/create";
+import type { DatagaseTag, ITag } from "~/types";
+import { getFormdataFromRequest, removeNullDeep } from "~/util";
 
 export const meta: MetaFunction = () => {
   return {
@@ -120,7 +121,7 @@ export async function loader({ request, params }: LoaderArgs) {
 }
 
 export default function QuestionEdit() {
-  const createNewFetch = useFetcher<typeof action>();
+  const editFetch = useFetcher<typeof action>();
   const loaded = useLoaderData<typeof loader>();
 
   const { handleSubmit, formState, control, watch, setValue, setFocus } =
@@ -132,10 +133,11 @@ export default function QuestionEdit() {
   const onSubmit = useMemo(
     () =>
       handleSubmit(async (formData) => {
-        const q = createQuestion(formData.question);
-        createNewFetch.submit(
+        const question = createQuestion(formData.question);
+        const tags: ITag[] = removeUndefined(formData.tags).map(createTag);
+        editFetch.submit(
           {
-            formValues: JSON.stringify(q),
+            formValues: JSON.stringify({ question, tags }),
           },
           {
             method: "post",
@@ -143,36 +145,37 @@ export default function QuestionEdit() {
           }
         );
       }),
-    [createNewFetch, handleSubmit, loaded.row.publicId]
+    [editFetch, handleSubmit, loaded.row.publicId]
   );
 
   const values = watch();
 
   useEffect(() => {
-    console.log("values", values);
-  }, [values]);
-
-  useEffect(() => {
-    if (createNewFetch?.data?.data) {
+    if (editFetch?.data?.data) {
       message.success({
         key: "creating",
         content: "성공적으로 수정되었습니다.",
+        duration: 2,
       });
-    } else if (createNewFetch?.data?.error) {
-      message.error({ key: "creating", content: "문제 수정이 실패했습니다." });
+    } else if (editFetch?.data?.error) {
+      message.error({
+        key: "creating",
+        content: "문제 수정이 실패했습니다.",
+        duration: 2,
+      });
       // eslint-disable-next-line no-console
-      console.error("createNewFetch?.data?.error", createNewFetch?.data?.error);
+      console.error("createNewFetch?.data?.error", editFetch?.data?.error);
     }
-  }, [createNewFetch?.data?.data, createNewFetch?.data?.error]);
+  }, [editFetch?.data]);
 
   useEffect(() => {
-    if (createNewFetch.state === "submitting") {
+    if (editFetch.state === "submitting") {
       message.loading({
         key: "creating",
         content: "문제를 수정하는 중입니다...",
       });
     }
-  }, [createNewFetch.state, setFocus, setValue]);
+  }, [editFetch.state, setFocus, setValue]);
 
   /** keyboard shortcut */
   useEffect(() => {
@@ -208,11 +211,11 @@ export default function QuestionEdit() {
 
 export const action = async ({ request, params }: ActionArgs) => {
   const publicId = params.publicId;
-  const data = Object.fromEntries(await request.formData()) as {
-    formValues: string;
-  };
 
-  const question = JSON.parse(data.formValues) as Question;
+  const editingData = await getFormdataFromRequest<{
+    question: Question;
+    tags: ITag[];
+  }>({ request, keyName: "formValues" });
 
   const response = new Response();
   const { profile } = await getSessionWithProfile({
@@ -222,25 +225,98 @@ export const action = async ({ request, params }: ActionArgs) => {
 
   const db = getServerSideSupabaseClient();
 
-  const updated = await db
+  const updatedQuestion = await db
     .from("questions")
     .update({
-      content: question as unknown as Json,
+      content: editingData.question as unknown as Json,
     })
     .eq("creator", profile.id)
     .eq("public_id", publicId)
     .select("*")
     .single();
 
-  if (!updated.data) {
+  if (!updatedQuestion.data) {
     return json({
       data: null,
-      error: updated.error?.message || "",
-    });
-  } else {
-    return json({
-      data: updated.data,
-      error: null,
+      error: updatedQuestion.error?.message || "",
     });
   }
+
+  // 현재 문제와 태그의 관계를 가져옵니다.
+  const existingTagsRes = await db
+    .from("tags_questions_relation")
+    .select("tag (*)")
+    .eq("q", updatedQuestion.data.id);
+
+  if (!existingTagsRes.data) {
+    return json({
+      data: null,
+      error: existingTagsRes.error?.message || "",
+    });
+  }
+
+  const existingTags = existingTagsRes.data.map((t) => t.tag as DatagaseTag);
+
+  // 원래 있는 태그 중 새로운 태그에 없는 태그들을 삭제합니다. (순수하게 삭제할 태그만 남깁니다.)
+  const removingTagIds = existingTags
+    .filter(
+      (existingTag) =>
+        !editingData.tags.some(
+          (newTag) => newTag.publicId === existingTag.public_id
+        )
+    )
+    .map((tag) => tag.id);
+
+  // 새로운 태그 중 원래 있는 태그에 없는 태그들을 삭제합니다. (순수하게 추가할 태그만 남깁니다.)
+  const addingTagPublicIds = editingData.tags
+    .filter(
+      (newTag) => !existingTags.some((tag) => tag.public_id === newTag.publicId)
+    )
+    .map((tag) => tag.publicId);
+
+  // 추가할 태그(editingData)는 id 값을 DB에서 가져와야 합니다.
+  const addingTagIdsRes = await db
+    .from("tags")
+    .select("id")
+    .in("public_id", addingTagPublicIds);
+
+  if (!addingTagIdsRes.data) {
+    return json({
+      data: null,
+      error: addingTagIdsRes.error?.message || "",
+    });
+  }
+
+  const addingTagIds = addingTagIdsRes.data.map((t) => t.id);
+
+  const [removeResult, addResult] = await Promise.all([
+    db
+      .from("tags_questions_relation")
+      .delete()
+      .in("tag", removingTagIds)
+      .eq("q", updatedQuestion.data.id)
+      .select("*"),
+
+    db
+      .from("tags_questions_relation")
+      .insert(
+        addingTagIds.map((addingTagId) => ({
+          q: updatedQuestion.data.id,
+          tag: addingTagId,
+        }))
+      )
+      .select("*"),
+  ] as const);
+
+  if (!removeResult.data || !addResult.data) {
+    return json({
+      data: null,
+      error: removeResult.error?.message || addResult.error?.message || "",
+    });
+  }
+
+  return json({
+    data: updatedQuestion.data,
+    error: null,
+  });
 };

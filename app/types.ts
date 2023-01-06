@@ -26,3 +26,5 @@ export interface ITag {
   name: string;
   publicId: string;
 }
+
+export type DatagaseTag = Database["public"]["Tables"]["tags"]["Row"];
