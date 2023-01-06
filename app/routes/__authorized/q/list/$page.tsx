@@ -78,21 +78,8 @@ export default function QuestionList() {
                         <span>
                           {dayjs(item.updated_at).format("YYYY-MM-DD HH:mm:ss")}
                         </span>
-                        {/* <span className="leading-none">{}</span> */}
                       </div>
                     </div>
-                  </div>
-                  <div className="flex-shrink-0 mt-4 sm:mt-0 sm:ml-5">
-                    {/* <div className="flex -space-x-1 overflow-hidden">
-                      {position.applicants.map((applicant) => (
-                        <img
-                          key={applicant.email}
-                          className="inline-block w-6 h-6 rounded-full ring-2 ring-white"
-                          src={applicant.imageUrl}
-                          alt={applicant.name}
-                        />
-                      ))}
-                    </div> */}
                   </div>
                 </div>
                 <div className="flex-shrink-0 ml-5">
@@ -107,43 +94,6 @@ export default function QuestionList() {
         ))}
       </ul>
 
-      {/* <ul className="border divide-y rounded-sm">
-        {loaded.items.map((q) => (
-          <li key={q.public_id}>
-            <Link
-              className="block px-6 py-4 transition hover:bg-gray-100"
-              to={`/q/${q.public_id}`}
-            >
-              {q.content.message}
-            </Link>
-            {q.content.tags && (
-              <div className="flex flex-wrap gap-2">
-                {q.content.tags.map((tag) => (
-                  <span key={tag}>{tag}</span>
-                ))}
-              </div>
-            )}
-          </li>
-        ))}
-      </ul> */}
-      {/* <List
-        size="large"
-        bordered
-        dataSource={loaded.items}
-        renderItem={(item) => (
-          <List.Item className="transition cursor-pointer hover:bg-gray-50">
-            <Link to={`/q/edit/${item.public_id}`}>{item.content.message}</Link>
-          </List.Item>
-        )}
-      /> */}
-
-      {/* <ul>
-        {loaded.questions.map((q) => (
-          <li key={q.id}>
-            <a href={`/q/${q.id}`}>{q.message}</a>
-          </li>
-        ))}
-      </ul> */}
       <div className="flex flex-col items-center justify-center my-4">
         <Pagination
           defaultCurrent={page}
