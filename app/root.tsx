@@ -94,7 +94,7 @@ export default function App() {
         <Meta />
         <Links />
       </head>
-      <body className="relative max-w-md min-h-[100vh] mx-auto bg-white">
+      <body className="relative max-w-md min-h-[100vh] mx-auto bg-white pb-24">
         <Outlet context={{ supabase, session }} />
         <ScrollRestoration />
         <Scripts />

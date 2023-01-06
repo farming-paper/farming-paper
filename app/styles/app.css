@@ -529,6 +529,10 @@
   padding-bottom: 0.25rem
 }
 
+.pb-24 {
+  padding-bottom: 6rem
+}
+
 .text-center {
   text-align: center
 }
