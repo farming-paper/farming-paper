@@ -67,7 +67,7 @@ export default function QuestionList() {
           <li key={item.public_id}>
             <Link
               className="block hover:bg-gray-50"
-              to={`/q/${item.public_id}`}
+              to={`/q/edit/${item.public_id}`}
             >
               <div className="flex items-center px-4 py-4 sm:px-6">
                 <div className="flex-1 min-w-0 sm:flex sm:items-center sm:justify-between">
