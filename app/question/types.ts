@@ -73,3 +73,13 @@ export type QuestionInputProps<T extends Question = Question> = {
   onSuccess?: (args: ISuccessArgs) => void;
   onFail?: (args: IFailArgs) => void;
 };
+
+export type QuestionRow = {
+  content: Question;
+  created_at: string;
+  creator: number;
+  deleted_at?: string;
+  id: number;
+  public_id: string;
+  updated_at: string;
+};
