@@ -1,3 +1,7 @@
 .anticon svg {
   vertical-align: baseline;
 }
+
+body {
+  height: 200%;
+}

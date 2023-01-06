@@ -282,8 +282,6 @@ export const action = async ({ request }: ActionArgs) => {
     response,
   });
 
-  console.log("started");
-
   const db = getServerSideSupabaseClient();
 
   const inserted = await db
