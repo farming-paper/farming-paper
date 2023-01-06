@@ -66,7 +66,7 @@ const Tags: React.FC<{
         <Input
           ref={inputRef}
           style={{
-            width: 78,
+            width: 100,
             verticalAlign: "top",
           }}
           type="text"

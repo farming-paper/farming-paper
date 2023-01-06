@@ -1,8 +1,8 @@
 import { MinusOutlined } from "@ant-design/icons";
 import { Form, useFetcher } from "@remix-run/react";
-import type { ActionFunction } from "@remix-run/server-runtime";
+import type { ActionArgs, MetaFunction } from "@remix-run/server-runtime";
 import { json } from "@remix-run/server-runtime";
-import { Button, Input, Select } from "antd";
+import { Button, Input, message, Select } from "antd";
 import { nanoid } from "nanoid";
 import { useEffect, useMemo } from "react";
 import type { FieldErrors, Resolver } from "react-hook-form";
@@ -17,39 +17,45 @@ import type { Question } from "~/question/types";
 import { getServerSideSupabaseClient } from "~/supabase/client";
 import type { Json } from "~/supabase/generated/supabase-types";
 
+export const meta: MetaFunction = () => {
+  return {
+    title: "새로운 문제 만들기 | Farming Paper",
+  };
+};
+
 type FormValues = {
   question: PartialDeep<Question>;
 };
 
 const questionTypeOptions = [
-  {
-    label: "단답형",
-    value: "short",
-  },
-  {
-    label: "단답형 (답 여러 개)",
-    value: "short_multi",
-  },
+  // {
+  //   label: "단답형",
+  //   value: "short",
+  // },
+  // {
+  //   label: "단답형 (답 여러 개)",
+  //   value: "short_multi",
+  // },
   {
     label: "단답형 (답 여러 개 + 순서)",
     value: "short_order",
   },
-  {
-    label: "다른 것 하나 고르기",
-    value: "pick_different",
-  },
-  {
-    label: "객관식",
-    value: "pick",
-  },
-  {
-    label: "객관식 (답 여러 개)",
-    value: "pick_multi",
-  },
-  {
-    label: "객관식 (답 여러 개 + 순서)",
-    value: "pick_order",
-  },
+  // {
+  //   label: "다른 것 하나 고르기",
+  //   value: "pick_different",
+  // },
+  // {
+  //   label: "객관식",
+  //   value: "pick",
+  // },
+  // {
+  //   label: "객관식 (답 여러 개)",
+  //   value: "pick_multi",
+  // },
+  // {
+  //   label: "객관식 (답 여러 개 + 순서)",
+  //   value: "pick_order",
+  // },
 ];
 
 const formResolver: Resolver<FormValues> = async (values) => {
@@ -81,6 +87,7 @@ export default function QuestionNew() {
     control,
     watch,
     setValue,
+    setFocus,
   } = useForm<FormValues>({
     resolver: formResolver,
     defaultValues: {
@@ -92,22 +99,15 @@ export default function QuestionNew() {
     },
   });
 
-  const fetcher = useFetcher();
+  const createNewFetch = useFetcher<typeof action>();
 
   const values = watch();
-
-  useEffect(() => {
-    console.log("fetcher.data", fetcher.data);
-  }, [fetcher.data]);
-  useEffect(() => {
-    console.log("values.question", values.question);
-  }, [values]);
 
   const onSubmit = useMemo(
     () =>
       handleSubmit(async (formData) => {
         const q = createQuestion(formData.question);
-        fetcher.submit(
+        createNewFetch.submit(
           {
             formValues: JSON.stringify(q),
           },
@@ -117,15 +117,47 @@ export default function QuestionNew() {
           }
         );
       }),
-    [fetcher, handleSubmit]
+    [createNewFetch, handleSubmit]
   );
+
+  useEffect(() => {
+    if (createNewFetch?.data?.data) {
+      message.success("성공적으로 생성되었습니다.");
+    } else if (createNewFetch?.data?.error) {
+      message.error("문제 생성에 실패했습니다.");
+      // eslint-disable-next-line no-console
+      console.error("createNewFetch?.data?.error", createNewFetch?.data?.error);
+    }
+  }, [createNewFetch?.data?.data, createNewFetch?.data?.error]);
+
+  useEffect(() => {
+    if (createNewFetch.state === "submitting") {
+      setValue("question.message", "");
+      setValue("question.corrects", [""]);
+      setFocus("question.message");
+      message.loading("문제를 생성하는 중입니다...");
+    }
+  }, [createNewFetch.state, setFocus, setValue]);
+
+  /** keyboard shortcut */
+  useEffect(() => {
+    const submitShortcut = (e: KeyboardEvent) => {
+      if (e.key === "Enter" && (e.metaKey || e.ctrlKey)) {
+        onSubmit();
+      }
+    };
+    document.addEventListener("keydown", submitShortcut);
+    return () => {
+      document.removeEventListener("keydown", submitShortcut);
+    };
+  }, [onSubmit]);
 
   return (
     <div className="p-2">
       <h1 className="my-2 text-xl font-medium">새로운 문제 만들기</h1>
       <Form onSubmit={onSubmit}>
         <div className="flex flex-col mb-4">
-          <Label htmlFor="question_message">타입</Label>
+          <Label htmlFor="question_type">타입</Label>
           <Controller
             control={control}
             name="question.type"
@@ -237,22 +269,20 @@ export default function QuestionNew() {
   );
 }
 
-export const action: ActionFunction = async ({ request }) => {
+export const action = async ({ request }: ActionArgs) => {
   const data = Object.fromEntries(await request.formData()) as {
     formValues: string;
   };
 
-  console.log(data.formValues);
   const question = JSON.parse(data.formValues) as Question;
-  console.log("formValues", question);
 
   const response = new Response();
-  const { session, profile } = await getSessionWithProfile({
+  const { profile } = await getSessionWithProfile({
     request,
     response,
   });
 
-  console.log("session", session, profile);
+  console.log("started");
 
   const db = getServerSideSupabaseClient();
 
