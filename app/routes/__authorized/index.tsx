@@ -1,8 +1,13 @@
 import { ArrowRightIcon } from "@heroicons/react/24/outline";
 import { Link } from "@remix-run/react";
+import { redirect } from "@remix-run/server-runtime";
 import { Button } from "antd";
 import { useMemo, useState } from "react";
 import { getQuestionGroups } from "~/question/utils";
+
+export async function loader() {
+  return redirect("/q/solve");
+}
 
 export default function Index() {
   const [questions] = useState(getQuestionGroups());

@@ -2,7 +2,6 @@ import { useOutletContext } from "@remix-run/react";
 import type { LoaderArgs } from "@remix-run/server-runtime";
 import { json, redirect } from "@remix-run/server-runtime";
 import { createServerClient } from "@supabase/auth-helpers-remix";
-import { Button } from "antd";
 import { getClientSideSupabaseConfig } from "~/config";
 import type { IOutletProps } from "~/types";
 
@@ -51,9 +50,29 @@ export default function Login() {
   };
 
   return (
-    <div className="flex flex-col items-center justify-center py-10">
-      <h2 className="text-xl font-medium">로그인이 필요합니다.</h2>
-      <Button onClick={handleGoogleLogin}>구글로 로그인</Button>
+    <div className="bg-green-700">
+      <div className="max-w-2xl px-6 py-16 mx-auto text-center @sm:py-20 @lg:px-8">
+        <h1 className="text-4xl font-bold tracking-tight text-white @sm:text-4xl">
+          <span className="block">Farming Paper</span>
+        </h1>
+        <h2 className="text-2xl font-medium tracking-tight text-white @sm:text-4xl">
+          <span className="block">생활을 꿋꿋하게</span>
+        </h2>
+        <p className="mt-4 text-lg leading-6 text-green-200">
+          문제를 직접 디자인하고
+          <br />
+          최적화된 루틴으로 출제되는 문제를
+          <br />
+          풀어보세요.
+        </p>
+        <button
+          type="button"
+          onClick={handleGoogleLogin}
+          className="inline-flex items-center justify-center w-full px-5 py-3 mt-8 text-base font-medium text-green-600 bg-white border border-transparent rounded-md hover:bg-green-50 @sm:w-auto transition"
+        >
+          구글로 로그인
+        </button>
+      </div>
     </div>
   );
 }
