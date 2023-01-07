@@ -15,6 +15,7 @@ import {
   createServerClient,
 } from "@supabase/auth-helpers-remix";
 import { Analytics } from "@vercel/analytics/react";
+import { ConfigProvider } from "antd";
 import antdResetStyles from "antd/dist/reset.css";
 import { useEffect, useState } from "react";
 import { getClientSideSupabaseConfig } from "./config";
@@ -95,7 +96,15 @@ export default function App() {
         <Links />
       </head>
       <body className="relative max-w-md min-h-[100vh] mx-auto bg-white pb-24 @container">
-        <Outlet context={{ supabase, session }} />
+        <ConfigProvider
+          theme={{
+            token: {
+              colorPrimary: "#16a34a",
+            },
+          }}
+        >
+          <Outlet context={{ supabase, session }} />
+        </ConfigProvider>
         <ScrollRestoration />
         <Scripts />
         <LiveReload />

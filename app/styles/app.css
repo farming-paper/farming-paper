@@ -181,6 +181,14 @@
   margin-top: 2.5rem
 }
 
+.mr-2 {
+  margin-right: 0.5rem
+}
+
+.-ml-1 {
+  margin-left: -0.25rem
+}
+
 .block {
   display: block
 }
@@ -237,6 +245,10 @@
   height: 3rem
 }
 
+.h-20 {
+  height: 5rem
+}
+
 .min-h-\[100vh\] {
   min-height: 100vh
 }
@@ -283,6 +295,10 @@
 
 .w-12 {
   width: 3rem
+}
+
+.w-20 {
+  width: 5rem
 }
 
 .min-w-0 {
@@ -557,6 +573,21 @@
   background-color: rgb(224 231 255 / var(--tw-bg-opacity))
 }
 
+.bg-lime-600 {
+  --tw-bg-opacity: 1;
+  background-color: rgb(101 163 13 / var(--tw-bg-opacity))
+}
+
+.bg-green-600 {
+  --tw-bg-opacity: 1;
+  background-color: rgb(22 163 74 / var(--tw-bg-opacity))
+}
+
+.bg-green-100 {
+  --tw-bg-opacity: 1;
+  background-color: rgb(220 252 231 / var(--tw-bg-opacity))
+}
+
 .bg-opacity-75 {
   --tw-bg-opacity: 0.75
 }
@@ -611,6 +642,11 @@
 .py-16 {
   padding-top: 4rem;
   padding-bottom: 4rem
+}
+
+.py-20 {
+  padding-top: 5rem;
+  padding-bottom: 5rem
 }
 
 .pb-24 {
@@ -817,6 +853,16 @@
   color: rgb(79 70 229 / var(--tw-text-opacity))
 }
 
+.text-gray-300 {
+  --tw-text-opacity: 1;
+  color: rgb(209 213 219 / var(--tw-text-opacity))
+}
+
+.text-green-700 {
+  --tw-text-opacity: 1;
+  color: rgb(21 128 61 / var(--tw-text-opacity))
+}
+
 .opacity-0 {
   opacity: 0
 }
@@ -938,6 +984,16 @@
   background-color: rgb(199 210 254 / var(--tw-bg-opacity))
 }
 
+.hover\:bg-green-700:hover {
+  --tw-bg-opacity: 1;
+  background-color: rgb(21 128 61 / var(--tw-bg-opacity))
+}
+
+.hover\:bg-green-200:hover {
+  --tw-bg-opacity: 1;
+  background-color: rgb(187 247 208 / var(--tw-bg-opacity))
+}
+
 .hover\:text-gray-700:hover {
   --tw-text-opacity: 1;
   color: rgb(55 65 81 / var(--tw-text-opacity))
@@ -958,6 +1014,16 @@
   color: rgb(20 184 166 / var(--tw-text-opacity))
 }
 
+.hover\:text-green-500:hover {
+  --tw-text-opacity: 1;
+  color: rgb(34 197 94 / var(--tw-text-opacity))
+}
+
+.hover\:text-gray-900:hover {
+  --tw-text-opacity: 1;
+  color: rgb(17 24 39 / var(--tw-text-opacity))
+}
+
 .hover\:underline:hover {
   text-decoration-line: underline
 }
@@ -965,6 +1031,11 @@
 .focus\:text-teal-500:focus {
   --tw-text-opacity: 1;
   color: rgb(20 184 166 / var(--tw-text-opacity))
+}
+
+.focus\:text-green-500:focus {
+  --tw-text-opacity: 1;
+  color: rgb(34 197 94 / var(--tw-text-opacity))
 }
 
 .focus\:outline-none:focus {
@@ -991,6 +1062,11 @@
 .focus\:ring-lime-500:focus {
   --tw-ring-opacity: 1;
   --tw-ring-color: rgb(132 204 22 / var(--tw-ring-opacity))
+}
+
+.focus\:ring-green-500:focus {
+  --tw-ring-opacity: 1;
+  --tw-ring-color: rgb(34 197 94 / var(--tw-ring-opacity))
 }
 
 .focus\:ring-offset-2:focus {
