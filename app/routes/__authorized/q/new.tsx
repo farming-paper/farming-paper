@@ -1,4 +1,4 @@
-import { useFetcher, useLoaderData } from "@remix-run/react";
+import { useLoaderData } from "@remix-run/react";
 import type {
   ActionArgs,
   LoaderArgs,
@@ -18,13 +18,25 @@ import { getServerSideSupabaseClient } from "~/supabase/client";
 import type { Json } from "~/supabase/generated/supabase-types";
 import { createTag } from "~/tag/create";
 import type { ITag } from "~/types";
-import { getFormdataFromRequest, removeNullDeep } from "~/util";
+import { removeNullDeep, typedFetcher } from "~/util";
 
 export const meta: MetaFunction = () => {
   return {
     title: "새로운 문제 만들기 | Farming Paper",
   };
 };
+
+const {
+  createArgs: createBody,
+  getArgsFromRequest,
+  useFetcher: useNewQuestionFetcher,
+} = typedFetcher<
+  typeof action,
+  {
+    question: Question;
+    tags: ITag[];
+  }
+>();
 
 export async function loader({ request }: LoaderArgs) {
   const response = new Response();
@@ -66,18 +78,16 @@ export default function QuestionNew() {
         tags: [],
       },
     });
-  const createNewFetch = useFetcher<typeof action>();
+  const createNewFetch = useNewQuestionFetcher();
 
   const onSubmit = useMemo(
     () =>
       handleSubmit(async (formData) => {
         createNewFetch.submit(
-          {
-            formValues: JSON.stringify({
-              question: createQuestion(formData.question),
-              tags: removeUndefined(formData.tags).map(createTag),
-            }),
-          },
+          createBody({
+            question: createQuestion(formData.question),
+            tags: removeUndefined(formData.tags).map(createTag),
+          }),
           {
             method: "post",
             action: `/q/new`,
@@ -149,10 +159,7 @@ export default function QuestionNew() {
 }
 
 export const action = async ({ request }: ActionArgs) => {
-  const { question, tags } = await getFormdataFromRequest<{
-    question: Question;
-    tags: ITag[];
-  }>({ request, keyName: "formValues" });
+  const { question, tags } = await getArgsFromRequest(request);
 
   const response = new Response();
   const { profile } = await getSessionWithProfile({

@@ -1,3 +1,4 @@
+import { useFetcher } from "@remix-run/react";
 import dayjsLib from "dayjs";
 import "dayjs/locale/ko"; // import locale
 import relativeTime from "dayjs/plugin/relativeTime"; // import plugin
@@ -173,7 +174,7 @@ export async function getFormdataFromRequest<T>({
 }: {
   request: Request;
   keyName: string;
-}) {
+}): Promise<T> {
   const data = Object.fromEntries(await request.formData()) as {
     [key in typeof keyName]: string;
   };
@@ -184,6 +185,28 @@ export async function getFormdataFromRequest<T>({
   }
 
   return JSON.parse(stringData) as T;
+}
+
+export async function getArgsFromRequest<T>(request: Request): Promise<T> {
+  const formData = Object.fromEntries(await request.formData()) as {
+    data: string;
+  };
+
+  return JSON.parse(formData.data) as T;
+}
+
+export function createFormData<T>(args: T) {
+  return {
+    data: JSON.stringify(args),
+  };
+}
+
+export function typedFetcher<TActionFunc, TArgs>() {
+  return {
+    useFetcher: useFetcher<TActionFunc>,
+    getArgsFromRequest: getArgsFromRequest<TArgs>,
+    createArgs: createFormData<TArgs>,
+  };
 }
 
 export const dayjs = dayjsLib;

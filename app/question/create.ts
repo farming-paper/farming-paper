@@ -1,4 +1,5 @@
 import { nanoid } from "nanoid";
+import type { Json } from "~/supabase/generated/supabase-types";
 import type { PartialDeep } from "~/types";
 import type {
   IPickDifferentQuestion,
@@ -31,6 +32,19 @@ export function createQuestion(args?: PartialDeep<Question>): Question {
       throw new Error("Invalid question type");
   }
 }
+
+export function createQuestionFromJson(json: Json): Question {
+  return createQuestion(json as unknown as PartialDeep<Question>);
+}
+
+// export function createQuestionRow(row?: PartialDeep<QuestionRow>) {
+//   return {
+//     id: nanoid(),
+//     ...row,
+
+//     data: JSON.stringify(createQuestion(row?.data)),
+//   };
+// }
 
 export function removeUndefined<T>(tags?: (T | undefined)[]): T[] {
   return tags?.filter((tag): tag is T => Boolean(tag)) || [];

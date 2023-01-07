@@ -1,4 +1,4 @@
-import { useFetcher, useLoaderData } from "@remix-run/react";
+import { Link, useCatch, useFetcher, useLoaderData } from "@remix-run/react";
 import type {
   ActionArgs,
   LoaderArgs,
@@ -6,10 +6,11 @@ import type {
 } from "@remix-run/server-runtime";
 import { json } from "@remix-run/server-runtime";
 import { Button, message } from "antd";
-import { useEffect, useMemo } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useForm } from "react-hook-form";
 import type { PartialDeep } from "type-fest";
 import { getSessionWithProfile } from "~/auth/get-session";
+import DangerModal from "~/common/components/DangerModal";
 import { createQuestion, removeUndefined } from "~/question/create";
 import QuestionForm from "~/question/edit-components/QuestionForm";
 import questionFormResolver from "~/question/question-form-resolver";
@@ -19,6 +20,10 @@ import type { Json } from "~/supabase/generated/supabase-types";
 import { createTag } from "~/tag/create";
 import type { DatagaseTag, ITag } from "~/types";
 import { getFormdataFromRequest, removeNullDeep } from "~/util";
+import {
+  createDeletionQuestionArgs,
+  useDeletionQuestionFetcher,
+} from "../delete";
 
 export const meta: MetaFunction = () => {
   return {
@@ -38,6 +43,7 @@ export async function getQuestionRow({
     .from("questions")
     .select("*")
     .eq("creator", profileId)
+    .is("deleted_at", null)
     .eq("public_id", publicId)
     .single();
 
@@ -105,7 +111,7 @@ export async function loader({ request, params }: LoaderArgs) {
   const publicId = params.publicId;
   if (!publicId) {
     throw new Response("Public Id Not Found", {
-      status: 400,
+      status: 404,
     });
   }
   const response = new Response();
@@ -192,9 +198,20 @@ export default function QuestionEdit() {
     };
   }, [onSubmit]);
 
+  const [deleteModalOpen, setDeleteModalOpen] = useState(false);
+
+  const deleteFetcher = useDeletionQuestionFetcher();
+
   return (
     <div className="p-2">
-      <h1 className="my-2 text-xl font-medium">문제 편집</h1>
+      <header className="flex items-center justify-between">
+        <h1 className="my-2 text-xl font-medium">문제 편집</h1>
+        <div className="flex items-center">
+          <Button danger onClick={() => setDeleteModalOpen(true)}>
+            삭제
+          </Button>
+        </div>
+      </header>
       <QuestionForm
         control={control}
         formState={formState}
@@ -207,6 +224,23 @@ export default function QuestionEdit() {
           수정
         </Button>
       </div>
+      <DangerModal
+        message="정말 문제를 삭제하시겠습니까? 한번 삭제하면 다시 복구할 수 없습니다."
+        title="문제 삭제"
+        open={deleteModalOpen}
+        setOpen={setDeleteModalOpen}
+        onSubmit={() => {
+          deleteFetcher.submit(
+            createDeletionQuestionArgs({
+              publicId: loaded.row.publicId,
+            }),
+            {
+              method: "delete",
+              action: `/q/delete`,
+            }
+          );
+        }}
+      />
     </div>
   );
 }
@@ -307,3 +341,47 @@ export const action = async ({ request, params }: ActionArgs) => {
     error: null,
   });
 };
+
+export function CatchBoundary() {
+  const caught = useCatch();
+
+  return (
+    <div className="min-h-full px-6 py-16 bg-white @sm:py-24 @md:grid @md:place-items-center @lg:px-8">
+      <div className="mx-auto max-w-max">
+        <main className="@sm:flex">
+          <p className="text-4xl font-bold tracking-tight text-indigo-600 @sm:text-5xl">
+            {caught.status}
+          </p>
+          <div className="@sm:ml-6">
+            <div className="@sm:border-l @sm:border-gray-200 @sm:pl-6">
+              <h1 className="text-4xl font-bold tracking-tight text-gray-900 @sm:text-5xl">
+                {caught.status === 404
+                  ? "페이지를 찾을 수 없습니다."
+                  : "오류가 발생했습니다."}
+              </h1>
+              {caught.status === 404 && (
+                <p className="mt-1 text-base text-gray-500">
+                  URL이 올바른지 확인하고 다시 시도해주세요.
+                </p>
+              )}
+            </div>
+            <div className="flex mt-10 space-x-3 @sm:border-l @sm:border-transparent @sm:pl-6">
+              <Link
+                to="/"
+                className="inline-flex items-center px-4 py-2 text-sm font-medium text-white bg-indigo-600 border border-transparent rounded-md shadow-sm hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 "
+              >
+                홈으로 돌아가기
+              </Link>
+              <Link
+                to="/account"
+                className="inline-flex items-center px-4 py-2 text-sm font-medium text-indigo-700 bg-indigo-100 border border-transparent rounded-md hover:bg-indigo-200 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
+              >
+                문의하기
+              </Link>
+            </div>
+          </div>
+        </main>
+      </div>
+    </div>
+  );
+}
