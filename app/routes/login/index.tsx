@@ -3,6 +3,7 @@ import type { LoaderArgs } from "@remix-run/server-runtime";
 import { json, redirect } from "@remix-run/server-runtime";
 import { createServerClient } from "@supabase/auth-helpers-remix";
 import { getClientSideSupabaseConfig } from "~/config";
+import google from "~/images/logo/google.svg";
 import type { IOutletProps } from "~/types";
 
 export const loader = async ({ request }: LoaderArgs) => {
@@ -68,8 +69,16 @@ export default function Login() {
         <button
           type="button"
           onClick={handleGoogleLogin}
-          className="inline-flex items-center justify-center w-full px-5 py-3 mt-8 text-base font-medium text-green-600 bg-white border border-transparent rounded-md hover:bg-green-50 @sm:w-auto transition"
+          className="inline-flex gap-1 items-center justify-center w-full px-5 py-3 mt-8 text-base font-medium text-gray-600 bg-white border border-transparent rounded-md hover:bg-green-50 @sm:w-auto transition shadow-xl"
         >
+          <span>
+            <img
+              aria-hidden
+              src={google}
+              alt="google logo"
+              style={{ height: "1em" }}
+            />
+          </span>
           구글로 로그인
         </button>
       </div>
