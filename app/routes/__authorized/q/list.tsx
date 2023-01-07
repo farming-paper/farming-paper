@@ -35,7 +35,7 @@ export async function loader({ request }: LoaderArgs) {
     .range((page - 1) * numberPerPage, page * numberPerPage - 1);
 
   if (questionsRes.error) {
-    throw new Error(questionsRes.error.message);
+    return redirect("/q/list", { status: 303 });
   }
 
   if (questionsRes.count === null) {
