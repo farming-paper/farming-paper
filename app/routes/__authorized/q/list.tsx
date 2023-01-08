@@ -55,12 +55,18 @@ export async function loader({ request }: LoaderArgs) {
 export default function QuestionList() {
   const loaded = useLoaderData<typeof loader>();
   const navigate = useNavigate();
+  const startingNum = (loaded.page - 1) * numberPerPage + 1;
+  const endingNum = startingNum + loaded.items.length - 1;
 
   return (
     <div className="flex flex-col">
       <header className="flex items-end gap-4 mx-5 my-5">
         <h1 className="m-0 text-xl font-medium leading-none">문제 리스트</h1>
-        <p className="m-0 leading-none text-gray-400">{loaded.page}p</p>
+        <p className="m-0 text-sm leading-none text-gray-400">
+          <span className="font-medium">{startingNum}</span> -{" "}
+          <span className="font-medium">{endingNum}</span> (총{" "}
+          <span className="font-medium">{loaded.total}</span>)
+        </p>
       </header>
 
       {loaded.page === 1 && loaded.items.length === 0 ? (

@@ -220,7 +220,20 @@ export interface Database {
       [_ in never]: never;
     };
     Functions: {
-      [_ in never]: never;
+      get_solving_tags_by_creator_id: {
+        Args: { p_creator: number };
+        Returns: {
+          id: number;
+          name: string;
+          desc: string;
+          public_id: string;
+          count: number;
+        }[];
+      };
+      hello_world: {
+        Args: Record<PropertyKey, never>;
+        Returns: string;
+      };
     };
     Enums: {
       [_ in never]: never;

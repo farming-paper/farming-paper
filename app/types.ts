@@ -28,4 +28,8 @@ export interface ITag {
   publicId: string;
 }
 
+export interface ITagForSolve extends ITag {
+  count: number;
+}
+
 export type DatagaseTag = Database["public"]["Tables"]["tags"]["Row"];
