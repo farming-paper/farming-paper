@@ -42,19 +42,25 @@ export async function loader({ request }: LoaderArgs) {
 export default function Page() {
   const loaded = useLoaderData<typeof loader>();
   return (
-    <div className="flex flex-col">
-      <header className="flex items-end gap-4 mx-5 my-5">
-        <h1 className="m-0 text-xl font-medium leading-none">문제 풀기</h1>
+    <div className="flex flex-col p-4">
+      <header className="flex items-end gap-4 my-2">
+        <h1 className="m-0 text-xl font-medium">문제 풀기</h1>
       </header>
-      <p className="flex items-center gap-2 mx-5 text-gray-500">
+      <p className="flex items-center gap-2 text-gray-500">
         <span>태그를 선택하세요.</span>
         <span className="text-sm text-gray-300">
-          <Tooltip title="문제에 태그를 설정하고,  풀 수 있습니다.">
+          <Tooltip
+            title={
+              <span className="break-keep">
+                문제에 태그를 먼저 설정해야 풀 수 있습니다.
+              </span>
+            }
+          >
             <QuestionCircleFilled className="w-4 h-4" />
           </Tooltip>
         </span>
       </p>
-      <div className="grid grid-cols-2 gap-4 px-2">
+      <div className="grid grid-cols-2 gap-4 ">
         {loaded.tagsForSolve.map((tag) => (
           <div
             key={tag.publicId}

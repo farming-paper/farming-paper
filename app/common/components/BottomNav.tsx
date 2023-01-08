@@ -10,22 +10,22 @@ const links = [
   {
     to: "/q/solve",
     icon: <BulbOutlined />,
-    label: "Solve",
+    label: "풀기",
   },
   {
     to: "/q/list",
     icon: <OrderedListOutlined />,
-    label: "List",
+    label: "목록",
   },
   {
     to: "/q/new",
     icon: <FileAddOutlined />,
-    label: "New",
+    label: "생성",
   },
   {
     to: "/account",
     icon: <UserOutlined />,
-    label: "Account",
+    label: "계정",
   },
 ];
 
@@ -42,7 +42,7 @@ export default function BottomNav() {
             to={link.to}
             className="justify-center inline-block w-full pt-2 pb-1 text-center transition focus:text-green-500 hover:text-green-500"
           >
-            <span className="text-xl">{link.icon}</span>
+            <span className="text-xl opacity-60">{link.icon}</span>
             <span className="block text-xs tab tab-explore">{link.label}</span>
           </Link>
         ))}

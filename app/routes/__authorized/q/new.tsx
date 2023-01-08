@@ -22,7 +22,7 @@ import { removeNullDeep, typedFetcher } from "~/util";
 
 export const meta: MetaFunction = () => {
   return {
-    title: "새로운 문제 만들기 | Farming Paper",
+    title: "문제 생성 | Farming Paper",
   };
 };
 
@@ -140,8 +140,8 @@ export default function QuestionNew() {
   }, [onSubmit]);
 
   return (
-    <div className="p-2">
-      <h1 className="my-2 text-xl font-medium">새로운 문제 만들기</h1>
+    <div className="p-4">
+      <h1 className="my-2 text-xl font-medium">문제 생성</h1>
       <QuestionForm
         control={control}
         formState={formState}

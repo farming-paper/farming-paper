@@ -113,7 +113,7 @@ const Tags: React.FC<{
 
         const tagElem = (
           <Tag
-            className="m-0 select-none"
+            className="inline-flex items-center h-8 px-2 m-0 select-none"
             key={tag.publicId}
             closable
             onClose={() => handleClose(tag)}
@@ -133,7 +133,7 @@ const Tags: React.FC<{
         <Input
           ref={inputRef}
           style={{
-            width: 100,
+            width: 120,
             verticalAlign: "top",
           }}
           type="text"
@@ -146,7 +146,10 @@ const Tags: React.FC<{
         />
       )}
       {!inputVisible && (
-        <Tag className="bg-white border-dashed" onClick={showInput}>
+        <Tag
+          className="inline-flex items-center h-8 bg-white border-dashed"
+          onClick={showInput}
+        >
           <PlusOutlined />
           <span>새 태그 추가</span>
         </Tag>

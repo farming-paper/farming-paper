@@ -59,10 +59,10 @@ export default function QuestionList() {
   const endingNum = startingNum + loaded.items.length - 1;
 
   return (
-    <div className="flex flex-col">
-      <header className="flex items-end gap-4 mx-5 my-5">
-        <h1 className="m-0 text-xl font-medium leading-none">문제 리스트</h1>
-        <p className="m-0 text-sm leading-none text-gray-400">
+    <div className="flex flex-col p-4">
+      <header className="flex items-center gap-4 my-2">
+        <h1 className="m-0 text-xl font-medium">문제 리스트</h1>
+        <p className="m-0 text-sm text-gray-400">
           <span className="font-medium">{startingNum}</span> -{" "}
           <span className="font-medium">{endingNum}</span> (총{" "}
           <span className="font-medium">{loaded.total}</span>)
@@ -91,7 +91,7 @@ export default function QuestionList() {
         </div>
       ) : (
         <>
-          <ul className="divide-y divide-gray-200">
+          <ul className="-mx-4 divide-y divide-gray-200 ">
             {loaded.items.map((item) => (
               <li key={item.public_id}>
                 <Link

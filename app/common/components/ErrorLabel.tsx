@@ -12,7 +12,7 @@ const ErrorLabel = React.forwardRef<HTMLLabelElement, IErrorLabelProps>(
       <label
         ref={ref}
         {...props}
-        className={twMerge("text-sm text-red-400 py-1", props.className)}
+        className={twMerge(" text-red-400 py-1", props.className)}
       >
         {props.children}
       </label>

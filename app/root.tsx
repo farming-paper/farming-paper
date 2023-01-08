@@ -99,7 +99,7 @@ export default function App() {
         <Meta />
         <Links />
       </head>
-      <body className="relative max-w-md min-h-[100vh] mx-auto bg-white pb-24 @container">
+      <body className="relative max-w-md min-h-[100vh] mx-auto bg-white pb-16 @container">
         <ConfigProvider
           theme={{
             token: {

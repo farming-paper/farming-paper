@@ -207,7 +207,7 @@ export default function QuestionEdit() {
       <header className="flex items-center justify-between">
         <h1 className="my-2 text-xl font-medium">문제 편집</h1>
         <div className="flex items-center">
-          <Button danger onClick={() => setDeleteModalOpen(true)}>
+          <Button size="small" danger onClick={() => setDeleteModalOpen(true)}>
             삭제
           </Button>
         </div>

@@ -11,7 +11,7 @@ const Label = React.forwardRef<HTMLLabelElement, ILabelProps>((props, ref) => {
     <label
       ref={ref}
       {...props}
-      className={twMerge("text-gray-500 text-sm py-1", props.className)}
+      className={twMerge("text-gray-500 py-1", props.className)}
     >
       {props.children}
     </label>
