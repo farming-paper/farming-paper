@@ -18,6 +18,7 @@ import { Analytics } from "@vercel/analytics/react";
 import { ConfigProvider } from "antd";
 import antdResetStyles from "antd/dist/reset.css";
 import { useEffect, useState } from "react";
+import GlobalLoading from "./common/components/GlobalLoading";
 import { getClientSideSupabaseConfig } from "./config";
 import antdStyles from "./styles/antd.css";
 import tailwindStyles from "./styles/app.css";
@@ -100,6 +101,7 @@ export default function App() {
         <Links />
       </head>
       <body className="relative max-w-md min-h-[100vh] mx-auto bg-white pb-16 @container">
+        <GlobalLoading />
         <ConfigProvider
           theme={{
             token: {
