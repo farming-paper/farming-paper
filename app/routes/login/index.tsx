@@ -69,7 +69,7 @@ export default function Login() {
         <button
           type="button"
           onClick={handleGoogleLogin}
-          className="inline-flex gap-1 items-center justify-center w-full px-5 py-3 mt-8 text-base font-medium text-gray-600 bg-white border border-transparent rounded-md hover:bg-green-50 @sm:w-auto transition shadow-xl"
+          className="inline-flex items-center justify-center w-full px-5 py-3 mt-8 text-base font-medium text-gray-600 bg-white border border-transparent rounded-md hover:bg-green-50 @sm:w-auto transition shadow-xl"
         >
           <span>
             <img
@@ -79,7 +79,7 @@ export default function Login() {
               style={{ height: "1em" }}
             />
           </span>
-          구글로 로그인
+          <span className="flex-1">구글로 로그인</span>
         </button>
       </div>
     </div>
