@@ -6,6 +6,7 @@
   "sideEffects": false,
   "scripts": {
     "test": "vitest",
+    "test:ci": "vitest run",
     "main": "vite-node ./app/main.ts",
     "build": "npm run build:css && remix build",
     "dev": "concurrently -c bgBlue.bold,bgCyan.bold \"npm run dev:css\" \"remix dev\"",
