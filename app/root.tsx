@@ -30,6 +30,10 @@ export function links() {
     { rel: "stylesheet", href: antdResetStyles },
     { rel: "stylesheet", href: tailwindStyles },
     { rel: "stylesheet", href: antdStyles },
+    {
+      rel: "stylesheet",
+      href: "https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.6/dist/web/static/pretendard.css",
+    },
   ];
 }
 
@@ -90,7 +94,7 @@ export default function App() {
   }, [serverAccessToken, supabase, fetcher]);
 
   return (
-    <html lang="ko" className="bg-gray-50">
+    <html lang="ko" className="font-sans bg-gray-50">
       <head>
         <Meta />
         <Links />

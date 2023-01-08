@@ -101,7 +101,7 @@ export default function QuestionList() {
                           </p>
                         </div>
                         <div className="flex mt-2">
-                          <div className="flex items-center text-sm text-gray-500">
+                          <div className="flex items-center text-sm font-light text-gray-500">
                             <CalendarOutlined
                               className="mr-1.5 h-4 w-4 flex-shrink-0 text-gray-400"
                               aria-hidden="true"
@@ -111,8 +111,8 @@ export default function QuestionList() {
                                 "YYYY년 MM월 DD일 HH:mm:ss"
                               )}
                             >
-                              <span className="leading-none">
-                                {dayjs(item.updated_at).fromNow()}
+                              <span className="text-sm leading-none">
+                                {dayjs(item.updated_at).fromNow()}에 업데이트 됨
                               </span>
                             </Tooltip>
                           </div>
