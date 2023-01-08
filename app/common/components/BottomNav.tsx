@@ -4,7 +4,8 @@ import {
   OrderedListOutlined,
   UserOutlined,
 } from "@ant-design/icons";
-import { Link } from "@remix-run/react";
+import { NavLink } from "@remix-run/react";
+import { twMerge } from "tailwind-merge";
 
 const links = [
   {
@@ -37,14 +38,22 @@ export default function BottomNav() {
     >
       <div id="tabs" className="flex justify-between">
         {links.map((link) => (
-          <Link
+          <NavLink
             key={link.to}
             to={link.to}
-            className="justify-center inline-block w-full pt-2 pb-1 text-center transition focus:text-green-500 hover:text-green-500"
+            className="justify-center inline-block w-full pt-2 pb-1 text-center transition hover:text-green-500"
           >
-            <span className="text-xl opacity-60">{link.icon}</span>
-            <span className="block text-xs tab tab-explore">{link.label}</span>
-          </Link>
+            {({ isActive }) => {
+              return (
+                <div className={twMerge(isActive && "text-green-600")}>
+                  <span className="text-xl opacity-60">{link.icon}</span>
+                  <span className="block text-xs tab tab-explore">
+                    {link.label}
+                  </span>
+                </div>
+              );
+            }}
+          </NavLink>
         ))}
       </div>
     </section>
