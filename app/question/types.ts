@@ -1,3 +1,5 @@
+import type { InputRef } from "antd";
+import type { RefObject } from "react";
 import type { ITag } from "~/types";
 
 export interface IBaseQuestion {
@@ -69,6 +71,8 @@ export interface IFailArgs extends IBaseProcessedArgs {}
 export type QuestionInputProps<T extends Question = Question> = {
   question: T;
   disabled?: boolean;
+  inputRef?: RefObject<HTMLTextAreaElement> | RefObject<HTMLInputElement>;
+  antdInputRef?: RefObject<InputRef>;
   onSuccess?: (args: ISuccessArgs) => void;
   onFail?: (args: IFailArgs) => void;
 };
