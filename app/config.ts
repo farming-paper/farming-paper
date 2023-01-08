@@ -26,25 +26,9 @@ export function getClientSideSupabaseConfig() {
 
 export const defaultDateFormat = "YYYY-MM-DD";
 
-export function getSessionSecret() {
-  return process.env.SESSION_SECRET || "ghULFsDlD1bEl8S9MqUeJZQZeyzUvHTH";
-}
-
-export function getCookieSecret() {
-  return process.env.COOKIE_SECRET || "CsoHcIWmfNqPqQDFM3eXzQC8XQBBWWaa";
-}
-
 export function getGoogleClientId() {
   return process.env.GOOGLE_CLIENT_ID || "GOOGLE_CLIENT_ID";
 }
 export function getGoogleClientSecret() {
   return process.env.GOOGLE_CLIENT_SECRET || "";
-}
-
-export function getHost() {
-  return (
-    process.env.HOST ||
-    (process.env.VERCEL_URL && `https://${process.env.VERCEL_URL}`) ||
-    "http://localhost:3000"
-  );
 }
