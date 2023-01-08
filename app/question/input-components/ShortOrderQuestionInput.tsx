@@ -6,7 +6,7 @@ import type { IShortOrderQuestion, QuestionInputProps } from "../types";
 
 const ShortOrderQuestionInput: React.FC<
   QuestionInputProps<IShortOrderQuestion>
-> = ({ question, onFail, onSuccess }) => {
+> = ({ question, onFail, onSuccess, disabled }) => {
   const [value, setValue] = useState("");
 
   const onSubmit = useCallback(() => {
@@ -38,6 +38,7 @@ const ShortOrderQuestionInput: React.FC<
       <div className="flex items-center gap-3">
         <Input
           id="answer"
+          disabled={disabled}
           type="text"
           className="flex-1"
           placeholder="정답을 입력하세요"

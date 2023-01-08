@@ -68,6 +68,7 @@ export interface IFailArgs extends IBaseProcessedArgs {}
 
 export type QuestionInputProps<T extends Question = Question> = {
   question: T;
+  disabled?: boolean;
   onSuccess?: (args: ISuccessArgs) => void;
   onFail?: (args: IFailArgs) => void;
 };

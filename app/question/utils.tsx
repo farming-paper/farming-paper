@@ -7,6 +7,7 @@ import { questions as enQuestions } from "./data/exercise-and-nutrition";
 import { questions as msQuestions } from "./data/mathematical-statistics";
 import { questions as plQuestions } from "./data/programming-linguistics";
 import { questions as sstQuestions } from "./data/sample-survey-theory";
+import type { Question } from "./types";
 
 export function getQuestionGroups() {
   return new Map([
@@ -34,3 +35,18 @@ export function getQuestionGroups() {
 }
 
 export type QuestionId = MapKey<ReturnType<typeof getQuestionGroups>>;
+
+export function getStringAnswer(question: Question) {
+  switch (question.type) {
+    case "pick_multi":
+    case "pick_order":
+    case "short_multi":
+    case "short_order":
+      return question.corrects.join(", ");
+    case "pick":
+    case "short":
+      return question.correct;
+    case "pick_different":
+      throw new Error("Not implemented");
+  }
+}
