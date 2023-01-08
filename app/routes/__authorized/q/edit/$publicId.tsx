@@ -203,7 +203,7 @@ export default function QuestionEdit() {
   const deleteFetcher = useDeletionQuestionFetcher();
 
   return (
-    <div className="p-2">
+    <div className="p-4">
       <header className="flex items-center justify-between">
         <h1 className="my-2 text-xl font-medium">문제 편집</h1>
         <div className="flex items-center">

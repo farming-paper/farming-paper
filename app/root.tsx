@@ -104,6 +104,8 @@ export default function App() {
           theme={{
             token: {
               colorPrimary: "#16a34a",
+              fontSize: 16,
+              controlHeight: 40,
             },
           }}
         >
