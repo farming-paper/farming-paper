@@ -25,10 +25,3 @@ export function getClientSideSupabaseConfig() {
 }
 
 export const defaultDateFormat = "YYYY-MM-DD";
-
-export function getGoogleClientId() {
-  return process.env.GOOGLE_CLIENT_ID || "GOOGLE_CLIENT_ID";
-}
-export function getGoogleClientSecret() {
-  return process.env.GOOGLE_CLIENT_SECRET || "";
-}
