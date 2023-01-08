@@ -1,7 +1,7 @@
 {
-  "name": "adsp",
-  "version": "1.0.0",
-  "description": "",
+  "name": "farming-paper",
+  "version": "0.0.1",
+  "description": "문제를 직접 디자인하고 최적화된 루틴으로 출제되는 문제를 풀어보세요.",
   "main": "index.js",
   "sideEffects": false,
   "scripts": {
