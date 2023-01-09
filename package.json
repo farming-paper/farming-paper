@@ -39,7 +39,7 @@
     "@vitejs/plugin-react": "^3.0.0",
     "antd": "^5.1.2",
     "dayjs": "^1.11.7",
-    "framer-motion": "^7.10.3",
+    "framer-motion": "^8.3.3",
     "graphql": "^16.6.0",
     "inquirer": "^9.1.4",
     "katex": "^0.16.4",
