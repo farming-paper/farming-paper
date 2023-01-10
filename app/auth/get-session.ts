@@ -43,8 +43,9 @@ export async function getSessionWithProfile({
 
   const findProfileRes = await db
     .from("profiles")
-    .select("*")
+    .select("id, public_id, desc, name, photo")
     .eq("email", session?.user?.email)
+    .is("deleted_at", null)
     .single();
 
   let profile: IProfile;
@@ -59,7 +60,7 @@ export async function getSessionWithProfile({
         email,
         public_id: nanoid(),
       })
-      .select("*")
+      .select("id, public_id, desc, name, photo")
       .single();
     if (!userRes.data) {
       throw new Error(

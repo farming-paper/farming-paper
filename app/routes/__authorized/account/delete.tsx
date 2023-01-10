@@ -1,6 +1,9 @@
 import type { ActionArgs } from "@remix-run/server-runtime";
-import { json } from "@remix-run/server-runtime";
+import { json, redirect } from "@remix-run/server-runtime";
+import { createServerClient } from "@supabase/auth-helpers-remix";
+import dayjs from "dayjs";
 import { getSessionWithProfile } from "~/auth/get-session";
+import { getServerSideSupabaseConfig } from "~/config";
 import { getServerSideSupabaseClient } from "~/supabase/client";
 import { typedFetcher } from "~/util";
 
@@ -15,7 +18,9 @@ async function removeTagsAndTagRelations(profileId: number) {
 
   const removeTagsRes = await db
     .from("tags")
-    .delete()
+    .update({
+      deleted_at: dayjs().toISOString(),
+    })
     .eq("creator", profileId)
     .select("id");
 
@@ -51,7 +56,9 @@ async function removeQuestions(profileId: number) {
 
   const removeQuestionsRes = await db
     .from("questions")
-    .delete()
+    .update({
+      deleted_at: dayjs().toISOString(),
+    })
     .eq("creator", profileId);
 
   if (removeQuestionsRes.error) {
@@ -67,13 +74,43 @@ async function removeQuestions(profileId: number) {
   } as const;
 }
 
+async function removeProfile(profileId: number) {
+  const db = getServerSideSupabaseClient();
+
+  const rmProfileRes = await db
+    .from("profiles")
+    .update({
+      deleted_at: dayjs().toISOString(),
+    })
+    .eq("id", profileId);
+
+  if (rmProfileRes.error) {
+    return {
+      data: null,
+      error: rmProfileRes.error.message,
+    };
+  }
+
+  return {
+    data: "success",
+    error: null,
+  } as const;
+}
+
 export async function action({ request }: ActionArgs) {
   const response = new Response();
   const { profile } = await getSessionWithProfile({ response, request });
+  const config = getServerSideSupabaseConfig();
+  const client = createServerClient(config.url, config.serviceRoleKey, {
+    request,
+    response,
+  });
 
   const removeTagsAndTagRelationsRes = await Promise.all([
     removeTagsAndTagRelations(profile.id),
     removeQuestions(profile.id),
+    removeProfile(profile.id),
+    client.auth.signOut(),
   ]);
 
   if (removeTagsAndTagRelationsRes.some((res) => res.error)) {
@@ -83,8 +120,7 @@ export async function action({ request }: ActionArgs) {
     });
   }
 
-  return json({
-    data: "success",
-    error: null,
+  return redirect("/login", {
+    headers: response.headers,
   });
 }

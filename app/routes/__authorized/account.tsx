@@ -2,15 +2,36 @@ import { GithubOutlined } from "@ant-design/icons";
 import { useOutletContext } from "@remix-run/react";
 import { Button } from "antd";
 import { ExternalLink } from "lucide-react";
-import { useCallback } from "react";
+import { useCallback, useState } from "react";
+import DangerModal from "~/common/components/DangerModal";
 import type { IOutletProps } from "~/types";
+import { useDeleteAccountFetcher } from "./account/delete";
 
 export default function Account() {
   const context = useOutletContext<IOutletProps>();
 
-  const handleLogout = useCallback(async () => {
+  const handleLogout = useCallback(() => {
     context.supabase.auth.signOut();
   }, [context.supabase.auth]);
+
+  const deleteAccountFetcher = useDeleteAccountFetcher();
+
+  const [deleteModalOpen, setDeleteModalOpen] = useState(false);
+
+  const openDeleteModal = useCallback(() => {
+    setDeleteModalOpen(true);
+  }, []);
+
+  const onDeletionSubmit = useCallback(() => {
+    deleteAccountFetcher.submit(
+      {},
+      {
+        method: "post",
+        action: `/account/delete`,
+      }
+    );
+    handleLogout();
+  }, [deleteAccountFetcher, handleLogout]);
 
   return (
     <div className="flex flex-col gap-3 p-4">
@@ -18,13 +39,16 @@ export default function Account() {
         <h1 className="my-2 text-xl font-medium">계정</h1>
         <div className="flex gap-4">
           <Button onClick={handleLogout}>로그아웃</Button>
-          <Button
-            onClick={() => {
-              // TODO: 계정 삭제
-            }}
-          >
+          <Button danger type="primary" onClick={openDeleteModal}>
             계정 삭제
           </Button>
+          <DangerModal
+            message="정말 계정을 삭제하시겠습니까? 문제, 태그 등등이 모두 영구히 삭제됩니다."
+            title="계정 삭제"
+            open={deleteModalOpen}
+            setOpen={setDeleteModalOpen}
+            onSubmit={onDeletionSubmit}
+          />
         </div>
       </div>
       <div>
@@ -38,9 +62,6 @@ export default function Account() {
       <div>
         <h2 className="my-2 text-lg">ABOUT</h2>
         <div className="flex flex-wrap gap-3">
-          {/* <Button target="_blank" rel="noopener noreferrer">
-            건의 및 문의하기
-          </Button> */}
           <Button
             type="primary"
             href="https://tally.so/r/w8NWlk"
