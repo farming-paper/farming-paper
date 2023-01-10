@@ -201,7 +201,7 @@ export function createFormData<T>(args: T) {
   };
 }
 
-export function typedFetcher<TActionFunc, TArgs>() {
+export function typedFetcher<TActionFunc, TArgs = Record<string, never>>() {
   return {
     useFetcher: useFetcher<TActionFunc>,
     getArgsFromRequest: getArgsFromRequest<TArgs>,
