@@ -16,7 +16,16 @@ export default function Account() {
     <div className="flex flex-col gap-3 p-4">
       <div>
         <h1 className="my-2 text-xl font-medium">계정</h1>
-        <Button onClick={handleLogout}>로그아웃</Button>
+        <div className="flex gap-4">
+          <Button onClick={handleLogout}>로그아웃</Button>
+          <Button
+            onClick={() => {
+              // TODO: 계정 삭제
+            }}
+          >
+            계정 삭제
+          </Button>
+        </div>
       </div>
       <div>
         <h2 className="my-2 text-lg">프로필</h2>
