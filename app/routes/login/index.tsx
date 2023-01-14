@@ -3,6 +3,7 @@ import type { LoaderArgs } from "@remix-run/server-runtime";
 import { json, redirect } from "@remix-run/server-runtime";
 import { createServerClient } from "@supabase/auth-helpers-remix";
 import { message } from "antd";
+import { Carrot, ExternalLink } from "lucide-react";
 import { useEffect, useRef } from "react";
 import { getClientSideSupabaseConfig } from "~/config";
 import google from "~/images/logo/google.svg";
@@ -108,6 +109,47 @@ export default function Login() {
           </span>
           <span className="flex-1">구글로 로그인</span>
         </button>
+        <div className="inline-flex items-center justify-center w-full">
+          <hr className="w-64 h-1 my-16 border-0 rounded bg-white/30 dark:bg-green-700" />
+          <div className="absolute px-4 text-white -translate-x-1/2 bg-green-700 left-1/2 dark:bg-green-900">
+            <Carrot />
+          </div>
+        </div>
+        <div className="flex flex-wrap justify-center gap-3">
+          <a
+            href="https://tally.so/r/w8NWlk"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-flex items-center justify-center gap-2 px-4 py-2 text-sm font-medium text-green-900 transition bg-green-400 border border-transparent rounded-md shadow-xl hover:bg-green-300"
+          >
+            <span style={{ marginInlineStart: 0 }}>건의 및 문의하기</span>
+            <span className="inline-flex opacity-40">
+              <ExternalLink className="w-4 h-4" />
+            </span>
+          </a>
+          <a
+            href="https://springfall.cc"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-flex items-center justify-center gap-2 px-4 py-2 text-sm font-medium text-green-900 transition bg-green-400 border border-transparent rounded-md shadow-xl hover:bg-green-300"
+          >
+            <span style={{ marginInlineStart: 0 }}>개발자 블로그</span>
+            <span className="inline-flex opacity-40">
+              <ExternalLink className="w-4 h-4" />
+            </span>
+          </a>
+          <a
+            href="https://github.com/farming-paper/farming-paper"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-flex items-center justify-center gap-2 px-4 py-2 text-sm font-medium text-green-900 transition bg-green-400 border border-transparent rounded-md shadow-xl hover:bg-green-300"
+          >
+            <span style={{ marginInlineStart: 0 }}>Github</span>
+            <span className="inline-flex opacity-40">
+              <ExternalLink className="w-4 h-4" />
+            </span>
+          </a>
+        </div>
       </div>
     </div>
   );
