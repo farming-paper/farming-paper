@@ -41,6 +41,7 @@ const {
 export async function loader({ request }: LoaderArgs) {
   const response = new Response();
   const { profile } = await getSessionWithProfile({ request, response });
+
   const db = getServerSideSupabaseClient();
 
   const tagsRes = await db.from("tags").select("*").eq("creator", profile.id);

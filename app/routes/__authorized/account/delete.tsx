@@ -1,9 +1,7 @@
 import type { ActionArgs } from "@remix-run/server-runtime";
-import { json, redirect } from "@remix-run/server-runtime";
-import { createServerClient } from "@supabase/auth-helpers-remix";
+import { json } from "@remix-run/server-runtime";
 import dayjs from "dayjs";
 import { getSessionWithProfile } from "~/auth/get-session";
-import { getServerSideSupabaseConfig } from "~/config";
 import { getServerSideSupabaseClient } from "~/supabase/client";
 import { typedFetcher } from "~/util";
 
@@ -100,17 +98,11 @@ async function removeProfile(profileId: number) {
 export async function action({ request }: ActionArgs) {
   const response = new Response();
   const { profile } = await getSessionWithProfile({ response, request });
-  const config = getServerSideSupabaseConfig();
-  const client = createServerClient(config.url, config.serviceRoleKey, {
-    request,
-    response,
-  });
 
   const removeTagsAndTagRelationsRes = await Promise.all([
     removeTagsAndTagRelations(profile.id),
     removeQuestions(profile.id),
     removeProfile(profile.id),
-    client.auth.signOut(),
   ]);
 
   if (removeTagsAndTagRelationsRes.some((res) => res.error)) {
@@ -120,7 +112,8 @@ export async function action({ request }: ActionArgs) {
     });
   }
 
-  return redirect("/login", {
-    headers: response.headers,
+  return json({
+    data: "success" as const,
+    error: null,
   });
 }

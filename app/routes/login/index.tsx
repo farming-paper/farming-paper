@@ -1,13 +1,16 @@
-import { useOutletContext } from "@remix-run/react";
+import { useOutletContext, useSearchParams } from "@remix-run/react";
 import type { LoaderArgs } from "@remix-run/server-runtime";
 import { json, redirect } from "@remix-run/server-runtime";
 import { createServerClient } from "@supabase/auth-helpers-remix";
+import { message } from "antd";
+import { useEffect, useRef } from "react";
 import { getClientSideSupabaseConfig } from "~/config";
 import google from "~/images/logo/google.svg";
 import type { IOutletProps } from "~/types";
 
 export const loader = async ({ request }: LoaderArgs) => {
   const response = new Response();
+
   const { anonKey, url } = getClientSideSupabaseConfig();
   const supabase = createServerClient(url, anonKey, {
     request,
@@ -35,12 +38,36 @@ export const loader = async ({ request }: LoaderArgs) => {
 
 export default function Login() {
   const props = useOutletContext<IOutletProps>();
+  const [urlSearchParams] = useSearchParams();
+  const statusMessaged = useRef(false);
+
+  useEffect(() => {
+    if (statusMessaged.current) {
+      return;
+    }
+    const status = urlSearchParams.get("status");
+
+    switch (status) {
+      case "logged_out":
+        message.success("성공적으로 로그아웃되었습니다.");
+        break;
+      case "deleted_account":
+        message.success("성공적으로 계정이 삭제되었습니다.");
+        break;
+      default:
+        break;
+    }
+
+    statusMessaged.current = true;
+  }, [urlSearchParams]);
 
   const handleGoogleLogin = async () => {
+    const redirectTo = new URL(window.location.href);
+    redirectTo.pathname = "/join";
     const { error } = await props.supabase.auth.signInWithOAuth({
       provider: "google",
       options: {
-        redirectTo: window.location.origin,
+        redirectTo: redirectTo.href,
       },
     });
 

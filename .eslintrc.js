@@ -63,7 +63,7 @@ module.exports = {
     "react-hooks/exhaustive-deps": [
       "warn",
       {
-        additionalHooks: "(useMyStoreMemo|useMyOtherCustomHook)",
+        additionalHooks: "(useEffectOnce|useMyOtherCustomHook)",
       },
     ],
   },

@@ -12,6 +12,7 @@ import type { ITagForSolve } from "~/types";
 export async function loader({ request }: LoaderArgs) {
   const response = new Response();
   const { profile } = await getSessionWithProfile({ request, response });
+
   const db = getServerSideSupabaseClient();
 
   // TODO: function 선언 시 리턴 타입 설정에서 nullable 을 설정할 수 없음. desc 같은 경우 Null 이 올 수도 있지만 타입은 그렇지 않음.

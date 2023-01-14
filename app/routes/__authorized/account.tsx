@@ -1,20 +1,31 @@
 import { GithubOutlined } from "@ant-design/icons";
-import { useOutletContext } from "@remix-run/react";
+import { useNavigate, useOutletContext } from "@remix-run/react";
 import { Button } from "antd";
 import { ExternalLink } from "lucide-react";
-import { useCallback, useState } from "react";
+import { useCallback, useEffect, useState } from "react";
 import DangerModal from "~/common/components/DangerModal";
 import type { IOutletProps } from "~/types";
 import { useDeleteAccountFetcher } from "./account/delete";
 
 export default function Account() {
   const context = useOutletContext<IOutletProps>();
+  const navigate = useNavigate();
 
-  const handleLogout = useCallback(() => {
-    context.supabase.auth.signOut();
-  }, [context.supabase.auth]);
+  const handleLogout = useCallback(async () => {
+    await context.supabase.auth.signOut();
+    navigate("/login?status=logged_out");
+  }, [context.supabase.auth, navigate]);
 
   const deleteAccountFetcher = useDeleteAccountFetcher();
+
+  useEffect(() => {
+    const data = deleteAccountFetcher.data?.data;
+    if (data === "success") {
+      context.supabase.auth.signOut().then(() => {
+        navigate("/login?status=deleted_account");
+      });
+    }
+  }, [context.supabase.auth, deleteAccountFetcher.data?.data, navigate]);
 
   const [deleteModalOpen, setDeleteModalOpen] = useState(false);
 
@@ -22,7 +33,7 @@ export default function Account() {
     setDeleteModalOpen(true);
   }, []);
 
-  const onDeletionSubmit = useCallback(() => {
+  const handleDeleteAccount = useCallback(async () => {
     deleteAccountFetcher.submit(
       {},
       {
@@ -30,8 +41,7 @@ export default function Account() {
         action: `/account/delete`,
       }
     );
-    handleLogout();
-  }, [deleteAccountFetcher, handleLogout]);
+  }, [deleteAccountFetcher]);
 
   return (
     <div className="flex flex-col gap-3 p-4">
@@ -47,7 +57,7 @@ export default function Account() {
             title="계정 삭제"
             open={deleteModalOpen}
             setOpen={setDeleteModalOpen}
-            onSubmit={onDeletionSubmit}
+            onSubmit={handleDeleteAccount}
           />
         </div>
       </div>

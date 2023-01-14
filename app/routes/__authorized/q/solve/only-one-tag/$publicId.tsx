@@ -42,6 +42,7 @@ const motionProps = {
 export async function loader({ request, params }: LoaderArgs) {
   const response = new Response();
   const { profile } = await getSessionWithProfile({ request, response });
+
   const db = getServerSideSupabaseClient();
   const tagPublicId = params.publicId;
   if (!tagPublicId) {

@@ -1,50 +1,49 @@
-import { Outlet, useLoaderData, useOutletContext } from "@remix-run/react";
+import {
+  Outlet,
+  useCatch,
+  useNavigate,
+  useOutletContext,
+  useSearchParams,
+} from "@remix-run/react";
 import type { LoaderArgs } from "@remix-run/server-runtime";
 import { json, redirect } from "@remix-run/server-runtime";
-import { createServerClient } from "@supabase/auth-helpers-remix";
 import { message } from "antd";
-import { useEffect, useRef } from "react";
+import { useEffect } from "react";
+import { getSessionWithProfile } from "~/auth/get-session";
 import BottomNav from "~/common/components/BottomNav";
-import { getClientSideSupabaseConfig } from "~/config";
 import type { IOutletProps } from "~/types";
 
 export const loader = async ({ request }: LoaderArgs) => {
   const response = new Response();
-  const { anonKey, url: supabaseUrl } = getClientSideSupabaseConfig();
-  const supabase = createServerClient(supabaseUrl, anonKey, {
+  const { profile, session, supabaseClient } = await getSessionWithProfile({
     request,
     response,
   });
 
-  const {
-    data: { session },
-  } = await supabase.auth.getSession();
-
-  const url = new URL(request.url);
-  const status = url.searchParams.get("status");
-
-  if (!session) {
+  if (!session || !profile) {
+    supabaseClient.auth.signOut();
     return redirect("/login", {
       headers: response.headers,
     });
   }
 
   return json({
-    isAlreadyLoggedIn: status === "already_logged_in",
+    profile,
   });
 };
 
 const Authorized = () => {
-  const data = useLoaderData<typeof loader>();
-  const messaged = useRef(false);
+  // const data = useLoaderData<typeof loader>();
+  // const messaged = useRef(false);
   const context = useOutletContext<IOutletProps>();
+  const [params] = useSearchParams();
 
   useEffect(() => {
-    if (data.isAlreadyLoggedIn && !messaged.current) {
+    const status = params.get("status");
+    if (status === "already_logged_in") {
       message.info("이미 로그인되어 있습니다.");
-      messaged.current = true;
     }
-  }, [data.isAlreadyLoggedIn]);
+  }, [params]);
 
   return (
     <>
@@ -53,5 +52,29 @@ const Authorized = () => {
     </>
   );
 };
+
+export function CatchBoundary() {
+  const caught = useCatch();
+  const context = useOutletContext<IOutletProps>();
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    if (caught.status === 401) {
+      context.supabase.auth.signOut();
+      navigate("/login", { replace: true });
+    }
+  }, [caught.status, context.supabase.auth, navigate]);
+
+  return (
+    <div>
+      <h1>Caught</h1>
+      <p>Status: {caught.status}</p>
+      <pre>
+        <code>{JSON.stringify(caught.data, null, 2)}</code>
+        <code>{JSON.stringify(context, null, 2)}</code>
+      </pre>
+    </div>
+  );
+}
 
 export default Authorized;

@@ -71,7 +71,7 @@ export default function App() {
     createBrowserClient<Database>(env.url, env.anonKey)
   );
 
-  const fetcher = useFetcher();
+  const authChangedFetcher = useFetcher();
 
   const serverAccessToken = session?.access_token;
 
@@ -82,7 +82,7 @@ export default function App() {
       if (session?.access_token !== serverAccessToken) {
         // server and client are out of sync.
         // Remix recalls active loaders after actions complete
-        fetcher.submit(null, {
+        authChangedFetcher.submit(null, {
           method: "post",
           action: "/handle-supabase-auth",
         });
@@ -92,7 +92,7 @@ export default function App() {
     return () => {
       subscription.unsubscribe();
     };
-  }, [serverAccessToken, supabase, fetcher]);
+  }, [authChangedFetcher, serverAccessToken, supabase]);
 
   return (
     <html lang="ko" className="font-sans bg-gray-50">
