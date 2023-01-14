@@ -96,6 +96,7 @@ const QuestionForm: React.FC<{
             return (
               <Input.TextArea
                 {...field}
+                autoSize={{ minRows: 3 }}
                 required
                 id="question_message"
                 placeholder="내용을 작성하세요"
