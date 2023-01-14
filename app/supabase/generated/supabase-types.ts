@@ -32,41 +32,32 @@ export interface Database {
   };
   public: {
     Tables: {
-      accounts: {
+      cached: {
         Row: {
-          access_token: string;
+          code: string;
+          content: Json;
           created_at: string;
           deleted_at: string | null;
-          email: string;
+          expires_in: string;
           id: number;
-          photo: string | null;
-          provider: string;
-          provider_id: string;
-          refresh_token: string;
           updated_at: string;
         };
         Insert: {
-          access_token: string;
+          code?: string;
+          content?: Json;
           created_at?: string;
           deleted_at?: string | null;
-          email: string;
+          expires_in: string;
           id?: number;
-          photo?: string | null;
-          provider: string;
-          provider_id: string;
-          refresh_token: string;
           updated_at?: string;
         };
         Update: {
-          access_token?: string;
+          code?: string;
+          content?: Json;
           created_at?: string;
           deleted_at?: string | null;
-          email?: string;
+          expires_in?: string;
           id?: number;
-          photo?: string | null;
-          provider?: string;
-          provider_id?: string;
-          refresh_token?: string;
           updated_at?: string;
         };
       };
