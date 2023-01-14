@@ -26,8 +26,7 @@ export async function getSessionWithProfile({
 
   const email = session?.user?.email;
   if (!email) {
-    // throw redirect("/login");
-    throw new Response("No Eamil in session", {
+    throw new Response("No email in session", {
       status: 401,
     });
   }
@@ -43,7 +42,6 @@ export async function getSessionWithProfile({
 
   // 유저가 없는 경우 로그아웃하고 로그인 페이지로 이동
   if (!findProfileRes.data) {
-    // throw redirect("/login");
     throw new Response("No Profile", {
       status: 401,
     });
