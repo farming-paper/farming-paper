@@ -67,12 +67,7 @@ export function CatchBoundary() {
 
   return (
     <div>
-      <h1>Caught</h1>
-      <p>Status: {caught.status}</p>
-      <pre>
-        <code>{JSON.stringify(caught.data, null, 2)}</code>
-        <code>{JSON.stringify(context, null, 2)}</code>
-      </pre>
+      <h1>로그인 정보가 없습니다. 로그인 페이지로 이동합니다.</h1>
     </div>
   );
 }
