@@ -1,10 +1,4 @@
-import {
-  Outlet,
-  useCatch,
-  useNavigate,
-  useOutletContext,
-  useSearchParams,
-} from "@remix-run/react";
+import { Outlet, useOutletContext, useSearchParams } from "@remix-run/react";
 import type { LoaderArgs } from "@remix-run/server-runtime";
 import { json, redirect } from "@remix-run/server-runtime";
 import { message } from "antd";
@@ -52,29 +46,5 @@ const Authorized = () => {
     </>
   );
 };
-
-export function CatchBoundary() {
-  const caught = useCatch();
-  const context = useOutletContext<IOutletProps>();
-  const navigate = useNavigate();
-
-  useEffect(() => {
-    if (caught.status === 401) {
-      context.supabase.auth.signOut();
-      navigate("/login", { replace: true });
-    }
-  }, [caught.status, context.supabase.auth, navigate]);
-
-  return (
-    <div>
-      <h1>Caught</h1>
-      <p>Status: {caught.status}</p>
-      <pre>
-        <code>{JSON.stringify(caught.data, null, 2)}</code>
-        <code>{JSON.stringify(context, null, 2)}</code>
-      </pre>
-    </div>
-  );
-}
 
 export default Authorized;
