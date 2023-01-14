@@ -11,7 +11,7 @@ import {
   useEffect,
   useLayoutEffect,
   useRef,
-  useState,
+  useState
 } from "react";
 import { twMerge } from "tailwind-merge";
 import { getSessionWithProfile } from "~/auth/get-session";
@@ -62,6 +62,10 @@ export async function loader({ request, params }: LoaderArgs) {
   const questions: Question[] = questionsRes.data.map((q) => {
     return createQuestionFromJson(q.content);
   });
+
+  if (questions.length === 0) {
+    throw new Response("No questions", { status: 404 });
+  }
 
   return json({ questions, name: "" });
 }

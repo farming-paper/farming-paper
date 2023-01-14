@@ -1,10 +1,4 @@
-import {
-  Outlet,
-  useCatch,
-  useNavigate,
-  useOutletContext,
-  useSearchParams,
-} from "@remix-run/react";
+import { Outlet, useOutletContext, useSearchParams } from "@remix-run/react";
 import type { LoaderArgs } from "@remix-run/server-runtime";
 import { json, redirect } from "@remix-run/server-runtime";
 import { message } from "antd";
@@ -52,24 +46,5 @@ const Authorized = () => {
     </>
   );
 };
-
-export function CatchBoundary() {
-  const caught = useCatch();
-  const context = useOutletContext<IOutletProps>();
-  const navigate = useNavigate();
-
-  useEffect(() => {
-    if (caught.status === 401) {
-      context.supabase.auth.signOut();
-      navigate("/login", { replace: true });
-    }
-  }, [caught.status, context.supabase.auth, navigate]);
-
-  return (
-    <div>
-      <h1>로그인 정보가 없습니다. 로그인 페이지로 이동합니다.</h1>
-    </div>
-  );
-}
 
 export default Authorized;
