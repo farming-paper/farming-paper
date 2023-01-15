@@ -1,4 +1,4 @@
-import { useLoaderData } from "@remix-run/react";
+import { useLoaderData, useNavigate } from "@remix-run/react";
 import type {
   ActionArgs,
   LoaderArgs,
@@ -10,6 +10,7 @@ import { nanoid } from "nanoid";
 import { useEffect, useMemo } from "react";
 import { useForm } from "react-hook-form";
 import { getSessionWithProfile } from "~/auth/get-session";
+import useCmdEnter from "~/common/hooks/use-cmd-enter";
 import { createQuestion, removeUndefined } from "~/question/create";
 import QuestionForm from "~/question/edit-components/QuestionForm";
 import questionFormResolver from "~/question/question-form-resolver";
@@ -67,6 +68,8 @@ export async function loader({ request }: LoaderArgs) {
 
 export default function QuestionNew() {
   const { tags } = useLoaderData<typeof loader>();
+  const navigate = useNavigate();
+
   const { handleSubmit, formState, control, watch, setValue, setFocus } =
     useForm({
       resolver: questionFormResolver,
@@ -128,21 +131,21 @@ export default function QuestionNew() {
   }, [createNewFetch.state, setFocus, setValue]);
 
   /** keyboard shortcut */
-  useEffect(() => {
-    const submitShortcut = (e: KeyboardEvent) => {
-      if (e.key === "Enter" && (e.metaKey || e.ctrlKey)) {
-        onSubmit();
-      }
-    };
-    document.addEventListener("keydown", submitShortcut);
-    return () => {
-      document.removeEventListener("keydown", submitShortcut);
-    };
-  }, [onSubmit]);
+  useCmdEnter(onSubmit);
 
   return (
     <div className="p-4">
-      <h1 className="my-2 text-xl font-medium">문제 생성</h1>
+      <header className="flex items-center justify-between gap-4 my-2">
+        <h1 className="m-0 text-xl font-medium">문제 생성</h1>
+        <Button
+          size="small"
+          onClick={() => {
+            navigate("/q/generator");
+          }}
+        >
+          문제 생성기
+        </Button>
+      </header>
       <QuestionForm
         control={control}
         formState={formState}
