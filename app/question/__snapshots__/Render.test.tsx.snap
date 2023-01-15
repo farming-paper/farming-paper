@@ -54,27 +54,6 @@ exports[`마크다운 렌더링 > 제목이 잘 표시되어야 함 1`] = `
 </div>
 `;
 
-exports[`배열 렌더링 > 일반 배열이 잘 렌더링되어야 함. 1`] = `
-<div>
-  <div>
-    <div>
-      <p>
-        this is one
-      </p>
-      
-
-    </div>
-    <div>
-      <p>
-        this is two
-      </p>
-      
-
-    </div>
-  </div>
-</div>
-`;
-
 exports[`수학 렌더링 (KaTeX) > Block Math 가 잘 렌더링되어야 함 1`] = `
 <div>
   <div>

@@ -30,6 +30,7 @@ specifiers:
   '@vitejs/plugin-react': ^3.0.1
   antd: ^5.1.4
   autoprefixer: ^10.4.13
+  compromise: ^14.8.1
   concurrently: ^7.6.0
   dayjs: ^1.11.7
   eslint: ^8.31.0
@@ -75,6 +76,7 @@ dependencies:
   '@vercel/node': 2.8.5
   '@vitejs/plugin-react': 3.0.1_vite@4.0.4
   antd: 5.1.4_biqbaboplfbrettd7655fr4n2y
+  compromise: 14.8.1
   dayjs: 1.11.7
   framer-motion: 8.3.3_biqbaboplfbrettd7655fr4n2y
   graphql: 16.6.0
@@ -4576,6 +4578,15 @@ packages:
       - supports-color
     dev: true
 
+  /compromise/14.8.1:
+    resolution: {integrity: sha512-RQmYyq4PsxMm5rPtVffKEXAy3AfUKXFOYjcvh3620haBo1kfLvP6cdsOBt9BIh/BVO6B8XF2A+smd4Bzz1H2oA==}
+    engines: {node: '>=12.0.0'}
+    dependencies:
+      efrt: 2.7.0
+      grad-school: 0.0.5
+      suffix-thumb: 4.0.2
+    dev: false
+
   /compute-scroll-into-view/2.0.3:
     resolution: {integrity: sha512-mj/AjC7WqXeVlUB6zUq5Qrivb6et0kyasDQcbCWLDusYUqaXng+BfOnhCdRqPOa5/dWNn5e9+u40H6w2BYRdNQ==}
     dev: false
@@ -5122,6 +5133,11 @@ packages:
   /ee-first/1.1.1:
     resolution: {integrity: sha512-WMwm9LhRUo+WUaRN+vRuETqG89IgZphVSNkdFgeb6sS/E4OrDIN7t48CAewSHXc6C8lefD8KKfr5vY61brQlow==}
     dev: true
+
+  /efrt/2.7.0:
+    resolution: {integrity: sha512-/RInbCy1d4P6Zdfa+TMVsf/ufZVotat5hCw3QXmWtjU+3pFEOvOQ7ibo3aIxyCJw2leIeAMjmPj+1SLJiCpdrQ==}
+    engines: {node: '>=12.0.0'}
+    dev: false
 
   /electron-to-chromium/1.4.284:
     resolution: {integrity: sha512-M8WEXFuKXMYMVr45fo8mq0wUrrJHheiKZf6BArTKk9ZBYCKJEOU5H8cdWgDT+qCVZf7Na4lVUaZsA+h6uA9+PA==}
@@ -6599,6 +6615,11 @@ packages:
   /graceful-fs/4.2.10:
     resolution: {integrity: sha512-9ByhssR2fPVsNZj478qUUbKfmL0+t5BDVyjShtyZZLiK7ZDAArFFfopyOTj0M05wE2tJPisA4iTnnXl2YoPvOA==}
     dev: true
+
+  /grad-school/0.0.5:
+    resolution: {integrity: sha512-rXunEHF9M9EkMydTBux7+IryYXEZinRk6g8OBOGDBzo/qWJjhTxy86i5q7lQYpCLHN8Sqv1XX3OIOc7ka2gtvQ==}
+    engines: {node: '>=8.0.0'}
+    dev: false
 
   /grapheme-splitter/1.0.4:
     resolution: {integrity: sha512-bzh50DW9kTPM00T8y4o8vQg89Di9oLJVLW/KaOGIXJWP/iqCN6WKYkbNOF04vFLJhwcpYUh9ydh/+5vpOqV4YQ==}
@@ -10834,6 +10855,10 @@ packages:
 
   /stylis/4.1.3:
     resolution: {integrity: sha512-GP6WDNWf+o403jrEp9c5jibKavrtLW+/qYGhFxFrG8maXhwTBI7gLLhiBb0o7uFccWN+EOS9aMO6cGHWAO07OA==}
+    dev: false
+
+  /suffix-thumb/4.0.2:
+    resolution: {integrity: sha512-CCvCAr7JyeQoO+/lyq3P2foZI/xJz5kpG3L6kg2CaOf9K2/gaM9ixy/JTuRwjEK38l306zE7vl3JoOZYmLQLlA==}
     dev: false
 
   /supports-color/5.5.0:
