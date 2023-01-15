@@ -19,6 +19,10 @@ export type PapagoResponse = {
 
 let clientCached: ReturnType<typeof createPapagoClient> | null = null;
 
+export function getPapagoCode(engSentence: string) {
+  return `papago-en-to-ko-${engSentence.replace(/ /g, "-")}`;
+}
+
 export function getPapagoClient() {
   if (!clientCached) {
     clientCached = createPapagoClient();
@@ -35,7 +39,7 @@ export function createPapagoClient() {
   }
 
   return {
-    async getKoreanSentence(engSentence: string) {
+    async getKorTranslated(engSentence: string) {
       const headers = new Headers();
       headers.append(
         "Content-Type",

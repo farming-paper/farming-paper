@@ -47,6 +47,10 @@ export type OxfordDictionarySentencesResponse = {
   [key: string]: unknown;
 };
 
+export function getOxfordDictionarySentencesCode(word: string) {
+  return `oxford-dictionary-sentences-${word}`;
+}
+
 let clientCached: ReturnType<typeof createOxfordDictionaryClient> | null = null;
 
 export function getOxfordDictionaryClient() {

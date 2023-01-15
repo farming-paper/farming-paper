@@ -1,18 +1,18 @@
 import dayjs from "dayjs";
 import { getServerSideSupabaseClient } from "~/supabase/client";
 import type { Json } from "~/supabase/generated/supabase-types";
+import type { ChromePapagoResponse } from "./chrome-papago";
+import {
+  getChromePapagoCode,
+  getKorTranslated as getChromePapagoKorTranslated,
+} from "./chrome-papago";
 import type { OxfordDictionarySentencesResponse } from "./oxford-dictionary-client";
-import { getOxfordDictionaryClient } from "./oxford-dictionary-client";
-import type { PapagoResponse } from "./papago-client";
-import { getPapagoClient } from "./papago-client";
-
-export function getOxfordDictionarySentencesCode(word: string) {
-  return `oxford-dictionary-sentences-${word}`;
-}
-
-export function getPapagoCode(engSentence: string) {
-  return `papago-en-to-ko-${engSentence.replace(/ /g, "-")}`;
-}
+import {
+  getOxfordDictionaryClient,
+  getOxfordDictionarySentencesCode,
+} from "./oxford-dictionary-client";
+import type { PapagoResponse } from "./papago";
+import { getPapagoClient, getPapagoCode } from "./papago";
 
 export async function getCachedContent<Content>(
   code: string
@@ -80,30 +80,45 @@ export async function getEngSentences(word: string) {
 export async function getKorTranslated(engSentance: string) {
   const db = getServerSideSupabaseClient();
 
-  const papagoCode = getPapagoCode(engSentance);
-  const papago = getPapagoClient();
-  const cached = await getCachedContent<PapagoResponse>(papagoCode);
+  const chromePapagoCode = getChromePapagoCode(engSentance);
 
-  let content: PapagoResponse;
-
-  if (cached) {
-    content = cached;
-  } else if (!papago) {
-    throw new Error("Papago client is not available");
-  } else {
-    const papagoRes = await papago.getKoreanSentence(engSentance);
-    if (!papagoRes.data) {
-      throw new Error(papagoRes.error);
-    }
-
-    content = papagoRes.data;
-
-    await db.from("cached").upsert({
-      code: papagoCode,
-      content: papagoRes.data as Json,
-      expires_in: dayjs().add(300, "day").toISOString(),
-    });
+  const chromePapagoCached = await getCachedContent<ChromePapagoResponse>(
+    chromePapagoCode
+  );
+  if (chromePapagoCached) {
+    return chromePapagoCached.translatedText;
   }
 
-  return content.message.result.translatedText;
+  const papagoCode = getPapagoCode(engSentance);
+  const papagoCached = await getCachedContent<PapagoResponse>(papagoCode);
+  if (papagoCached) {
+    return papagoCached.message.result.translatedText;
+  }
+
+  const chromePapagoRes = await getChromePapagoKorTranslated(engSentance);
+  if (chromePapagoRes.data) {
+    await db.from("cached").upsert({
+      code: chromePapagoCode,
+      content: chromePapagoRes.data as Json,
+      expires_in: dayjs().add(1600, "day").toISOString(),
+    });
+
+    return chromePapagoRes.data.translatedText;
+  }
+
+  const papago = getPapagoClient();
+  if (papago) {
+    const papagoRes = await papago.getKorTranslated(engSentance);
+    if (papagoRes.data) {
+      await db.from("cached").upsert({
+        code: papagoCode,
+        content: papagoRes.data as Json,
+        expires_in: dayjs().add(1600, "day").toISOString(),
+      });
+
+      return papagoRes.data.message.result.translatedText;
+    }
+  }
+
+  throw new Error("No translation available");
 }
