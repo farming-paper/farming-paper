@@ -1,4 +1,5 @@
 import nlp from "compromise";
+import type View from "compromise/types/view/one";
 
 export default function replace({
   sourceEngSentence,
@@ -31,7 +32,23 @@ export default function replace({
 
   const document = nlp(sourceEngSentence);
 
-  words.forEach((word) => document.replace(word, replacement));
+  const prevWords: string[] = [];
 
-  return document.text();
+  words.forEach((word) =>
+    document.replace(word, (match: View) => {
+      prevWords.push(
+        match.text({
+          keepPunct: false, // '?!' → ?
+          acronyms: false, // F.B.I. → FBI
+          abbreviations: false, // Mrs. → Mrs
+        })
+      );
+      return replacement;
+    })
+  );
+
+  return {
+    prevWords,
+    replaced: document.text(),
+  };
 }

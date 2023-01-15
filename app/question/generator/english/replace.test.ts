@@ -4,43 +4,53 @@ import replace from "./replace";
   {
     sourceEngSentence: "That's what I did!",
     word: "do",
-    expected: `That's what I ___!`,
+    expectedReplaced: `That's what I ___!`,
+    expectedPrevWords: ["did"],
   },
   {
-    sourceEngSentence: "That's what I did!",
-    word: "do",
-    expected: `That's what I ___!`,
+    sourceEngSentence: "This is super cat. super. what super?",
+    word: "super",
+    expectedReplaced: "This is ___ cat. ___. what ___?",
+    expectedPrevWords: ["super", "super", "super"],
   },
   {
     sourceEngSentence: "I am discharging you",
     word: "discharge",
-    expected: "I am ___ you",
+    expectedReplaced: "I am ___ you",
+    expectedPrevWords: ["discharging"],
   },
   {
     sourceEngSentence: "I have discharged you",
     word: "discharge",
-    expected: "I have ___ you",
+    expectedReplaced: "I have ___ you",
+    expectedPrevWords: ["discharged"],
   },
   {
     sourceEngSentence: "I will discharge him",
     word: "discharge",
-    expected: "I will ___ him",
+    expectedReplaced: "I will ___ him",
+    expectedPrevWords: ["discharge"],
   },
   {
     sourceEngSentence: "I discharged you",
     word: "discharge",
-    expected: "I ___ you",
+    expectedReplaced: "I ___ you",
+    expectedPrevWords: ["discharged"],
   },
   {
     sourceEngSentence:
       "It was an excellent sum for the third world and a sincere demonstration that the people of Manorhamilton have a burning desire to alleviate the poverty that exists in less well off lands.",
     word: "demonstration",
-    expected:
+    expectedReplaced:
       "It was an excellent sum for the third world and a sincere ___ that the people of Manorhamilton have a burning desire to alleviate the poverty that exists in less well off lands.",
+    expectedPrevWords: ["demonstration"],
   },
-].forEach(({ expected, sourceEngSentence, word }) => {
-  test(`replace ${sourceEngSentence} with ${word}`, () => {
-    const result = replace({ sourceEngSentence, word, replacement: "___" });
-    expect(result).toBe(expected);
-  });
-});
+].forEach(
+  ({ expectedReplaced, sourceEngSentence, word, expectedPrevWords }) => {
+    test(`replace ${sourceEngSentence} with ${word}`, () => {
+      const result = replace({ sourceEngSentence, word, replacement: "___" });
+      expect(result.replaced).toBe(expectedReplaced);
+      expect(result.prevWords).toStrictEqual(expectedPrevWords);
+    });
+  }
+);
