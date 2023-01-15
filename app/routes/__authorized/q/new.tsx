@@ -1,12 +1,8 @@
 import { useLoaderData, useNavigate } from "@remix-run/react";
-import type {
-  ActionArgs,
-  LoaderArgs,
-  MetaFunction,
-} from "@remix-run/server-runtime";
+import type { LoaderArgs, MetaFunction } from "@remix-run/server-runtime";
 import { json } from "@remix-run/server-runtime";
 import { Button, message } from "antd";
-import { nanoid } from "nanoid";
+import { ChevronRight } from "lucide-react";
 import { useEffect, useMemo } from "react";
 import { useForm } from "react-hook-form";
 import { getSessionWithProfile } from "~/auth/get-session";
@@ -14,30 +10,17 @@ import useCmdEnter from "~/common/hooks/use-cmd-enter";
 import { createQuestion, removeUndefined } from "~/question/create";
 import QuestionForm from "~/question/edit-components/QuestionForm";
 import questionFormResolver from "~/question/question-form-resolver";
-import type { Question } from "~/question/types";
 import { getServerSideSupabaseClient } from "~/supabase/client";
-import type { Json } from "~/supabase/generated/supabase-types";
 import { createTag } from "~/tag/create";
 import type { ITag } from "~/types";
-import { removeNullDeep, typedFetcher } from "~/util";
+import { removeNullDeep } from "~/util";
+import { createCreateQuestionArgs, useCreateQuestionFetcher } from "./create";
 
 export const meta: MetaFunction = () => {
   return {
     title: "문제 생성 | Farming Paper",
   };
 };
-
-const {
-  createArgs: createBody,
-  getArgsFromRequest,
-  useFetcher: useNewQuestionFetcher,
-} = typedFetcher<
-  typeof action,
-  {
-    question: Question;
-    tags: ITag[];
-  }
->();
 
 export async function loader({ request }: LoaderArgs) {
   const response = new Response();
@@ -82,42 +65,46 @@ export default function QuestionNew() {
         tags: [],
       },
     });
-  const createNewFetch = useNewQuestionFetcher();
+
+  const createQuestionFetch = useCreateQuestionFetcher();
 
   const onSubmit = useMemo(
     () =>
       handleSubmit(async (formData) => {
-        createNewFetch.submit(
-          createBody({
+        createQuestionFetch.submit(
+          createCreateQuestionArgs({
             question: createQuestion(formData.question),
             tags: removeUndefined(formData.tags).map(createTag),
           }),
           {
             method: "post",
-            action: `/q/new`,
+            action: `/q/create`,
           }
         );
       }),
-    [createNewFetch, handleSubmit]
+    [createQuestionFetch, handleSubmit]
   );
 
   const values = watch();
 
   useEffect(() => {
-    if (createNewFetch?.data?.data) {
+    if (createQuestionFetch?.data?.data) {
       message.success({
         key: "creating",
         content: "문제가 성공적으로 생성되었습니다.",
       });
-    } else if (createNewFetch?.data?.error) {
+    } else if (createQuestionFetch?.data?.error) {
       message.error({ key: "creating", content: "문제 생성이 실패했습니다." });
       // eslint-disable-next-line no-console
-      console.error("createNewFetch?.data?.error", createNewFetch?.data?.error);
+      console.error(
+        "createNewFetch?.data?.error",
+        createQuestionFetch?.data?.error
+      );
     }
-  }, [createNewFetch?.data?.data, createNewFetch?.data?.error]);
+  }, [createQuestionFetch?.data?.data, createQuestionFetch?.data?.error]);
 
   useEffect(() => {
-    if (createNewFetch.state === "submitting") {
+    if (createQuestionFetch.state === "submitting") {
       message.loading({
         key: "creating",
         content: "문제를 생성하는 중입니다...",
@@ -128,9 +115,8 @@ export default function QuestionNew() {
         setFocus("question.message");
       });
     }
-  }, [createNewFetch.state, setFocus, setValue]);
+  }, [createQuestionFetch.state, setFocus, setValue]);
 
-  /** keyboard shortcut */
   useCmdEnter(onSubmit);
 
   return (
@@ -138,12 +124,15 @@ export default function QuestionNew() {
       <header className="flex items-center justify-between gap-4 my-2">
         <h1 className="m-0 text-xl font-medium">문제 생성</h1>
         <Button
+          type="text"
           size="small"
           onClick={() => {
             navigate("/q/generator");
           }}
+          className="flex items-center gap-1"
         >
-          문제 생성기
+          <span>문제 생성기</span>
+          <ChevronRight className="w-4 h-4 opacity-50" />
         </Button>
       </header>
       <QuestionForm
@@ -154,61 +143,15 @@ export default function QuestionNew() {
         existingTags={tags}
       />
       <div className="flex justify-end">
-        <Button htmlType="submit" onClick={onSubmit} type="primary">
+        <Button
+          loading={createQuestionFetch.state === "submitting"}
+          htmlType="submit"
+          onClick={onSubmit}
+          type="primary"
+        >
           만들기
         </Button>
       </div>
     </div>
   );
 }
-
-export const action = async ({ request }: ActionArgs) => {
-  const { question, tags } = await getArgsFromRequest(request);
-
-  const response = new Response();
-  const { profile } = await getSessionWithProfile({
-    request,
-    response,
-  });
-
-  const db = getServerSideSupabaseClient();
-
-  const inserted = await db
-    .from("questions")
-    .insert({
-      creator: profile.id,
-      public_id: nanoid(),
-      content: question as unknown as Json,
-    })
-    .select("*")
-    .single();
-
-  if (!inserted.data) {
-    return json({
-      data: null,
-      error: "inserted.data is null",
-    });
-  }
-
-  const tagRelationRes = await db
-    .from("tags_questions_relation")
-    .upsert(
-      tags.map((t) => ({
-        q: inserted.data.id,
-        tag: t.id,
-      }))
-    )
-    .select("*");
-
-  if (tagRelationRes.error) {
-    return json({
-      data: null,
-      error: tagRelationRes.error.message,
-    });
-  }
-
-  return json({
-    data: inserted.data,
-    error: null,
-  });
-};
