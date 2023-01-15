@@ -31,6 +31,13 @@ import replace from "./replace";
     word: "discharge",
     expected: "I ___ you",
   },
+  {
+    sourceEngSentence:
+      "It was an excellent sum for the third world and a sincere demonstration that the people of Manorhamilton have a burning desire to alleviate the poverty that exists in less well off lands.",
+    word: "demonstration",
+    expected:
+      "It was an excellent sum for the third world and a sincere ___ that the people of Manorhamilton have a burning desire to alleviate the poverty that exists in less well off lands.",
+  },
 ].forEach(({ expected, sourceEngSentence, word }) => {
   test(`replace ${sourceEngSentence} with ${word}`, () => {
     const result = replace({ sourceEngSentence, word, replacement: "___" });
