@@ -141,3 +141,5 @@ dist
 /api/_assets
 
 /app/styles/app.css
+
+.DS_Store
