@@ -1,8 +1,22 @@
-# 파밍페이퍼 Farming Paper (가제)
+# Farming Paper
+
+분야를 가리지 않는, 극한의 **셀프 암기 학습** 도구
 
 농사꾼이 농사를 지으며 자급자족하듯 스스로 문제를 만들어서 스스로 문제를 푸는 플랫폼입니다.
 
-🚀 서비스 배포 보기 : <https://farming-paper.vercel.app>
+🚀 지금 바로 사용해보세요! <https://farming-paper.vercel.app>
+
+<h2 align="center">
+☺️ 어서오세요~ 환영합니다!
+</h2>
+
+Farming Paper 서비스에 관심이 있으신 **당신**!
+
+모든 방식의 협업, 제안, 건의사항, 대화는 언제나 열려있습니다.
+
+[Issues](https://github.com/farming-paper/farming-paper/issues)에 이야깃거리를 남겨주거나 개발자 이메일 (eszqsc112@gmail.com)로 메시지를 남겨주세요.
+
+
 
 ## 주기능
 
