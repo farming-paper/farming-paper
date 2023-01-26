@@ -95,6 +95,7 @@ const QuestionForm: React.FC<{
           render={({ field }) => {
             return (
               <Input.TextArea
+                autoSize={{ minRows: 3 }}
                 {...field}
                 autoSize={{ minRows: 3 }}
                 required
