@@ -24,7 +24,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "@ant-design/icons": "^4.8.0",
+    "@ant-design/icons": "^5.0.1",
     "@headlessui/react": "^1.7.7",
     "@heroicons/react": "^2.0.13",
     "@remix-run/node": "^1.10.0",
