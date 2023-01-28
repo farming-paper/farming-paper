@@ -15,15 +15,15 @@ import { createQuestion, removeUndefined } from "~/question/create";
 import QuestionForm from "~/question/edit-components/QuestionForm";
 import questionFormResolver from "~/question/question-form-resolver";
 import type { Question, QuestionRow } from "~/question/types";
+import {
+  createDeletionQuestionArgs,
+  useDeletionQuestionFetcher,
+} from "~/routes/_auth/q.delete";
 import { getServerSideSupabaseClient } from "~/supabase/client";
 import type { Json } from "~/supabase/generated/supabase-types";
 import { createTag } from "~/tag/create";
 import type { DatagaseTag, ITag } from "~/types";
 import { getFormdataFromRequest, removeNullDeep } from "~/util";
-import {
-  createDeletionQuestionArgs,
-  useDeletionQuestionFetcher,
-} from "./_authorized/q/_authorized.q.delete";
 
 export const meta: MetaFunction = () => {
   return {
