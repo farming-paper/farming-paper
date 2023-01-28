@@ -1,4 +1,5 @@
-import { useFetcher } from "@remix-run/react";
+import type { SubmitOptions } from "@remix-run/react";
+import { useFetcher, useSubmit } from "@remix-run/react";
 import dayjsLib from "dayjs";
 import "dayjs/locale/ko"; // import locale
 import relativeTime from "dayjs/plugin/relativeTime"; // import plugin
@@ -206,6 +207,18 @@ export function typedFetcher<TActionFunc, TArgs = Record<string, never>>() {
     useFetcher: useFetcher<TActionFunc>,
     getArgsFromRequest: getArgsFromRequest<TArgs>,
     createArgs: createFormData<TArgs>,
+  };
+}
+
+export function typedSubmit<TArgs = Record<string, never>>() {
+  return {
+    useSubmit: () => {
+      const submit = useSubmit();
+      return (args: TArgs, options?: SubmitOptions) => {
+        submit(createFormData(args), options);
+      };
+    },
+    getArgsFromRequest: getArgsFromRequest<TArgs>,
   };
 }
 

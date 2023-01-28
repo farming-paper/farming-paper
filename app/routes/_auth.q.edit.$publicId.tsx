@@ -15,15 +15,15 @@ import { createQuestion, removeUndefined } from "~/question/create";
 import QuestionForm from "~/question/edit-components/QuestionForm";
 import questionFormResolver from "~/question/question-form-resolver";
 import type { Question, QuestionRow } from "~/question/types";
+import {
+  createDeletionQuestionArgs,
+  useDeletionQuestionFetcher,
+} from "~/routes/_auth.q.delete";
 import { getServerSideSupabaseClient } from "~/supabase/client";
 import type { Json } from "~/supabase/generated/supabase-types";
 import { createTag } from "~/tag/create";
 import type { DatagaseTag, ITag } from "~/types";
 import { getFormdataFromRequest, removeNullDeep } from "~/util";
-import {
-  createDeletionQuestionArgs,
-  useDeletionQuestionFetcher,
-} from "../delete";
 
 export const meta: MetaFunction = () => {
   return {
@@ -159,22 +159,16 @@ export default function QuestionEdit() {
   const values = watch();
 
   useEffect(() => {
-    if (editFetch?.data?.data) {
+    if (editFetch.type === "done") {
       message.success({
         key: "creating",
         content: "성공적으로 수정되었습니다.",
         duration: 2,
       });
-    } else if (editFetch?.data?.error) {
-      message.error({
-        key: "creating",
-        content: "문제 수정이 실패했습니다.",
-        duration: 2,
-      });
-      // eslint-disable-next-line no-console
-      console.error("createNewFetch?.data?.error", editFetch?.data?.error);
     }
-  }, [editFetch?.data]);
+    // eslint-disable-next-line no-console
+    // console.error("createNewFetch?.data?.error", editFetch?.data?.error);
+  }, [editFetch.type]);
 
   useEffect(() => {
     if (editFetch.state === "submitting") {

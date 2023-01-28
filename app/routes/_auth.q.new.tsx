@@ -14,7 +14,10 @@ import { getServerSideSupabaseClient } from "~/supabase/client";
 import { createTag } from "~/tag/create";
 import type { ITag } from "~/types";
 import { removeNullDeep } from "~/util";
-import { createCreateQuestionArgs, useCreateQuestionFetcher } from "./create";
+import {
+  createCreateQuestionArgs,
+  useCreateQuestionFetcher,
+} from "./_auth.q.create";
 
 export const meta: MetaFunction = () => {
   return {
@@ -88,20 +91,21 @@ export default function QuestionNew() {
   const values = watch();
 
   useEffect(() => {
-    if (createQuestionFetch?.data?.data) {
+    if (createQuestionFetch.type === "done") {
       message.success({
         key: "creating",
         content: "문제가 성공적으로 생성되었습니다.",
       });
-    } else if (createQuestionFetch?.data?.error) {
-      message.error({ key: "creating", content: "문제 생성이 실패했습니다." });
-      // eslint-disable-next-line no-console
-      console.error(
-        "createNewFetch?.data?.error",
-        createQuestionFetch?.data?.error
-      );
     }
-  }, [createQuestionFetch?.data?.data, createQuestionFetch?.data?.error]);
+    // else if (createQuestionFetch?.data?.error) {
+    //   message.error({ key: "creating", content: "문제 생성이 실패했습니다." });
+    //   // eslint-disable-next-line no-console
+    //   console.error(
+    //     "createNewFetch?.data?.error",
+    //     createQuestionFetch?.data?.error
+    //   );
+    // }
+  }, [createQuestionFetch.type]);
 
   useEffect(() => {
     if (createQuestionFetch.state === "submitting") {

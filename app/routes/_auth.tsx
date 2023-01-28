@@ -15,7 +15,7 @@ export const loader = async ({ request }: LoaderArgs) => {
   });
 
   if (!session || !profile) {
-    supabaseClient.auth.signOut();
+    await supabaseClient.auth.signOut();
     return redirect("/login", {
       headers: response.headers,
     });

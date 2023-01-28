@@ -11,7 +11,7 @@ import {
   useEffect,
   useLayoutEffect,
   useRef,
-  useState
+  useState,
 } from "react";
 import { twMerge } from "tailwind-merge";
 import { getSessionWithProfile } from "~/auth/get-session";

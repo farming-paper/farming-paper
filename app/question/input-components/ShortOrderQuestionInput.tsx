@@ -38,6 +38,7 @@ const ShortOrderQuestionInput: React.FC<
       <div className="flex items-center gap-3">
         <Input
           id="answer"
+          enterKeyHint="go"
           ref={antdInputRef}
           disabled={disabled}
           type="text"

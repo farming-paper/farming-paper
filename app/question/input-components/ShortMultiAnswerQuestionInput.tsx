@@ -38,6 +38,7 @@ const ShortMultiAnswerQuestionInput: React.FC<
       <div className="flex items-center gap-3">
         <Input
           id="answer"
+          enterKeyHint="go"
           type="text"
           className="flex-1"
           placeholder="정답을 입력하세요"
