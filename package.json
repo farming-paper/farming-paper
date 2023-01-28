@@ -8,7 +8,7 @@
     "test": "vitest",
     "test:ci": "vitest run",
     "main": "vite-node ./app/main.ts",
-    "build": "npm run build:css && remix build",
+    "build": "npm run build:css && remix build --sourcemap",
     "dev": "concurrently -c bgBlue.bold,bgCyan.bold \"npm run dev:css\" \"remix dev\"",
     "build:css": "tailwindcss -m -i ./styles/app.css -o app/styles/app.css",
     "dev:css": "tailwindcss -w -i ./styles/app.css -o app/styles/app.css",
