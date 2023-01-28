@@ -18,7 +18,7 @@ import type { Question, QuestionRow } from "~/question/types";
 import {
   createDeletionQuestionArgs,
   useDeletionQuestionFetcher,
-} from "~/routes/_auth/q.delete";
+} from "~/routes/_auth.q.delete";
 import { getServerSideSupabaseClient } from "~/supabase/client";
 import type { Json } from "~/supabase/generated/supabase-types";
 import { createTag } from "~/tag/create";

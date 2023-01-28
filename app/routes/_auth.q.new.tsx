@@ -14,7 +14,10 @@ import { getServerSideSupabaseClient } from "~/supabase/client";
 import { createTag } from "~/tag/create";
 import type { ITag } from "~/types";
 import { removeNullDeep } from "~/util";
-import { createCreateQuestionArgs, useCreateQuestionFetcher } from "./q.create";
+import {
+  createCreateQuestionArgs,
+  useCreateQuestionFetcher,
+} from "./_auth.q.create";
 
 export const meta: MetaFunction = () => {
   return {

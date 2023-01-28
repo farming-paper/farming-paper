@@ -17,7 +17,7 @@ import questionFormResolver from "~/question/question-form-resolver";
 import {
   createCreateQuestionArgs,
   useCreateQuestionFetcher,
-} from "~/routes/_auth/q.create";
+} from "~/routes/_auth.q.create";
 import { getServerSideSupabaseClient } from "~/supabase/client";
 import { createTag } from "~/tag/create";
 import type { ITag } from "~/types";

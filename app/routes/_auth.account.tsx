@@ -5,7 +5,7 @@ import { ExternalLink } from "lucide-react";
 import { useCallback, useEffect, useState } from "react";
 import DangerModal from "~/common/components/DangerModal";
 import type { IOutletProps } from "~/types";
-import { useDeleteAccountFetcher } from "./account.delete";
+import { useDeleteAccountFetcher } from "./_auth.account.delete";
 
 export default function Account() {
   const context = useOutletContext<IOutletProps>();

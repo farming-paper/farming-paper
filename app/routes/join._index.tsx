@@ -57,6 +57,7 @@ export async function action({ request }: ActionArgs) {
   } = await supabaseClient.auth.getSession();
 
   const email = session?.user?.email;
+
   if (!email) {
     return redirect("/login?status=email_not_found");
   }
