@@ -82,7 +82,6 @@ export default function App() {
     const {
       data: { subscription },
     } = supabase.auth.onAuthStateChange((event, session) => {
-      console.log("onAuthStateChange", event, session);
       if (session?.access_token !== serverAccessToken) {
         // server and client are out of sync.
         // Remix recalls active loaders after actions complete

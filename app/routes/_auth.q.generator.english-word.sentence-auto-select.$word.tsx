@@ -117,20 +117,13 @@ export default function Page() {
   );
 
   useEffect(() => {
-    if (createQuestionFetch?.data?.data) {
+    if (createQuestionFetch.type === "done") {
       message.success({
         key: "creating",
         content: "문제가 성공적으로 생성되었습니다.",
       });
-    } else if (createQuestionFetch?.data?.error) {
-      message.error({ key: "creating", content: "문제 생성이 실패했습니다." });
-      // eslint-disable-next-line no-console
-      console.error(
-        "createNewFetch?.data?.error",
-        createQuestionFetch?.data?.error
-      );
     }
-  }, [createQuestionFetch?.data?.data, createQuestionFetch?.data?.error]);
+  }, [createQuestionFetch.type]);
 
   useEffect(() => {
     if (createQuestionFetch.state === "submitting") {
