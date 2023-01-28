@@ -62,7 +62,6 @@
     "@babel/core": "^7.20.12",
     "@remix-run/dev": "^1.11.1",
     "@remix-run/eslint-config": "^1.11.1",
-    "@remix-run/serve": "^1.11.1",
     "@testing-library/jest-dom": "^5.16.5",
     "@testing-library/react": "^13.4.0",
     "@types/katex": "^0.16.0",
