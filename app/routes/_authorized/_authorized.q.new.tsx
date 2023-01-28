@@ -1,31 +1,34 @@
-import { useLoaderData } from "@remix-run/react";
-import type { LoaderArgs } from "@remix-run/server-runtime";
+import { useLoaderData, useNavigate } from "@remix-run/react";
+import type { LoaderArgs, MetaFunction } from "@remix-run/server-runtime";
 import { json } from "@remix-run/server-runtime";
 import { Button, message } from "antd";
+import { ChevronRight } from "lucide-react";
 import { useEffect, useMemo } from "react";
 import { useForm } from "react-hook-form";
 import { getSessionWithProfile } from "~/auth/get-session";
 import useCmdEnter from "~/common/hooks/use-cmd-enter";
 import { createQuestion, removeUndefined } from "~/question/create";
 import QuestionForm from "~/question/edit-components/QuestionForm";
-import {
-  getEngSentences,
-  getKorTranslated,
-} from "~/question/generator/english/english";
-import replace from "~/question/generator/english/replace";
 import questionFormResolver from "~/question/question-form-resolver";
-import {
-  createCreateQuestionArgs,
-  useCreateQuestionFetcher,
-} from "~/routes/_authorized/q/create";
 import { getServerSideSupabaseClient } from "~/supabase/client";
 import { createTag } from "~/tag/create";
 import type { ITag } from "~/types";
 import { removeNullDeep } from "~/util";
+import {
+  createCreateQuestionArgs,
+  useCreateQuestionFetcher,
+} from "./_authorized.q.create";
 
-async function getTags(request: Request) {
+export const meta: MetaFunction = () => {
+  return {
+    title: "문제 생성 | Farming Paper",
+  };
+};
+
+export async function loader({ request }: LoaderArgs) {
   const response = new Response();
   const { profile } = await getSessionWithProfile({ request, response });
+
   const db = getServerSideSupabaseClient();
 
   const tagsRes = await db.from("tags").select("*").eq("creator", profile.id);
@@ -44,43 +47,14 @@ async function getTags(request: Request) {
     })
   );
 
-  return tags;
-}
-
-async function getSentence(word: string) {
-  const sentences = await getEngSentences(word);
-
-  const sentence = sentences[Math.floor(Math.random() * sentences.length)];
-  if (!sentence) {
-    throw new Response("Unknown Error while fetching sentences", {
-      status: 500,
-    });
-  }
-
-  const translated = await getKorTranslated(sentence);
-
-  const { prevWords, replaced } = replace({
-    sourceEngSentence: sentence,
-    word,
+  return json({
+    tags,
   });
-
-  return { sentence, translated, prevWords, marked: replaced };
 }
 
-export async function loader({ params, request }: LoaderArgs) {
-  const word = params.word;
-  if (!word) {
-    throw new Response("No word", { status: 400 });
-  }
-
-  const [s, tags] = await Promise.all([getSentence(word), getTags(request)]);
-
-  return json({ ...s, tags });
-}
-
-export default function Page() {
-  const loaded = useLoaderData<typeof loader>();
-  const { marked, prevWords, tags, translated } = loaded;
+export default function QuestionNew() {
+  const { tags } = useLoaderData<typeof loader>();
+  const navigate = useNavigate();
 
   const { handleSubmit, formState, control, watch, setValue, setFocus } =
     useForm({
@@ -88,14 +62,12 @@ export default function Page() {
       defaultValues: {
         question: {
           type: "short_order",
-          message: `${marked}\n\n${translated}`,
-          corrects: prevWords,
+          message: "",
+          corrects: [""],
         },
         tags: [],
       },
     });
-
-  const values = watch();
 
   const createQuestionFetch = useCreateQuestionFetcher();
 
@@ -116,21 +88,24 @@ export default function Page() {
     [createQuestionFetch, handleSubmit]
   );
 
+  const values = watch();
+
   useEffect(() => {
-    if (createQuestionFetch?.data?.data) {
+    if (createQuestionFetch.type === "done") {
       message.success({
         key: "creating",
         content: "문제가 성공적으로 생성되었습니다.",
       });
-    } else if (createQuestionFetch?.data?.error) {
-      message.error({ key: "creating", content: "문제 생성이 실패했습니다." });
-      // eslint-disable-next-line no-console
-      console.error(
-        "createNewFetch?.data?.error",
-        createQuestionFetch?.data?.error
-      );
     }
-  }, [createQuestionFetch?.data?.data, createQuestionFetch?.data?.error]);
+    // else if (createQuestionFetch?.data?.error) {
+    //   message.error({ key: "creating", content: "문제 생성이 실패했습니다." });
+    //   // eslint-disable-next-line no-console
+    //   console.error(
+    //     "createNewFetch?.data?.error",
+    //     createQuestionFetch?.data?.error
+    //   );
+    // }
+  }, [createQuestionFetch.type]);
 
   useEffect(() => {
     if (createQuestionFetch.state === "submitting") {
@@ -149,12 +124,21 @@ export default function Page() {
   useCmdEnter(onSubmit);
 
   return (
-    <>
-      <div className="flex items-center gap-2 mb-4">
-        <span className="text-gray-400">1. 단어 입력</span>
-        <span>-</span>
-        <span className="font-bold text-green-600">2. 문제 점검</span>
-      </div>
+    <div className="p-4">
+      <header className="flex items-center justify-between gap-4 my-2">
+        <h1 className="m-0 text-xl font-medium">문제 생성</h1>
+        <Button
+          type="text"
+          size="small"
+          onClick={() => {
+            navigate("/q/generator");
+          }}
+          className="flex items-center gap-1"
+        >
+          <span>문제 생성기</span>
+          <ChevronRight className="w-4 h-4 opacity-50" />
+        </Button>
+      </header>
       <QuestionForm
         control={control}
         formState={formState}
@@ -172,6 +156,6 @@ export default function Page() {
           만들기
         </Button>
       </div>
-    </>
+    </div>
   );
 }

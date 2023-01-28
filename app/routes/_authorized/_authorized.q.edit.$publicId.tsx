@@ -23,7 +23,7 @@ import { getFormdataFromRequest, removeNullDeep } from "~/util";
 import {
   createDeletionQuestionArgs,
   useDeletionQuestionFetcher,
-} from "./_authorized/q/delete";
+} from "./_authorized/q/_authorized.q.delete";
 
 export const meta: MetaFunction = () => {
   return {

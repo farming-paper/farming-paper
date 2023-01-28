@@ -3,7 +3,7 @@ import { useFetcher } from "@remix-run/react";
 import type { InputRef } from "antd";
 import { Input, message, Tag, Tooltip } from "antd";
 import React, { useCallback, useEffect, useRef, useState } from "react";
-import type { action as upsertTagOneAction } from "~/routes/_authorized/tags/upsert_one";
+import type { action as upsertTagOneAction } from "~/routes/_authorized.tags.upsert_one";
 import type { ITag } from "~/types";
 import { deepclone } from "~/util";
 
