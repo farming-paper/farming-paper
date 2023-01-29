@@ -37,7 +37,6 @@ export interface Database {
           code: string;
           content: Json;
           created_at: string;
-          deleted_at: string | null;
           expires_in: string;
           id: number;
           updated_at: string;
@@ -46,7 +45,6 @@ export interface Database {
           code?: string;
           content?: Json;
           created_at?: string;
-          deleted_at?: string | null;
           expires_in: string;
           id?: number;
           updated_at?: string;
@@ -55,7 +53,6 @@ export interface Database {
           code?: string;
           content?: Json;
           created_at?: string;
-          deleted_at?: string | null;
           expires_in?: string;
           id?: number;
           updated_at?: string;
@@ -212,6 +209,16 @@ export interface Database {
     };
     Functions: {
       get_solving_tags_by_creator_id: {
+        Args: { p_creator: number };
+        Returns: {
+          id: number;
+          name: string;
+          desc: string;
+          public_id: string;
+          count: number;
+        }[];
+      };
+      get_tags_by_creator_with_count: {
         Args: { p_creator: number };
         Returns: {
           id: number;

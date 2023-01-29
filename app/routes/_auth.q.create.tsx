@@ -48,10 +48,26 @@ export async function action({ request }: ActionArgs) {
     });
   }
 
+  // get tags each id
+  const tagsRes = await db
+    .from("tags")
+    .select("id")
+    .in(
+      "public_id",
+      tags.map((t) => t.publicId)
+    );
+
+  if (tagsRes.error) {
+    return json({
+      data: null,
+      error: tagsRes.error.message,
+    });
+  }
+
   const tagRelationRes = await db
     .from("tags_questions_relation")
     .upsert(
-      tags.map((t) => ({
+      tagsRes.data.map((t) => ({
         q: inserted.data.id,
         tag: t.id,
       }))

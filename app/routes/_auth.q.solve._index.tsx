@@ -5,9 +5,10 @@ import { json } from "@remix-run/server-runtime";
 import type { PostgrestSingleResponse } from "@supabase/supabase-js";
 import { Tooltip } from "antd";
 import { getSessionWithProfile } from "~/auth/get-session";
+import NumberBall from "~/common/components/NumberBall";
 import { getServerSideSupabaseClient } from "~/supabase/client";
 import type { Database } from "~/supabase/generated/supabase-types";
-import type { ITagForSolve } from "~/types";
+import type { ITagWithCount } from "~/types";
 
 export async function loader({ request }: LoaderArgs) {
   const response = new Response();
@@ -29,7 +30,7 @@ export async function loader({ request }: LoaderArgs) {
     });
   }
 
-  const tagsForSolve: ITagForSolve[] = tagsRes.data.map((t) => ({
+  const tagsForSolve: ITagWithCount[] = tagsRes.data.map((t) => ({
     count: t.count,
     id: t.id,
     name: t.name,
@@ -75,9 +76,7 @@ export default function Page() {
                 <span className="absolute inset-0" aria-hidden="true" />
                 <p className="flex items-center gap-1 m-0 text-sm font-medium text-gray-900">
                   <span>{tag.name}</span>
-                  <span className="inline-flex items-center justify-center w-5 h-5 text-xs text-gray-400 bg-gray-100 rounded-full">
-                    {tag.count}
-                  </span>
+                  <NumberBall>{tag.count}</NumberBall>
                 </p>
                 {/* <p className="text-sm text-gray-500 truncate">{tag.role}</p> */}
               </Link>

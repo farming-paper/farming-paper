@@ -21,8 +21,9 @@ import {
 } from "~/routes/_auth.q.delete";
 import { getServerSideSupabaseClient } from "~/supabase/client";
 import type { Json } from "~/supabase/generated/supabase-types";
+import { rpc } from "~/supabase/rpc";
 import { createTag } from "~/tag/create";
-import type { DatagaseTag, ITag } from "~/types";
+import type { DatabaseTag, ITag, ITagWithCount } from "~/types";
 import { getFormdataFromRequest, removeNullDeep } from "~/util";
 
 export const meta: MetaFunction = () => {
@@ -69,7 +70,7 @@ export async function getQuestionRow({
     publicId: questionRes.data.public_id,
     updatedAt: questionRes.data.updated_at,
     tags: tags.data.map((t) => {
-      const tag = t.tag as DatagaseTag;
+      const tag = t.tag as DatabaseTag;
       return removeNullDeep({
         id: tag.id,
         name: tag.name || "",
@@ -83,11 +84,9 @@ export async function getQuestionRow({
 }
 
 export async function getAllTags({ profileId }: { profileId: number }) {
-  const db = getServerSideSupabaseClient();
-  const tagsRes = await db
-    .from("tags")
-    .select("name, public_id, desc, id")
-    .eq("creator", profileId);
+  const tagsRes = await rpc("get_tags_by_creator_with_count", {
+    p_creator: profileId,
+  });
 
   if (!tagsRes.data) {
     throw new Response("Unknown Error", {
@@ -95,12 +94,12 @@ export async function getAllTags({ profileId }: { profileId: number }) {
     });
   }
 
-  const tags: ITag[] = tagsRes.data.map((t) => {
+  const tags: ITagWithCount[] = tagsRes.data.map((t) => {
     return removeNullDeep({
-      id: t.id,
       name: t.name || "",
       publicId: t.public_id,
       desc: t.desc,
+      count: t.count,
     });
   });
 
@@ -273,10 +272,20 @@ export const action = async ({ request, params }: ActionArgs) => {
   }
 
   // 현재 문제와 태그의 관계를 가져옵니다.
-  const existingTagsRes = await db
-    .from("tags_questions_relation")
-    .select("tag (*)")
-    .eq("q", updatedQuestion.data.id);
+  const [existingTagsRes, editingDataTagsRes] = await Promise.all([
+    db
+      .from("tags_questions_relation")
+      .select("tag (*)")
+      .eq("q", updatedQuestion.data.id),
+    db
+      .from("tags")
+      .select("id, publicId")
+      .is("deleted_at", null)
+      .in(
+        "publicId",
+        editingData.tags.map((tag) => tag.publicId)
+      ),
+  ]);
 
   if (!existingTagsRes.data) {
     return json({
@@ -285,20 +294,28 @@ export const action = async ({ request, params }: ActionArgs) => {
     });
   }
 
-  const existingTags = existingTagsRes.data.map((t) => t.tag as DatagaseTag);
+  if (!editingDataTagsRes.data) {
+    return json({
+      data: null,
+      error: editingDataTagsRes.error?.message || "",
+    });
+  }
+
+  const existingTags = existingTagsRes.data.map((t) => t.tag as DatabaseTag);
+  const editingDataTags = editingDataTagsRes.data;
 
   // 원래 있는 태그 중 새로운 태그에 없는 태그들을 삭제합니다. (순수하게 삭제할 태그만 남깁니다.)
   const removingTagIds = existingTags
     .filter(
       (existingTag) =>
-        !editingData.tags.some(
+        !editingDataTags.some(
           (newTag) => newTag.publicId === existingTag.public_id
         )
     )
     .map((tag) => tag.id);
 
   // 새로운 태그 중 원래 있는 태그에 없는 태그들을 삭제합니다. (순수하게 추가할 태그만 남깁니다.)
-  const addingTagIds = editingData.tags
+  const addingTagIds = editingDataTags
     .filter(
       (newTag) => !existingTags.some((tag) => tag.public_id === newTag.publicId)
     )

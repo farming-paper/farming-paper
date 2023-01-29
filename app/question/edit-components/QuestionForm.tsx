@@ -7,7 +7,7 @@ import { Controller } from "react-hook-form";
 import ErrorLabel from "~/common/components/ErrorLabel";
 import Label from "~/common/components/Label";
 import { createTag } from "~/tag/create";
-import type { ITag } from "~/types";
+import type { ITagWithCount } from "~/types";
 import type { QuestionFormValues } from "../question-form-resolver";
 import Tags from "./Tags";
 
@@ -47,7 +47,7 @@ const QuestionForm: React.FC<{
   setValue: UseFormSetValue<QuestionFormValues>;
   formState: FormState<QuestionFormValues>;
   values: QuestionFormValues;
-  existingTags: ITag[];
+  existingTags: ITagWithCount[];
 }> = ({ control, formState: { errors }, setValue, values, existingTags }) => {
   return (
     <Form>
