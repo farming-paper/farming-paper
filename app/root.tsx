@@ -125,45 +125,6 @@ export default function App() {
   );
 }
 
-// export function CatchBoundary() {
-//   const caught = useCatch();
-
-//   return (
-//     <html lang="ko" className="font-sans bg-gray-50">
-//       <head>
-//         <Meta />
-//         <Links />
-//       </head>
-//       <body className="relative max-w-md min-h-[100vh] mx-auto bg-white pb-16 @container">
-//         <GlobalLoading />
-//         <ConfigProvider
-//           theme={{
-//             token: {
-//               colorPrimary: "#16a34a",
-//               fontSize: 16,
-//               controlHeight: 40,
-//             },
-//           }}
-//         >
-//           <div className="p-4">
-//             {caught.status === 404 ? (
-//               <h1 className="my-2 text-xl font-medium">
-//                 페이지를 찾을 수 없습니다.
-//               </h1>
-//             ) : (
-//               <h1></h1>
-//             )}
-//           </div>
-//         </ConfigProvider>
-//         <ScrollRestoration />
-//         <Scripts />
-//         <LiveReload />
-//         <Analytics />
-//       </body>
-//     </html>
-//   );
-// }
-
 export function CatchBoundary() {
   const caught = useCatch();
   const navigate = useNavigate();
