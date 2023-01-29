@@ -10,9 +10,9 @@ import useCmdEnter from "~/common/hooks/use-cmd-enter";
 import { createQuestion, removeUndefined } from "~/question/create";
 import QuestionForm from "~/question/edit-components/QuestionForm";
 import questionFormResolver from "~/question/question-form-resolver";
-import { getServerSideSupabaseClient } from "~/supabase/client";
+import { rpc } from "~/supabase/rpc";
 import { createTag } from "~/tag/create";
-import type { ITag } from "~/types";
+import type { ITagWithCount } from "~/types";
 import { removeNullDeep } from "~/util";
 import {
   createCreateQuestionArgs,
@@ -29,21 +29,22 @@ export async function loader({ request }: LoaderArgs) {
   const response = new Response();
   const { profile } = await getSessionWithProfile({ request, response });
 
-  const db = getServerSideSupabaseClient();
+  const tagsRes = await rpc("get_tags_by_creator_with_count", {
+    p_creator: profile.id,
+  });
 
-  const tagsRes = await db.from("tags").select("*").eq("creator", profile.id);
   if (tagsRes.error) {
     throw new Response("Something went wrong while fetching tags", {
       status: 500,
     });
   }
 
-  const tags: ITag[] = tagsRes.data.map((t) =>
+  const tags: ITagWithCount[] = tagsRes.data.map((t) =>
     removeNullDeep({
-      id: t.id,
       publicId: t.public_id,
       desc: t.desc,
       name: t.name || "",
+      count: t.count,
     })
   );
 

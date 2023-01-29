@@ -7,7 +7,6 @@ import { useForm } from "react-hook-form";
 import { getSessionWithProfile } from "~/auth/get-session";
 import useCmdEnter from "~/common/hooks/use-cmd-enter";
 import { createQuestion, removeUndefined } from "~/question/create";
-import QuestionForm from "~/question/edit-components/QuestionForm";
 import {
   getEngSentences,
   getKorTranslated,
@@ -148,13 +147,14 @@ export default function Page() {
         <span>-</span>
         <span className="font-bold text-green-600">2. 문제 점검</span>
       </div>
-      <QuestionForm
+      {/* TODO: 전반적으로 리팩토링 필요 */}
+      {/* <QuestionForm
         control={control}
         formState={formState}
         setValue={setValue}
         values={values}
         existingTags={tags}
-      />
+      /> */}
       <div className="flex justify-end">
         <Button
           loading={createQuestionFetch.state === "submitting"}

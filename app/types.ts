@@ -22,14 +22,13 @@ export type PartialDeep<T> = PartialDeepTypeFest<
 >;
 
 export interface ITag {
-  id: number;
   desc?: string;
   name: string;
   publicId: string;
 }
 
-export interface ITagForSolve extends ITag {
+export interface ITagWithCount extends ITag {
   count: number;
 }
 
-export type DatagaseTag = Database["public"]["Tables"]["tags"]["Row"];
+export type DatabaseTag = Database["public"]["Tables"]["tags"]["Row"];

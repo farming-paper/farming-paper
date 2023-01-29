@@ -4,22 +4,30 @@ import { nanoid } from "nanoid";
 import { getSessionWithProfile } from "~/auth/get-session";
 import { getServerSideSupabaseClient } from "~/supabase/client";
 import { createTag } from "~/tag/create";
-import type { ITag, PartialDeep } from "~/types";
-import { getFormdataFromRequest, removeNullDeep } from "~/util";
+import type { ITag } from "~/types";
+import { removeNullDeep, typedFetcher } from "~/util";
+
+const { createArgs, getArgsFromRequest, useFetcher } = typedFetcher<
+  typeof action,
+  { name: string; desc?: string }
+>();
+
+export const createUpsertTagArgs = createArgs;
+
+export const useUpsertTagFetcher = useFetcher;
 
 export async function action({ request }: ActionArgs) {
   const response = new Response();
-  const [tag, { profile }] = await Promise.all([
-    getFormdataFromRequest<PartialDeep<ITag>>({
-      request,
-      keyName: "tag",
-    }),
+  const [{ name, desc }, { profile }] = await Promise.all([
+    getArgsFromRequest(request),
     getSessionWithProfile({ request, response }),
   ]);
 
   const db = getServerSideSupabaseClient();
 
-  const creating = createTag(tag);
+  const creating = createTag({
+    name,
+  });
 
   const updateTagRes = await db
     .from("tags")
@@ -46,8 +54,8 @@ export async function action({ request }: ActionArgs) {
       .insert({
         creator: profile.id,
         public_id: nanoid(),
-        name: tag.name,
-        desc: tag.desc,
+        name,
+        desc,
       })
       .select("public_id, desc, name, id")
       .single();

@@ -7,7 +7,7 @@ import { Controller } from "react-hook-form";
 import ErrorLabel from "~/common/components/ErrorLabel";
 import Label from "~/common/components/Label";
 import { createTag } from "~/tag/create";
-import type { ITag } from "~/types";
+import type { ITagWithCount } from "~/types";
 import type { QuestionFormValues } from "../question-form-resolver";
 import Tags from "./Tags";
 
@@ -47,27 +47,10 @@ const QuestionForm: React.FC<{
   setValue: UseFormSetValue<QuestionFormValues>;
   formState: FormState<QuestionFormValues>;
   values: QuestionFormValues;
-  existingTags: ITag[];
+  existingTags: ITagWithCount[];
 }> = ({ control, formState: { errors }, setValue, values, existingTags }) => {
   return (
     <Form>
-      <div className="flex flex-col mb-4">
-        <Label htmlFor="question_type">타입</Label>
-        <Controller
-          control={control}
-          name="question.type"
-          render={({ field }) => {
-            return (
-              <Select
-                {...field}
-                options={questionTypeOptions}
-                id="question_type"
-              />
-            );
-          }}
-        />
-      </div>
-
       <div className="flex flex-col mb-4">
         <Label htmlFor="tags">태그</Label>
         <Controller
@@ -81,6 +64,23 @@ const QuestionForm: React.FC<{
                 existingTags={existingTags}
                 onChange={onChange}
                 value={value?.map((v) => createTag(v))}
+              />
+            );
+          }}
+        />
+      </div>
+
+      <div className="flex flex-col mb-4">
+        <Label htmlFor="question_type">문제 유형</Label>
+        <Controller
+          control={control}
+          name="question.type"
+          render={({ field }) => {
+            return (
+              <Select
+                {...field}
+                options={questionTypeOptions}
+                id="question_type"
               />
             );
           }}
@@ -167,7 +167,7 @@ const QuestionForm: React.FC<{
               }}
             >
               <PlusOutlined />
-              <span>추가</span>
+              <span>정답 추가</span>
             </Button>
           </div>
         </div>

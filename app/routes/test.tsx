@@ -5,7 +5,7 @@ import type { PartialDeep } from "type-fest";
 import { createQuestion } from "~/question/create";
 import type { Question, QuestionRow } from "~/question/types";
 import { getServerSideSupabaseClient } from "~/supabase/client";
-import type { DatagaseTag } from "~/types";
+import type { DatabaseTag } from "~/types";
 import { removeNullDeep } from "~/util";
 
 export async function loader({ request: _r }: LoaderArgs) {
@@ -49,7 +49,7 @@ export async function loader({ request: _r }: LoaderArgs) {
     publicId: questionResult.data.public_id,
     updatedAt: questionResult.data.updated_at,
     tags: tags.data.map((t) => {
-      const tag = t.tag as DatagaseTag;
+      const tag = t.tag as DatabaseTag;
       return removeNullDeep({
         id: tag.id,
         name: tag.name || "",
