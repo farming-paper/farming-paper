@@ -44,7 +44,7 @@ export function links() {
 export const meta: MetaFunction = () => ({
   charset: "utf-8",
   title: "Farming Paper",
-  viewport: "width=device-width,user-scalable=no",
+  viewport: "width=device-width,initial-scale=1",
 });
 
 export const loader = async ({ request }: LoaderArgs) => {
