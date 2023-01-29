@@ -47,7 +47,6 @@ specifiers:
   react: ^18.2.0
   react-dom: ^18.2.0
   react-hook-form: ^7.42.1
-  react-merge-refs: ^2.0.1
   react-select: ^5.7.0
   remix-auth: ^3.4.0
   remix-auth-google: ^1.2.0
@@ -91,7 +90,6 @@ dependencies:
   react: 18.2.0
   react-dom: 18.2.0_react@18.2.0
   react-hook-form: 7.42.1_react@18.2.0
-  react-merge-refs: 2.0.1
   react-select: 5.7.0_57czaiyk6rdr5iy5tfs5pior4u
   remix-auth: 3.4.0_bxn25n6byjqbdjszaqbq3xfoia
   remix-auth-google: 1.2.0_5m7qctmjvoh6qyyx4363mxbnqq
@@ -9451,10 +9449,6 @@ packages:
   /react-is/18.2.0:
     resolution: {integrity: sha512-xWGDIW6x921xtzPkhiULtthJHoJvBbF3q26fzloPCK0hsvxtPVelvftw3zjbHWSkR2km9Z+4uxbDDK/6Zw9B8w==}
     dev: true
-
-  /react-merge-refs/2.0.1:
-    resolution: {integrity: sha512-pywF6oouJWuqL26xV3OruRSIqai31R9SdJX/I3gP2q8jLxUnA1IwXcLW8werUHLZOrp4N7YOeQNZrh/BKrHI4A==}
-    dev: false
 
   /react-refresh/0.14.0:
     resolution: {integrity: sha512-wViHqhAd8OHeLS/IRMJjTSDHF3U9eWi62F/MledQGPdJGDhodXJ9PBLNGr6WWL7qlH12Mt3TyTpbS+hGXMjCzQ==}
