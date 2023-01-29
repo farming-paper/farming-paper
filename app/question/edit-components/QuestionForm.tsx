@@ -52,23 +52,6 @@ const QuestionForm: React.FC<{
   return (
     <Form>
       <div className="flex flex-col mb-4">
-        <Label htmlFor="question_type">타입</Label>
-        <Controller
-          control={control}
-          name="question.type"
-          render={({ field }) => {
-            return (
-              <Select
-                {...field}
-                options={questionTypeOptions}
-                id="question_type"
-              />
-            );
-          }}
-        />
-      </div>
-
-      <div className="flex flex-col mb-4">
         <Label htmlFor="tags">태그</Label>
         <Controller
           control={control}
@@ -81,6 +64,23 @@ const QuestionForm: React.FC<{
                 existingTags={existingTags}
                 onChange={onChange}
                 value={value?.map((v) => createTag(v))}
+              />
+            );
+          }}
+        />
+      </div>
+
+      <div className="flex flex-col mb-4">
+        <Label htmlFor="question_type">문제 유형</Label>
+        <Controller
+          control={control}
+          name="question.type"
+          render={({ field }) => {
+            return (
+              <Select
+                {...field}
+                options={questionTypeOptions}
+                id="question_type"
               />
             );
           }}
@@ -167,7 +167,7 @@ const QuestionForm: React.FC<{
               }}
             >
               <PlusOutlined />
-              <span>추가</span>
+              <span>정답 추가</span>
             </Button>
           </div>
         </div>

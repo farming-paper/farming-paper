@@ -16,6 +16,7 @@ import type {
 } from "react-select";
 import { components } from "react-select";
 import Select from "react-select/creatable";
+import Loader from "~/common/components/Loader";
 import NumberBall from "~/common/components/NumberBall";
 
 import {
@@ -43,8 +44,13 @@ const MultiValueLabel = (props: MultiValueGenericProps<SelectItem>) => {
 };
 
 const MultiValueRemove = (props: MultiValueRemoveProps<SelectItem>) => {
-  const { children: _children, ...restProps } = props;
-  return <>asdf</>;
+  return props.data.creating ? (
+    <div className="flex items-center justify-center mx-1 text-xs">
+      <Loader />
+    </div>
+  ) : (
+    <components.MultiValueRemove {...props} />
+  );
 };
 
 function selectItemToTag(item: SelectItem): ITag {
@@ -73,11 +79,11 @@ const Tags: React.FC<{
   value: ITag[] | undefined;
   onChange: (arg: ITag[]) => void;
 }> = ({ onChange, value, existingTags }) => {
-  const [upsertedTag, setUpsertedTag] = useState<ITag | null>(null);
   const [upsertingTags, upsertingTagsDispatch] = useReducer(
     upsertingTagsReducer,
     []
   );
+  const [upsertedTag, setUpsertedTag] = useState<ITag | null>(null);
   const [isBrowser, setIsBrowser] = useState(false);
   const upsertTagFetcher = useUpsertTagFetcher();
 
@@ -86,23 +92,29 @@ const Tags: React.FC<{
   }, []);
 
   useEffect(() => {
-    const newTag = upsertTagFetcher.data?.data;
-    if (newTag) {
-      setUpsertedTag(newTag);
-      message.success({
-        key: "addingTag",
-        duration: 2,
-        content: `"${newTag.name}" 태그가 추가되었습니다.`,
-      });
-    } else if (upsertTagFetcher.data?.error) {
+    if (upsertTagFetcher.type !== "done") {
+      return;
+    }
+
+    const newTagRes = upsertTagFetcher.data;
+    if (newTagRes.error) {
       message.error({
         key: "addingTag",
-        content: `"${upsertTagFetcher.data.error.name}" 태그를 추가하는 중에 오류가 발생했습니다.`,
+        content: `"${newTagRes.error.name}" 태그를 추가하는 중에 오류가 발생했습니다.`,
       });
       // eslint-disable-next-line no-console
       console.error("upsertTagFetcher.data.error", upsertTagFetcher.data.error);
+      return;
     }
-  }, [upsertTagFetcher.data?.data, upsertTagFetcher.data?.error]);
+
+    setUpsertedTag(newTagRes.data);
+
+    message.success({
+      key: "addingTag",
+      duration: 2,
+      content: `"${newTagRes.data.name}" 태그가 추가되었습니다.`,
+    });
+  }, [upsertTagFetcher.data, upsertTagFetcher.type]);
 
   useEffect(() => {
     if (upsertedTag) {
@@ -141,18 +153,22 @@ const Tags: React.FC<{
 
   const onSelectChange = useCallback(
     (newValue: MultiValue<SelectItem>, actionMeta: ActionMeta<SelectItem>) => {
-      console.log(newValue, actionMeta);
-      const creatings = newValue.filter((item) => item.creating === true);
-      creatings.forEach((item) => {
-        upsertingTagsDispatch({ type: "add", item });
-        upsertTagFetcher.submit(createUpsertTagArgs({ name: item.label }), {
-          method: "post",
-          action: `/tags/upsert_one`,
+      if (actionMeta.action === "create-option") {
+        upsertingTagsDispatch({
+          type: "add",
+          item: actionMeta.option,
         });
-      });
-      const newTags = newValue.filter((item) => item.creating !== true);
-      onChange(newTags.map(selectItemToTag));
-      // TODO: implement
+        upsertTagFetcher.submit(
+          createUpsertTagArgs({ name: actionMeta.option.label }),
+          {
+            method: "post",
+            action: `/tags/upsert_one`,
+          }
+        );
+        return;
+      }
+
+      onChange(newValue.map(selectItemToTag));
     },
     [onChange, upsertTagFetcher]
   );
