@@ -45,12 +45,24 @@ import replace from "./replace";
       "It was an excellent sum for the third world and a sincere ___ that the people of Manorhamilton have a burning desire to alleviate the poverty that exists in less well off lands.",
     expectedPrevWords: ["demonstration"],
   },
+  {
+    sourceEngSentence:
+      "Er, well excuse me, but what's left if those areas of your game aren't up to scratch?",
+    word: "what",
+    expectedReplaced:
+      "Er, well excuse me, but ___ is left if those areas of your game aren't up to scratch?",
+    expectedPrevWords: ["what"],
+    only: false,
+  },
 ].forEach(
-  ({ expectedReplaced, sourceEngSentence, word, expectedPrevWords }) => {
-    test(`replace ${sourceEngSentence} with ${word}`, () => {
-      const result = replace({ sourceEngSentence, word, replacement: "___" });
-      expect(result.replaced).toBe(expectedReplaced);
-      expect(result.prevWords).toStrictEqual(expectedPrevWords);
-    });
+  ({ expectedReplaced, sourceEngSentence, word, expectedPrevWords, only }) => {
+    (only ? test.only : test)(
+      `replace ${sourceEngSentence} with ${word}`,
+      () => {
+        const result = replace({ sourceEngSentence, word, replacement: "___" });
+        expect(result.replaced).toBe(expectedReplaced);
+        expect(result.prevWords).toStrictEqual(expectedPrevWords);
+      }
+    );
   }
 );

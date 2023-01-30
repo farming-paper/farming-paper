@@ -40,7 +40,12 @@ renderer.paragraph = (text) => {
 marked.use({ renderer });
 
 const Render: React.FC<{ children: string }> = ({ children }) => {
-  return <div dangerouslySetInnerHTML={{ __html: marked(children) }} />;
+  return (
+    <div
+      className="leading-normal"
+      dangerouslySetInnerHTML={{ __html: marked(children) }}
+    />
+  );
 };
 
 export default React.memo(Render);
