@@ -36,13 +36,19 @@ export default function replace({
 
   words.forEach((word) =>
     document.replace(word, (match: View) => {
-      prevWords.push(
-        match.text({
-          keepPunct: false, // '?!' → ?
-          acronyms: false, // F.B.I. → FBI
-          abbreviations: false, // Mrs. → Mrs
-        })
-      );
+      const prevWord = match.text({
+        keepPunct: false, // '?!' → ?
+        acronyms: false, // F.B.I. → FBI
+        abbreviations: false, // Mrs. → Mrs
+        implicit: true,
+      });
+
+      if (prevWord.includes("'")) {
+        prevWords.push(prevWord.split("'")[0] as string); // what's → what
+      } else {
+        prevWords.push(prevWord);
+      }
+
       return replacement;
     })
   );
