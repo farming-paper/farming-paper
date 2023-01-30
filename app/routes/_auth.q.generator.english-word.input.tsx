@@ -1,12 +1,64 @@
-import { useNavigate } from "@remix-run/react";
-import { Button, Input } from "antd";
-import { useCallback, useState } from "react";
+import { Await, useLoaderData, useNavigate } from "@remix-run/react";
+import type { LoaderArgs } from "@remix-run/server-runtime";
+import { defer } from "@remix-run/server-runtime";
+import { Button, Input, message } from "antd";
+import { AnimatePresence, motion } from "framer-motion";
+import { Suspense, useCallback, useEffect, useMemo, useState } from "react";
+import { getSessionWithProfile } from "~/auth/get-session";
 import Label from "~/common/components/Label";
 import useCmdEnter from "~/common/hooks/use-cmd-enter";
+import { createShortOrderQuestion } from "~/question/create";
+import Tags from "~/question/edit-components/Tags";
+import Render from "~/question/Render";
+import { rpc } from "~/supabase/rpc";
+import type { ITag, ITagWithCount } from "~/types";
+import { removeNullDeep } from "~/util";
+import {
+  createCreateQuestionArgs,
+  useCreateQuestionFetcher,
+} from "./_auth.q.create";
+import {
+  createGenerateEnglishQuestionArgs,
+  useGenerateEnglishQuestionFetcher,
+} from "./_auth.q.generator.english-word.generate";
+
+export async function getExisingTags(profileId: number) {
+  const tagsRes = await rpc("get_tags_by_creator_with_count", {
+    p_creator: profileId,
+  });
+
+  if (tagsRes.error) {
+    throw new Response("Something went wrong while fetching tags", {
+      status: 500,
+    });
+  }
+
+  const tags: ITagWithCount[] = tagsRes.data.map((t) =>
+    removeNullDeep({
+      publicId: t.public_id,
+      desc: t.desc,
+      name: t.name || "",
+      count: t.count,
+    })
+  );
+
+  return tags;
+}
+
+export async function loader({ request }: LoaderArgs) {
+  const response = new Response();
+  const { profile } = await getSessionWithProfile({ request, response });
+
+  return defer({
+    existingTags: getExisingTags(profile.id),
+  });
+}
 
 export default function Page() {
   const [word, setWord] = useState("");
   const navigate = useNavigate();
+  // const [formValues, setFormValues] = useState<QuestionFormValues>({});
+  const loaded = useLoaderData<typeof loader>();
 
   const handleNext = useCallback(() => {
     navigate("/q/generator/english-word/sentence-auto-select/" + word);
@@ -14,14 +66,85 @@ export default function Page() {
 
   useCmdEnter(handleNext);
 
+  const generateEnglishQuestionFetcher = useGenerateEnglishQuestionFetcher();
+
+  const handleGenerate = useCallback(() => {
+    generateEnglishQuestionFetcher.submit(
+      createGenerateEnglishQuestionArgs({ word }),
+      {
+        method: "post",
+        action: "/q/generator/english-word/generate",
+      }
+    );
+  }, [generateEnglishQuestionFetcher, word]);
+
+  const createQuestionFetch = useCreateQuestionFetcher();
+
+  useEffect(() => {
+    if (createQuestionFetch.type === "done") {
+      message.success({
+        key: "creating",
+        content: "문제가 성공적으로 생성되었습니다.",
+      });
+    }
+  }, [createQuestionFetch.type]);
+
+  const generated = useMemo(() => {
+    if (
+      generateEnglishQuestionFetcher.type !== "done" ||
+      !generateEnglishQuestionFetcher.data
+    ) {
+      return null;
+    }
+    return generateEnglishQuestionFetcher.data.question;
+  }, [
+    generateEnglishQuestionFetcher.data,
+    generateEnglishQuestionFetcher.type,
+  ]);
+
+  const [tags, setTags] = useState<ITag[]>([]);
+
+  const handleCreateQuestion = useCallback(() => {
+    if (!generated) {
+      return;
+    }
+    createQuestionFetch.submit(
+      createCreateQuestionArgs({
+        question: createShortOrderQuestion({
+          message: generated.marked + "\n\n" + generated.translated,
+          corrects: generated.prevWords,
+        }),
+
+        tags,
+      }),
+      {
+        method: "post",
+        action: `/q/create`,
+      }
+    );
+  }, [createQuestionFetch, generated, tags]);
+
   return (
     <>
-      <div className="flex items-center gap-2 mb-4">
-        <span className="font-bold text-green-600">1. 단어 입력</span>
-        <span>-</span>
-        <span className="text-gray-400">2. 문제 점검</span>
+      <div className="flex flex-col mb-4">
+        <Label htmlFor="word">태그</Label>
+        <Suspense
+          fallback={<Tags existingTags={[]} onChange={setTags} value={tags} />}
+        >
+          <Await
+            resolve={loaded.existingTags}
+            errorElement={"태그 목록을 불러오는 데 실패했습니다."}
+          >
+            {(existingTags) => (
+              <Tags
+                existingTags={existingTags}
+                onChange={setTags}
+                value={tags}
+              />
+            )}
+          </Await>
+        </Suspense>
       </div>
-
       <div className="flex flex-col mb-4">
         <Label htmlFor="word">영어 단어</Label>
         <Input
@@ -33,10 +156,86 @@ export default function Page() {
       </div>
       <div className="flex justify-end gap-3">
         {/* <Button onClick={handleNext}>문장 자동 선택</Button> */}
-        <Button onClick={handleNext} type="primary">
-          다음
+        <Button
+          onClick={handleGenerate}
+          type={
+            generateEnglishQuestionFetcher.type === "init"
+              ? "primary"
+              : "default"
+          }
+          loading={generateEnglishQuestionFetcher.state === "submitting"}
+          disabled={!word}
+        >
+          문제 추출
         </Button>
       </div>
+      <AnimatePresence>
+        {generated && (
+          <motion.div
+            key="question"
+            className="px-4 py-3 mt-6 rounded-lg shadow-lg bg-gray-50"
+            initial={{ opacity: 0, y: -20 }}
+            animate={{
+              opacity: 1,
+              y: 0,
+              transition: {
+                ease: "easeOut",
+                duration: 0.3,
+              },
+            }}
+            exit={{
+              opacity: 0,
+              transition: {
+                duration: 0.1,
+              },
+            }}
+          >
+            <div className="py-4">
+              <dt className="font-medium text-gray-400 ">문제</dt>
+              <dd className="mt-1 text-gray-900">
+                <Render>
+                  {generated.marked + "\n\n" + generated.translated}
+                </Render>
+              </dd>
+            </div>
+            <div className="py-4 ">
+              <dt className="font-medium text-gray-400 ">정답</dt>
+              <dd className="mt-1 font-bold">
+                {generated.prevWords.join(", ")}
+              </dd>
+            </div>
+          </motion.div>
+        )}
+        {generated && (
+          <motion.div
+            key="button"
+            className="flex justify-end mt-4"
+            initial={{ opacity: 0, y: -20 }}
+            animate={{
+              opacity: 1,
+              y: 0,
+              transition: {
+                ease: "easeOut",
+                duration: 0.3,
+              },
+            }}
+            exit={{
+              opacity: 0,
+              transition: {
+                duration: 0.1,
+              },
+            }}
+          >
+            <Button
+              onClick={handleCreateQuestion}
+              type="primary"
+              loading={createQuestionFetch.state === "submitting"}
+            >
+              문제 생성
+            </Button>
+          </motion.div>
+        )}
+      </AnimatePresence>
     </>
   );
 }

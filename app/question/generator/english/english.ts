@@ -13,6 +13,7 @@ import {
 } from "./oxford-dictionary-client";
 import type { PapagoResponse } from "./papago";
 import { getPapagoClient, getPapagoCode } from "./papago";
+import replace from "./replace";
 
 export async function getCachedContent<Content>(
   code: string
@@ -121,4 +122,24 @@ export async function getKorTranslated(engSentance: string) {
   }
 
   throw new Error("No translation available");
+}
+
+export async function generateEnglishQuestion(word: string) {
+  const sentences = await getEngSentences(word);
+
+  const sentence = sentences[Math.floor(Math.random() * sentences.length)];
+  if (!sentence) {
+    throw new Response("Unknown Error while fetching sentences", {
+      status: 500,
+    });
+  }
+
+  const translated = await getKorTranslated(sentence);
+
+  const { prevWords, replaced } = replace({
+    sourceEngSentence: sentence,
+    word,
+  });
+
+  return { sentence, translated, prevWords, marked: replaced };
 }
