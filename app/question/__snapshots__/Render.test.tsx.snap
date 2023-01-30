@@ -2,7 +2,9 @@
 
 exports[`Simple Text 1`] = `
 <div>
-  <div>
+  <div
+    class="leading-normal"
+  >
     <p>
       Simple Text
     </p>
@@ -14,7 +16,9 @@ exports[`Simple Text 1`] = `
 
 exports[`마크다운 렌더링 > 굵게가 잘 표시되어야 함 1`] = `
 <div>
-  <div>
+  <div
+    class="leading-normal"
+  >
     <p>
       <strong>
         bold
@@ -28,7 +32,9 @@ exports[`마크다운 렌더링 > 굵게가 잘 표시되어야 함 1`] = `
 
 exports[`마크다운 렌더링 > 제목이 잘 표시되어야 함 1`] = `
 <div>
-  <div>
+  <div
+    class="leading-normal"
+  >
     <h1
       id="heading-1"
     >
@@ -56,7 +62,9 @@ exports[`마크다운 렌더링 > 제목이 잘 표시되어야 함 1`] = `
 
 exports[`수학 렌더링 (KaTeX) > Block Math 가 잘 렌더링되어야 함 1`] = `
 <div>
-  <div>
+  <div
+    class="leading-normal"
+  >
     <p>
       <span
         class="katex-display"
@@ -157,7 +165,9 @@ exports[`수학 렌더링 (KaTeX) > Block Math 가 잘 렌더링되어야 함 1`
 
 exports[`수학 렌더링 (KaTeX) > Inline Math 가 잘 렌더링되어야 함 1`] = `
 <div>
-  <div>
+  <div
+    class="leading-normal"
+  >
     <p>
       <span
         class="katex"
