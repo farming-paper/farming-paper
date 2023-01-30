@@ -3,7 +3,7 @@ import type { LoaderArgs } from "@remix-run/server-runtime";
 import { json, redirect } from "@remix-run/server-runtime";
 import { createServerClient } from "@supabase/auth-helpers-remix";
 import { message } from "antd";
-import { Carrot, ExternalLink } from "lucide-react";
+import { ExternalLink } from "lucide-react";
 import { useEffect, useRef } from "react";
 import { getClientSideSupabaseConfig } from "~/config";
 import google from "~/images/logo/google.svg";
@@ -80,41 +80,38 @@ export default function Login() {
 
   return (
     <div className="bg-green-700">
-      <div className="max-w-2xl px-6 py-16 mx-auto text-center @sm:py-20 @lg:px-8">
-        <h1 className="text-4xl font-bold tracking-tight text-white @sm:text-4xl">
+      <div className="max-w-2xl px-6 py-16 mx-auto text-center">
+        <h1 className="mb-8 text-5xl font-bold tracking-tight text-white">
           <span className="block">Farming Paper</span>
         </h1>
-        <h2 className="text-2xl font-medium tracking-tight text-white @sm:text-4xl">
-          <span className="block">생활을 꿋꿋하게</span>
-        </h2>
-        <p className="mt-4 text-lg leading-6 text-green-200">
-          문제를 직접 디자인하고
+        <p className="mb-12 text-2xl font-semibold leading-tight text-green-200">
+          분야를 가리지 않는,
           <br />
-          최적화된 루틴으로 출제되는 문제를
-          <br />
-          풀어보세요.
+          극한의 <span className="text-white">셀프 암기 학습</span> 도구
         </p>
-        <button
-          type="button"
-          onClick={handleGoogleLogin}
-          className="inline-flex items-center justify-center w-full px-5 py-3 mt-8 text-base font-medium text-gray-600 bg-white border border-transparent rounded-md hover:bg-green-50 @sm:w-auto transition shadow-xl"
-        >
-          <span>
-            <img
-              aria-hidden
-              src={google}
-              alt="google logo"
-              style={{ height: "1em" }}
-            />
-          </span>
-          <span className="flex-1">구글로 로그인</span>
-        </button>
-        <div className="inline-flex items-center justify-center w-full">
+        <div className="my-20">
+          <button
+            type="button"
+            onClick={handleGoogleLogin}
+            className="inline-flex items-center justify-center w-full px-5 py-3 text-base font-medium text-gray-600 bg-white border border-transparent rounded-md hover:bg-green-50 @sm:w-auto transition shadow-xl"
+          >
+            <span>
+              <img
+                aria-hidden
+                src={google}
+                alt="google logo"
+                style={{ height: "1em" }}
+              />
+            </span>
+            <span className="flex-1">구글로 로그인</span>
+          </button>
+        </div>
+        {/* <div className="inline-flex items-center justify-center w-full">
           <hr className="w-64 h-1 my-16 border-0 rounded bg-white/30 dark:bg-green-700" />
-          <div className="absolute px-4 text-white -translate-x-1/2 bg-green-700 left-1/2 dark:bg-green-900">
+          <div className="absolute px-4 text-green-200 -translate-x-1/2 bg-green-700 left-1/2 dark:bg-green-900">
             <Carrot />
           </div>
-        </div>
+        </div> */}
         <div className="flex flex-wrap justify-center gap-3">
           <a
             href="https://tally.so/r/w8NWlk"
