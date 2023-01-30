@@ -40,7 +40,6 @@ export default function replace({
         keepPunct: false, // '?!' → ?
         acronyms: false, // F.B.I. → FBI
         abbreviations: false, // Mrs. → Mrs
-        implicit: true,
       });
 
       if (prevWord.includes("'")) {
