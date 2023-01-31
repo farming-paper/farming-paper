@@ -1,12 +1,18 @@
 import { ChevronRightIcon } from "@heroicons/react/24/outline";
 import { Link } from "@remix-run/react";
 
-const items = [
-  {
-    url: "/q/generator/english-word/input",
-    title: "영어 단어 → 빈칸 예문 + 해석",
-    desc: "영어 단어 기반 문제를 생성합니다. 예문은 Oxford Dictionary를 사용하고 해석은 Naver Papago를 사용합니다.",
-  },
+type Item = {
+  url: string;
+  title: string;
+  desc: string;
+};
+
+const items: Item[] = [
+  // {
+  //   url: "/q/generator/english-word/input",
+  //   title: "영어 단어 → 빈칸 예문 + 해석",
+  //   desc: "영어 단어 기반 문제를 생성합니다. 예문은 Oxford Dictionary를 사용하고 해석은 Naver Papago를 사용합니다.",
+  // },
 ];
 
 export default function Page() {
