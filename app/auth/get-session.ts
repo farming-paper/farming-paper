@@ -1,9 +1,63 @@
 import { createServerClient } from "@supabase/auth-helpers-remix";
+import LRU from "lru-cache";
 import { getServerSideSupabaseConfig } from "~/config";
 import { getServerSideSupabaseClient } from "~/supabase/client";
 import type { Database } from "~/supabase/generated/supabase-types";
-import type { IProfile } from "~/types";
 import { removeNullDeep } from "~/util";
+
+type ProfileFromDB = {
+  id: number;
+  public_id: string;
+  desc: string | null;
+  name: string | null;
+  photo: string | null;
+};
+
+// @see https://stackoverflow.com/questions/72661999/how-do-i-use-in-memory-cache-in-remix-run-dev-mode
+declare global {
+  // eslint-disable-next-line no-var
+  var __profileCache: LRU<string, ProfileFromDB>;
+}
+
+let profileCache: LRU<string, ProfileFromDB>;
+const cacheOptions = {
+  max: 500,
+};
+
+if (process.env.NODE_ENV === "production") {
+  profileCache = new LRU<string, ProfileFromDB>(cacheOptions);
+} else {
+  if (!global.__profileCache) {
+    global.__profileCache = new LRU<string, ProfileFromDB>(cacheOptions);
+  }
+  profileCache = global.__profileCache;
+}
+
+export async function getProfile(email: string): Promise<ProfileFromDB> {
+  const cached = profileCache.get(email);
+  if (cached) {
+    return cached;
+  }
+
+  const db = getServerSideSupabaseClient();
+
+  const findProfileRes = await db
+    .from("profiles")
+    .select("id, public_id, desc, name, photo")
+    .eq("email", email)
+    .is("deleted_at", null)
+    .single();
+
+  if (findProfileRes.data) {
+    const profile: ProfileFromDB = findProfileRes.data;
+    profileCache.set(email, findProfileRes.data);
+    return profile;
+  }
+
+  throw new Response("No Profile", {
+    status: 401,
+  });
+}
 
 export async function getSessionWithProfile({
   request,
@@ -22,8 +76,6 @@ export async function getSessionWithProfile({
     data: { session },
   } = await supabaseClient.auth.getSession();
 
-  const db = getServerSideSupabaseClient();
-
   const email = session?.user?.email;
   if (!email) {
     throw new Response("No email in session", {
@@ -31,32 +83,10 @@ export async function getSessionWithProfile({
     });
   }
 
-  const findProfileRes = await db
-    .from("profiles")
-    .select("id, public_id, desc, name, photo")
-    .eq("email", session?.user?.email)
-    .is("deleted_at", null)
-    .single();
-
-  let profile: IProfile;
-
-  // 유저가 없는 경우 로그아웃하고 로그인 페이지로 이동
-  if (!findProfileRes.data) {
-    throw new Response("No Profile", {
-      status: 401,
-    });
-  }
-  // 유저가 존재하는 경우
-  else {
-    profile = removeNullDeep({
-      email,
-      id: findProfileRes.data.id,
-      public_id: findProfileRes.data.public_id,
-      desc: findProfileRes.data.desc,
-      name: findProfileRes.data.name,
-      photo: findProfileRes.data.photo,
-    });
-  }
+  const profile = removeNullDeep({
+    email,
+    ...(await getProfile(email)),
+  });
 
   return {
     session,

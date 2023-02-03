@@ -9,7 +9,7 @@ import { getSessionWithProfile } from "~/auth/get-session";
 import { createQuestion } from "~/question/create";
 import type { Question } from "~/question/types";
 import { getServerSideSupabaseClient } from "~/supabase/client";
-import { dayjs } from "~/util";
+import { dayjs, withDurationLog } from "~/util";
 
 const numberPerPage = 10;
 
@@ -26,13 +26,16 @@ export async function loader({ request }: LoaderArgs) {
   const { profile } = await getSessionWithProfile({ request, response });
   const db = getServerSideSupabaseClient();
 
-  const questionsRes = await db
-    .from("questions")
-    .select("*", { count: "estimated" })
-    .eq("creator", profile.id)
-    .is("deleted_at", null)
-    .order("updated_at", { ascending: false })
-    .range((page - 1) * numberPerPage, page * numberPerPage - 1);
+  const questionsRes = await withDurationLog(
+    "get_q_by_creator",
+    db
+      .from("questions")
+      .select("*", { count: "estimated" })
+      .eq("creator", profile.id)
+      .is("deleted_at", null)
+      .order("updated_at", { ascending: false })
+      .range((page - 1) * numberPerPage, page * numberPerPage - 1)
+  );
 
   if (questionsRes.error) {
     return redirect("/q/list", { status: 303 });

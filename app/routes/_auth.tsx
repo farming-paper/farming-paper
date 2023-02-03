@@ -6,13 +6,17 @@ import { useEffect } from "react";
 import { getSessionWithProfile } from "~/auth/get-session";
 import BottomNav from "~/common/components/BottomNav";
 import type { IOutletProps } from "~/types";
+import { withDurationLog } from "~/util";
 
 export const loader = async ({ request }: LoaderArgs) => {
   const response = new Response();
-  const { profile, session, supabaseClient } = await getSessionWithProfile({
-    request,
-    response,
-  });
+  const { profile, session, supabaseClient } = await withDurationLog(
+    "_auth_getSessionWithProfile",
+    getSessionWithProfile({
+      request,
+      response,
+    })
+  );
 
   if (!session || !profile) {
     await supabaseClient.auth.signOut();

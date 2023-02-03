@@ -1,6 +1,7 @@
 import dayjs from "dayjs";
 import { getServerSideSupabaseClient } from "~/supabase/client";
 import type { Json } from "~/supabase/generated/supabase-types";
+import { withDurationLog } from "~/util";
 import type { ChromePapagoResponse } from "./chrome-papago";
 import {
   getChromePapagoCode,
@@ -61,11 +62,14 @@ export async function getEngSentences(word: string) {
 
     content = oxfordSentencesRes.data;
 
-    await db.from("cached").upsert({
-      code: oxfordSentencesCode,
-      content: oxfordSentencesRes.data as Json,
-      expires_in: dayjs().add(300, "day").toISOString(),
-    });
+    await withDurationLog(
+      "cached.upsert",
+      db.from("cached").upsert({
+        code: oxfordSentencesCode,
+        content: oxfordSentencesRes.data as Json,
+        expires_in: dayjs().add(300, "day").toISOString(),
+      })
+    );
   }
 
   // get sentences
