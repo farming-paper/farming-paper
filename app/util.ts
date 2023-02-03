@@ -223,3 +223,20 @@ export function typedSubmit<TArgs = Record<string, never>>() {
 }
 
 export const dayjs = dayjsLib;
+
+export async function withDurationLog<T>(
+  name: string,
+  promise: PromiseLike<T>,
+  options: { onlyDev?: boolean } = {}
+): Promise<T> {
+  const { onlyDev = false } = options;
+  if (onlyDev && process.env.NODE_ENV !== "development") {
+    return promise;
+  }
+  const start = Date.now();
+  const result = await promise;
+  const end = Date.now();
+  // eslint-disable-next-line no-console
+  console.log(`[time] ${name}: ${end - start}ms`);
+  return result;
+}

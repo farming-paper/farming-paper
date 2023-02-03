@@ -27,6 +27,7 @@ import antdStyles from "./styles/antd.css";
 import tailwindStyles from "./styles/app.css";
 import tailwindResetStyles from "./styles/tailwind.reset.css";
 import type { Database } from "./supabase/generated/supabase-types";
+import { withDurationLog } from "./util";
 
 export function links() {
   return [
@@ -57,7 +58,7 @@ export const loader = async ({ request }: LoaderArgs) => {
 
   const {
     data: { session },
-  } = await supabase.auth.getSession();
+  } = await withDurationLog("root_getSession", supabase.auth.getSession());
 
   return json(
     { env: getClientSideSupabaseConfig(), session },
