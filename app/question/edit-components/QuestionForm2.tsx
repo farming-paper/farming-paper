@@ -129,12 +129,11 @@ const QuestionForm2: React.FC<{
             );
           }}
         />
-        {errors?.question?.message &&
-          typeof errors.question.message !== "string" && (
-            <ErrorLabel htmlFor="question_message">
-              {errors.question.message.message}
-            </ErrorLabel>
-          )}
+        {errors.question?.message && (
+          <ErrorLabel htmlFor="question_message">
+            {errors.question.message}
+          </ErrorLabel>
+        )}
       </div>
 
       {/* ShortOrder corrects */}
