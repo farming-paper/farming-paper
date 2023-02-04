@@ -12,6 +12,7 @@ import {
 } from "@floating-ui/react";
 import { Calendar, ChevronDown } from "lucide-react";
 import { useState } from "react";
+import DatePicker from "./DatePicker";
 
 export const SimplePopover: React.FC = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -57,9 +58,11 @@ export const SimplePopover: React.FC = () => {
               left: x ?? 0,
               width: "max-content",
             }}
-            {...getFloatingProps()}
+            {...getFloatingProps({
+              className: "bg-white rounded-md shadow-lg",
+            })}
           >
-            Popover element
+            <DatePicker />
           </div>
         </FloatingFocusManager>
       )}

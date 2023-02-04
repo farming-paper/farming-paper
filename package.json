@@ -27,6 +27,7 @@
     "@floating-ui/react": "^0.19.1",
     "@headlessui/react": "^1.7.14",
     "@heroicons/react": "^2.0.18",
+    "@rehookify/datepicker": "^4.0.0",
     "@remix-run/node": "^1.16.1",
     "@remix-run/react": "^1.16.1",
     "@remix-run/serve": "^1.16.1",
