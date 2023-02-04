@@ -20,7 +20,7 @@ import { Suspense, useState } from "react";
 import { twMerge } from "tailwind-merge";
 import type { PartialDeep } from "type-fest";
 import { getSessionWithProfile } from "~/auth/get-session";
-import SimplePopover from "~/common/components/SimpleMenu";
+import DateFilterButton from "~/common/components/DateFilterButton";
 import TagFilterButton from "~/common/components/TagFilterButton";
 import { createQuestion } from "~/question/create";
 import type { Question } from "~/question/types";
@@ -200,7 +200,7 @@ export default function QuestionList() {
         <div className="-mx-4 overflow-auto scroll">
           <div className="p-4">
             <div className="flex min-w-full gap-2 align-middle whitespace-nowrap">
-              <SimplePopover />
+              <DateFilterButton />
               <TagFilterButton
                 tags={loaded.tags}
                 onChangeSeletedTag={(e) => {
@@ -274,9 +274,13 @@ export default function QuestionList() {
                                     aria-hidden="true"
                                   />
                                   <Tooltip
-                                    title={dayjs(item.updated_at).format(
-                                      "YYYY년 MM월 DD일 HH:mm:ss"
-                                    )}
+                                    title={
+                                      <span className="text-sm">
+                                        {dayjs(item.updated_at).format(
+                                          "YYYY년 MM월 DD일 HH:mm:ss"
+                                        )}
+                                      </span>
+                                    }
                                   >
                                     <span className="text-sm leading-none">
                                       {dayjs(item.updated_at).fromNow()}에

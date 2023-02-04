@@ -8,7 +8,7 @@ import {
   useDismiss,
   useFloating,
   useInteractions,
-  useRole,
+  useRole
 } from "@floating-ui/react";
 import { useSearchParams } from "@remix-run/react";
 import { Calendar, ChevronDown } from "lucide-react";
@@ -18,7 +18,7 @@ import { dayjs } from "~/util";
 import type { DatePickerValue } from "./DatePicker";
 import DatePicker from "./DatePicker";
 
-export const SimplePopover: React.FC = () => {
+export const DateFilterButton: React.FC = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [searchParams, setSearchParams] = useSearchParams();
 
@@ -162,4 +162,4 @@ export const SimplePopover: React.FC = () => {
   );
 };
 
-export default SimplePopover;
+export default DateFilterButton;
