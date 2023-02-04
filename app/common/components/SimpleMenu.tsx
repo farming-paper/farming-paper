@@ -43,6 +43,7 @@ export const SimplePopover: React.FC = () => {
   const datePickerValue: DatePickerValue = useMemo(() => {
     const start = searchParams.get("start");
     const end = searchParams.get("end");
+    const singleDate = searchParams.get("single_date");
 
     if (start && end) {
       return {
@@ -52,10 +53,10 @@ export const SimplePopover: React.FC = () => {
       };
     }
 
-    if (start) {
+    if (singleDate) {
       return {
         type: "single",
-        date: dayjs(start).toDate(),
+        date: dayjs(singleDate).toDate(),
       };
     }
 
@@ -71,6 +72,8 @@ export const SimplePopover: React.FC = () => {
           const next = new URLSearchParams(prev);
           next.delete("start");
           next.delete("end");
+          next.delete("single_date");
+
           return next;
         });
         return;
@@ -79,7 +82,8 @@ export const SimplePopover: React.FC = () => {
       if (value.type === "single") {
         setSearchParams((prev) => {
           const next = new URLSearchParams(prev);
-          next.set("start", dayjs(value.date).format("YYYY-MM-DD"));
+          next.set("single_date", dayjs(value.date).format("YYYY-MM-DD"));
+          next.delete("start");
           next.delete("end");
           return next;
         });
@@ -90,6 +94,7 @@ export const SimplePopover: React.FC = () => {
         const next = new URLSearchParams(prev);
         next.set("start", dayjs(value.start).format("YYYY-MM-DD"));
         next.set("end", dayjs(value.end).format("YYYY-MM-DD"));
+        next.delete("single_date");
         return next;
       });
 
@@ -104,12 +109,12 @@ export const SimplePopover: React.FC = () => {
     }
 
     if (datePickerValue.type === "single") {
-      return dayjs(datePickerValue.date).format("YYYY-MM-DD");
+      return dayjs(datePickerValue.date).format("YYYY/MM/DD");
     }
 
-    return `${dayjs(datePickerValue.start).format("YYYY-MM-DD")} ~ ${dayjs(
+    return `${dayjs(datePickerValue.start).format("YYYY/MM/DD")} - ${dayjs(
       datePickerValue.end
-    ).format("YYYY-MM-DD")}`;
+    ).format("YYYY/MM/DD")}`;
   }, [datePickerValue]);
 
   return (
@@ -125,7 +130,14 @@ export const SimplePopover: React.FC = () => {
         })}
       >
         <Calendar className="w-4 h-4 mr-2 -ml-1" aria-hidden="true" />
-        {buttonText}
+        <span
+          className={twMerge(
+            "mt-px font-mono",
+            datePickerValue.type !== "none" && "text-xs"
+          )}
+        >
+          {buttonText}
+        </span>
         <ChevronDown className="w-3 h-3 ml-2 -mr-1" aria-hidden="true" />
       </button>
       {isOpen && (

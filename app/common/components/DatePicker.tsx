@@ -3,6 +3,7 @@ import { useDatePicker } from "@rehookify/datepicker";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { useCallback, useMemo } from "react";
 import { twMerge } from "tailwind-merge";
+import { dayjs } from "~/util";
 
 export type DatePickerValue =
   | {
@@ -99,7 +100,7 @@ const DatePicker: React.FC<{
         </ul>
         <ul className="grid grid-cols-7 gap-y-1">
           {days.map((dpDay) => (
-            <li key={dpDay.$date.toISOString()} className={dpDay.range}>
+            <li key={dpDay.$date.toISOString()}>
               <button {...dayButton(dpDay)} className="group">
                 <span
                   className={twMerge(
@@ -122,7 +123,10 @@ const DatePicker: React.FC<{
                     (dpDay.range === "range-end" ||
                       dpDay.range === "will-be-range-end") &&
                       "rounded-r-sm",
-                    dpDay.range === "range-start range-end" && "rounded-sm"
+                    dpDay.range === "range-start range-end" && "rounded-sm",
+                    value.type === "single" &&
+                      dayjs(dpDay.$date).isSame(value.date, "day") &&
+                      "bg-green-200"
                     // dpDay.selected && "bg-green-500 text-white"
                   )}
                 >
