@@ -1,92 +1,41 @@
 import { CloseCircleFilled } from "@ant-design/icons";
 import { Dialog, Transition } from "@headlessui/react";
-import { Await, Form } from "@remix-run/react";
+import { Form, useSearchParams } from "@remix-run/react";
 import { disassembleHangul } from "@toss/hangul";
 import { Button } from "antd";
-import { AnimatePresence, motion } from "framer-motion";
+import { AnimatePresence, motion, Reorder } from "framer-motion";
 import { Check, ChevronDown, Tag } from "lucide-react";
-import {
-  Fragment,
-  Suspense,
-  useCallback,
-  useEffect,
-  useMemo,
-  useReducer,
-  useRef,
-  useState,
-} from "react";
+import { Fragment, useCallback, useMemo, useRef, useState } from "react";
 import { twMerge } from "tailwind-merge";
-
-type FilterTag = {
-  publicId: string;
-  name: string;
-};
-
-function selectedTagsReducer(
-  state: FilterTag[],
-  action:
-    | {
-        type: "add";
-        tag: FilterTag;
-      }
-    | {
-        type: "remove";
-        publicId: string;
-      }
-) {
-  switch (action.type) {
-    case "add":
-      return [...state, action.tag];
-    case "remove":
-      return state.filter((tag) => tag.publicId !== action.publicId);
-    default:
-      throw new Error();
-  }
-}
+import type { FilterTag } from "~/types";
+import { noopFunction } from "~/util";
 
 const TagFilterButton: React.FC<{
-  tags: Promise<FilterTag[]>;
-  onChangeSeletedTag: (tags: FilterTag[]) => void;
-}> = ({ onChangeSeletedTag, tags }) => {
+  tags: FilterTag[];
+}> = ({ tags }) => {
   const [open, setOpen] = useState(false);
   const [search, setSearch] = useState("");
-  const [selectedTags, dispatchSelectedTags] = useReducer(
-    selectedTagsReducer,
-    []
-  );
+  const [searchParams, setSearchParams] = useSearchParams();
+
+  const isFiltered = useMemo(() => {
+    return searchParams.get("tags") !== null;
+  }, [searchParams]);
 
   const okButtonRef = useRef(null);
 
-  const filtered = useMemo(
-    async () =>
-      (await tags).filter((tag) => {
-        if (search === "") {
-          return true;
-        }
-
-        // disassembleHangul
-        const disassembledSearch = disassembleHangul(search);
-        const disassembledTag = disassembleHangul(tag.name);
-
-        return disassembledTag.includes(disassembledSearch);
-      }),
-    [search, tags]
-  );
-
-  useEffect(() => {
-    onChangeSeletedTag(selectedTags);
-  }, [onChangeSeletedTag, selectedTags]);
-
-  const handleToggleTag = useCallback(
-    (tag: FilterTag) => {
-      if (selectedTags.find((t) => t.publicId === tag.publicId)) {
-        dispatchSelectedTags({ type: "remove", publicId: tag.publicId });
-      } else {
-        dispatchSelectedTags({ type: "add", tag });
+  const filtered = useMemo(() => {
+    return tags.filter((tag) => {
+      if (search === "") {
+        return true;
       }
-    },
-    [selectedTags]
-  );
+
+      // disassembleHangul
+      const disassembledSearch = disassembleHangul(search);
+      const disassembledTag = disassembleHangul(tag.name);
+
+      return disassembledTag.includes(disassembledSearch);
+    });
+  }, [search, tags]);
 
   const [isSearchFocus, setIsSearchFocus] = useState(false);
 
@@ -102,10 +51,64 @@ const TagFilterButton: React.FC<{
     return isSearchFocus || search !== "";
   }, [isSearchFocus, search]);
 
+  const selectedTags = useMemo(() => {
+    if (searchParams.get("tags") === null) {
+      return [];
+    }
+
+    const tagsFromSearchParams = searchParams.get("tags")?.split(",") || [];
+
+    return tags.filter((tag) => tagsFromSearchParams.includes(tag.publicId));
+  }, [searchParams, tags]);
+
+  const handleToggleTag = useCallback(
+    (tag: FilterTag) => {
+      if (selectedTags.includes(tag)) {
+        const newTags = selectedTags.filter((t) => t.publicId !== tag.publicId);
+
+        if (newTags.length === 0) {
+          setSearchParams(
+            (params) => {
+              params.delete("tags");
+              return params;
+            },
+            {
+              state: "hi",
+            }
+          );
+        } else {
+          setSearchParams(
+            (params) => {
+              params.set("tags", newTags.map((t) => t.publicId).join(","));
+              return params;
+            },
+            {
+              state: "hi",
+            }
+          );
+        }
+
+        return;
+      }
+
+      setSearchParams((params) => {
+        params.set(
+          "tags",
+          [...selectedTags.map((t) => t.publicId), tag.publicId].join(",")
+        );
+        return params;
+      });
+    },
+    [selectedTags, setSearchParams]
+  );
+
   return (
     <>
       <button
-        className="inline-flex items-center justify-center px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-full shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2 focus:ring-offset-gray-100"
+        className={twMerge(
+          "inline-flex items-center justify-center px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-full shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2 focus:ring-offset-gray-100 transition",
+          isFiltered && "bg-green-50 text-green-700 border-green-500"
+        )}
         onClick={() => {
           setOpen(true);
         }}
@@ -134,7 +137,7 @@ const TagFilterButton: React.FC<{
           </Transition.Child>
 
           <div className="fixed inset-0 z-10">
-            <div className="flex justify-center h-full text-center sm:items-center">
+            <div className="flex justify-center h-full text-center">
               <Transition.Child
                 as={Fragment}
                 enter="ease-out duration-300"
@@ -181,7 +184,6 @@ const TagFilterButton: React.FC<{
                       </motion.div>
                     )}
                   </AnimatePresence>
-
                   <Form
                     className={twMerge(
                       "flex items-center mt-3 transition",
@@ -233,54 +235,60 @@ const TagFilterButton: React.FC<{
                       </button>
                     </div>
                   </Form>
-                  <hr className="mt-4 mb-0 -mx-4" />
 
-                  <Suspense fallback={<div>로딩중...</div>}>
-                    <Await resolve={filtered}>
-                      {(filtered) => {
-                        return (
-                          <ul className="grid min-h-0 grid-cols-2 gap-3 p-3 mb-0 -mx-4 overflow-y-auto ">
-                            {filtered.map((tag) => (
-                              <li
-                                key={tag.publicId}
-                                className={twMerge(
-                                  "transition bg-white shadow-sm hover:cursor-pointer border hover:bg-gray-50 hover:border-green-400",
-                                  selectedTags.includes(tag) &&
-                                    "border-green-500"
-                                )}
-                                onClick={() => {
-                                  handleToggleTag(tag);
-                                  setSearch("");
-                                }}
-                              >
-                                <div className="flex items-center px-4 py-4 sm:px-6">
-                                  <div className="flex-1 min-w-0 sm:flex sm:items-center sm:justify-between">
-                                    <div className="truncate">
-                                      <div className="flex text-sm">
-                                        <p className="m-0 font-medium truncate">
-                                          {tag.name}
-                                        </p>
-                                      </div>
-                                    </div>
-                                  </div>
-                                  <div className="flex-shrink-0 ml-5">
-                                    <Check
-                                      className={twMerge(
-                                        "w-5 h-5 text-gray-200",
-                                        selectedTags.includes(tag) &&
-                                          "text-green-500"
-                                      )}
-                                      aria-hidden="true"
-                                    />
-                                  </div>
+                  <Reorder.Group
+                    as="ul"
+                    className="grid min-h-0 grid-cols-2 gap-3 p-3 mb-0 -mx-4 overflow-y-auto min-w-max"
+                    values={filtered}
+                    onReorder={noopFunction}
+                  >
+                    <AnimatePresence mode="popLayout">
+                      {filtered.map((tag) => (
+                        <Reorder.Item
+                          as="li"
+                          initial={{ opacity: 0 }}
+                          animate={{ opacity: 1 }}
+                          exit={{
+                            opacity: 0,
+                            transition: {
+                              ease: "easeOut",
+                            },
+                          }}
+                          value={tag}
+                          drag={false}
+                          key={tag.publicId}
+                          className={twMerge(
+                            "bg-white shadow-sm hover:cursor-pointer border hover:bg-gray-50 hover:border-green-400",
+                            selectedTags.includes(tag) && "border-green-500"
+                          )}
+                          onClick={() => {
+                            handleToggleTag(tag);
+                          }}
+                        >
+                          <div className="flex items-center px-4 py-4 sm:px-6">
+                            <div className="flex-1 min-w-0 sm:flex sm:items-center sm:justify-between">
+                              <div className="truncate">
+                                <div className="flex text-sm">
+                                  <p className="m-0 font-medium truncate">
+                                    {tag.name}
+                                  </p>
                                 </div>
-                              </li>
-                            ))}
-                          </ul>
-                        );
-                      }}
-                    </Await>
-                  </Suspense>
+                              </div>
+                            </div>
+                            <div className="flex-shrink-0 ml-5">
+                              <Check
+                                className={twMerge(
+                                  "w-5 h-5 text-gray-200",
+                                  selectedTags.includes(tag) && "text-green-500"
+                                )}
+                                aria-hidden="true"
+                              />
+                            </div>
+                          </div>
+                        </Reorder.Item>
+                      ))}
+                    </AnimatePresence>
+                  </Reorder.Group>
                 </Dialog.Panel>
               </Transition.Child>
             </div>

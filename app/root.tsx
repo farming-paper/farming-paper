@@ -20,6 +20,7 @@ import {
 import { Analytics } from "@vercel/analytics/react";
 import { ConfigProvider } from "antd";
 import antdResetStyles from "antd/dist/reset.css";
+import type { ThemeConfig } from "antd/es/config-provider/context";
 import { useEffect, useState } from "react";
 import GlobalLoading from "./common/components/GlobalLoading";
 import { getClientSideSupabaseConfig } from "./config";
@@ -68,6 +69,14 @@ export const loader = async ({ request }: LoaderArgs) => {
   );
 };
 
+const theme: ThemeConfig = {
+  token: {
+    colorPrimary: "#16a34a",
+    fontSize: 16,
+    controlHeight: 40,
+  },
+};
+
 export default function App() {
   const { env, session } = useLoaderData<typeof loader>();
 
@@ -106,15 +115,7 @@ export default function App() {
       </head>
       <body className="relative max-w-md min-h-[100vh] mx-auto bg-white pb-16 @container">
         <GlobalLoading />
-        <ConfigProvider
-          theme={{
-            token: {
-              colorPrimary: "#16a34a",
-              fontSize: 16,
-              controlHeight: 40,
-            },
-          }}
-        >
+        <ConfigProvider theme={theme}>
           <Outlet context={{ supabase, session }} />
         </ConfigProvider>
         <ScrollRestoration />

@@ -8,7 +8,7 @@ import {
   useDismiss,
   useFloating,
   useInteractions,
-  useRole
+  useRole,
 } from "@floating-ui/react";
 import { useSearchParams } from "@remix-run/react";
 import { Calendar, ChevronDown } from "lucide-react";
@@ -25,6 +25,7 @@ export const DateFilterButton: React.FC = () => {
   const { x, y, strategy, refs, context } = useFloating({
     open: isOpen,
     onOpenChange: setIsOpen,
+    placement: "bottom-start",
     middleware: [offset(10), flip(), shift()],
     whileElementsMounted: autoUpdate,
   });
@@ -123,7 +124,7 @@ export const DateFilterButton: React.FC = () => {
         ref={refs.setReference}
         {...getReferenceProps({
           className: twMerge(
-            "inline-flex items-center justify-center px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-full shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2 focus:ring-offset-gray-100",
+            "inline-flex items-center justify-center px-4 py-2 text-sm font-medium text-gray-700 bg-white border border-gray-300 rounded-full shadow-sm hover:bg-gray-50 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2 focus:ring-offset-gray-100 transition",
             datePickerValue.type !== "none" &&
               "bg-green-50 text-green-700 border-green-500"
           ),

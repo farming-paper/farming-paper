@@ -1,22 +1,21 @@
 import {
-  CalendarOutlined,
   CloseCircleFilled,
   FileAddOutlined,
   PlusOutlined,
 } from "@ant-design/icons";
-import { ChevronRightIcon, PlusIcon } from "@heroicons/react/24/outline";
+import type { ShouldRevalidateFunction } from "@remix-run/react";
 import {
   Await,
   Form,
-  Link,
   useLoaderData,
   useNavigate,
+  useSearchParams,
 } from "@remix-run/react";
 import type { LoaderArgs } from "@remix-run/server-runtime";
 import { defer } from "@remix-run/server-runtime";
-import { Button, Pagination, Tooltip } from "antd";
+import { Button } from "antd";
 import { AnimatePresence, motion } from "framer-motion";
-import { Suspense, useState } from "react";
+import { Suspense, useMemo, useState } from "react";
 import { twMerge } from "tailwind-merge";
 import type { PartialDeep } from "type-fest";
 import { getSessionWithProfile } from "~/auth/get-session";
@@ -25,32 +24,18 @@ import TagFilterButton from "~/common/components/TagFilterButton";
 import { createQuestion } from "~/question/create";
 import type { Question } from "~/question/types";
 import { getServerSideSupabaseClient } from "~/supabase/client";
-import { dayjs, withDurationLog } from "~/util";
+import { getFilterTagsByCreatorId } from "~/supabase/getters";
+import { withDurationLog } from "~/util";
+import type { GetQuestionsArgs } from "./_auth.q.list.get-questions";
+
+import { useDebounce } from "usehooks-ts";
 
 const numberPerPage = 10;
 
 export async function getMyTagNames({ request }: { request: Request }) {
   const response = new Response();
   const { profile } = await getSessionWithProfile({ request, response });
-  const db = getServerSideSupabaseClient();
-
-  const tagsRes = await withDurationLog(
-    "get_tags_by_creator",
-    db
-      .from("tags")
-      .select("public_id, name")
-      .eq("creator", profile.id)
-      .is("deleted_at", null)
-  );
-
-  if (tagsRes.error) {
-    throw new Response(tagsRes.error.message, { status: 500 });
-  }
-
-  return tagsRes.data.map((tag) => ({
-    publicId: tag.public_id,
-    name: tag.name || "",
-  }));
+  return getFilterTagsByCreatorId(profile.id);
 }
 
 export async function getMyQuestions({
@@ -102,7 +87,7 @@ export async function loader({ request }: LoaderArgs) {
   }
 
   return defer({
-    question: getMyQuestions({ page, request }),
+    // question: getMyQuestions({ page, request }),
     page,
     tags: getMyTagNames({ request }),
   });
@@ -113,6 +98,21 @@ export default function QuestionList() {
 
   const navigate = useNavigate();
   const [search, setSearch] = useState("");
+  const [searchParams] = useSearchParams();
+
+  const page = useMemo(
+    () => Number.parseInt(searchParams.get("p") || "1"),
+    [searchParams]
+  );
+
+  const getQuestionArgs = useMemo<GetQuestionsArgs>(() => {
+    return {
+      page,
+      search,
+    };
+  }, [page, search]);
+
+  const debouncedGetQuestionArgs = useDebounce(getQuestionArgs, 500);
 
   return (
     <div className="flex flex-col p-4">
@@ -175,7 +175,7 @@ export default function QuestionList() {
               type="text"
               name="search"
               id="search"
-              className="peer bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-1 focus:ring-offset-0 focus:border-green-500 focus:ring-green-500 block w-full pl-10 p-2.5"
+              className="peer bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-1 focus:ring-offset-0 focus:border-green-500 focus:ring-green-500 block w-full pl-10 p-2.5 transition"
               placeholder="내용 및 정답 검색..."
               required
               value={search}
@@ -184,16 +184,23 @@ export default function QuestionList() {
                 setSearch(e.target.value);
               }}
             />
-            <button
-              type="button"
-              className={twMerge(
-                "absolute inset-y-0 right-0 hidden items-center text-gray-500 transition hover:text-gray-900 pr-3",
-                search && "flex"
+            <AnimatePresence>
+              {search && (
+                <motion.button
+                  type="button"
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  exit={{ opacity: 0 }}
+                  transition={{ duration: 0.1 }}
+                  className={twMerge(
+                    "absolute inset-y-0 right-0 items-center flex text-gray-500 transition hover:text-gray-900 pr-3"
+                  )}
+                  onClick={() => setSearch("")}
+                >
+                  <CloseCircleFilled className="w-4 h-4" />
+                </motion.button>
               )}
-              onClick={() => setSearch("")}
-            >
-              <CloseCircleFilled className="w-4 h-4" />
-            </button>
+            </AnimatePresence>
           </div>
         </Form>
 
@@ -201,19 +208,28 @@ export default function QuestionList() {
           <div className="p-4">
             <div className="flex min-w-full gap-2 align-middle whitespace-nowrap">
               <DateFilterButton />
-              <TagFilterButton
-                tags={loaded.tags}
-                onChangeSeletedTag={(e) => {
-                  // console.log(e);
-                }}
-              />
+              <Suspense fallback={<div>로딩 중...</div>}>
+                <Await
+                  resolve={loaded.tags}
+                  errorElement={
+                    <div className="py-20 text-center">
+                      <FileAddOutlined className="text-3xl text-gray-400" />
+                      <h3 className="mt-2 text-sm font-medium text-gray-900">
+                        태그를 불러오는 중 오류가 발생했습니다.
+                      </h3>
+                    </div>
+                  }
+                >
+                  {(tags) => <TagFilterButton tags={tags} />}
+                </Await>
+              </Suspense>
             </div>
           </div>
         </div>
       </header>
 
       {/* await loaded questions promise */}
-      <Suspense fallback={<div>로딩 중...</div>}>
+      {/* <Suspense fallback={<div>로딩 중...</div>}>
         <Await
           resolve={loaded.question}
           errorElement={
@@ -319,7 +335,18 @@ export default function QuestionList() {
             );
           }}
         </Await>
-      </Suspense>
+      </Suspense> */}
     </div>
   );
 }
+
+export const shouldRevalidate: ShouldRevalidateFunction = (args) => {
+  const { formMethod, defaultShouldRevalidate } = args;
+  console.log("_auth.q.list shouldRevalidate", args);
+
+  if (formMethod === "get") {
+    return false;
+  }
+
+  return defaultShouldRevalidate;
+};
