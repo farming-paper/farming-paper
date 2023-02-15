@@ -20,6 +20,7 @@ declare global {
 }
 
 let profileCache: LRUCache<string, ProfileFromDB>;
+
 const cacheOptions = {
   max: 500,
 };

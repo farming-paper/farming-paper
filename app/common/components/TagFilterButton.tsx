@@ -236,59 +236,62 @@ const TagFilterButton: React.FC<{
                     </div>
                   </Form>
 
-                  <Reorder.Group
-                    as="ul"
-                    className="grid min-h-0 grid-cols-2 gap-3 p-3 mb-0 -mx-4 overflow-y-auto min-w-max"
-                    values={filtered}
-                    onReorder={noopFunction}
-                  >
-                    <AnimatePresence mode="popLayout">
-                      {filtered.map((tag) => (
-                        <Reorder.Item
-                          as="li"
-                          initial={{ opacity: 0 }}
-                          animate={{ opacity: 1 }}
-                          exit={{
-                            opacity: 0,
-                            transition: {
-                              ease: "easeOut",
-                            },
-                          }}
-                          value={tag}
-                          drag={false}
-                          key={tag.publicId}
-                          className={twMerge(
-                            "bg-white shadow-sm hover:cursor-pointer border hover:bg-gray-50 hover:border-green-400",
-                            selectedTags.includes(tag) && "border-green-500"
-                          )}
-                          onClick={() => {
-                            handleToggleTag(tag);
-                          }}
-                        >
-                          <div className="flex items-center px-4 py-4 sm:px-6">
-                            <div className="flex-1 min-w-0 sm:flex sm:items-center sm:justify-between">
-                              <div className="truncate">
-                                <div className="flex text-sm">
-                                  <p className="m-0 font-medium truncate">
-                                    {tag.name}
-                                  </p>
+                  <div className="flex-1 mt-3 overflow-y-auto">
+                    <Reorder.Group
+                      as="ul"
+                      className="grid content-start min-h-full grid-cols-2 gap-3 mb-0 overflow-y-auto"
+                      values={filtered}
+                      onReorder={noopFunction}
+                    >
+                      <AnimatePresence mode="popLayout">
+                        {filtered.map((tag) => (
+                          <Reorder.Item
+                            as="li"
+                            initial={{ opacity: 0 }}
+                            animate={{ opacity: 1 }}
+                            exit={{
+                              opacity: 0,
+                              transition: {
+                                ease: "easeOut",
+                              },
+                            }}
+                            value={tag}
+                            drag={false}
+                            key={tag.publicId}
+                            className={twMerge(
+                              "bg-white shadow-sm hover:cursor-pointer border hover:bg-gray-50 hover:border-green-400",
+                              selectedTags.includes(tag) && "border-green-500"
+                            )}
+                            onClick={() => {
+                              handleToggleTag(tag);
+                            }}
+                          >
+                            <div className="flex items-center px-4 py-4 sm:px-6">
+                              <div className="flex-1 min-w-0 sm:flex sm:items-center sm:justify-between">
+                                <div className="truncate">
+                                  <div className="flex text-sm">
+                                    <p className="m-0 font-medium truncate">
+                                      {tag.name}
+                                    </p>
+                                  </div>
                                 </div>
                               </div>
+                              <div className="flex-shrink-0 ml-5">
+                                <Check
+                                  className={twMerge(
+                                    "w-5 h-5 text-gray-200",
+                                    selectedTags.includes(tag) &&
+                                      "text-green-500"
+                                  )}
+                                  aria-hidden="true"
+                                />
+                              </div>
                             </div>
-                            <div className="flex-shrink-0 ml-5">
-                              <Check
-                                className={twMerge(
-                                  "w-5 h-5 text-gray-200",
-                                  selectedTags.includes(tag) && "text-green-500"
-                                )}
-                                aria-hidden="true"
-                              />
-                            </div>
-                          </div>
-                        </Reorder.Item>
-                      ))}
-                    </AnimatePresence>
-                  </Reorder.Group>
+                          </Reorder.Item>
+                        ))}
+                      </AnimatePresence>
+                    </Reorder.Group>
+                  </div>
                 </Dialog.Panel>
               </Transition.Child>
             </div>
