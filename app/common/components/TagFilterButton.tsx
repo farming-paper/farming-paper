@@ -114,7 +114,9 @@ const TagFilterButton: React.FC<{
         }}
       >
         <Tag className="w-4 h-4 mr-2 -ml-1" aria-hidden="true" />
-        태그
+        {selectedTags.length === 0
+          ? "태그"
+          : selectedTags.map((tag) => tag.name).join(", ")}
         <ChevronDown className="w-3 h-3 ml-2 -mr-1" aria-hidden="true" />
       </button>
       <Transition.Root show={open} as={Fragment}>
