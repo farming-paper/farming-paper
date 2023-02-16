@@ -44,7 +44,28 @@ export const DateFilterButton: React.FC = () => {
   const datePickerValue: DatePickerValue = useMemo(() => {
     const start = searchParams.get("start");
     const end = searchParams.get("end");
-    const singleDate = searchParams.get("single_date");
+    const dateFilterType = searchParams.get("date_filter_type");
+
+    if (!start || !end) {
+      return {
+        type: "none",
+      };
+    }
+
+    if (dateFilterType === "single") {
+      return {
+        type: "single",
+        date: dayjs(start).toDate(),
+      };
+    }
+
+    if (dateFilterType === "range") {
+      return {
+        type: "range",
+        start: dayjs(start).toDate(),
+        end: dayjs(end).toDate(),
+      };
+    }
 
     if (start && end) {
       return {
@@ -54,10 +75,10 @@ export const DateFilterButton: React.FC = () => {
       };
     }
 
-    if (singleDate) {
+    if (dateFilterType) {
       return {
         type: "single",
-        date: dayjs(singleDate).toDate(),
+        date: dayjs(dateFilterType).toDate(),
       };
     }
 
@@ -69,34 +90,43 @@ export const DateFilterButton: React.FC = () => {
   const onChange = useCallback(
     (value: DatePickerValue) => {
       if (value.type === "none") {
-        setSearchParams((prev) => {
-          const next = new URLSearchParams(prev);
-          next.delete("start");
-          next.delete("end");
-          next.delete("single_date");
-
-          return next;
+        setSearchParams((params) => {
+          params.delete("p");
+          params.delete("date_filter_type");
+          params.delete("start");
+          params.delete("end");
+          return params;
         });
         return;
       }
 
       if (value.type === "single") {
-        setSearchParams((prev) => {
-          const next = new URLSearchParams(prev);
-          next.set("single_date", dayjs(value.date).format("YYYY-MM-DD"));
-          next.delete("start");
-          next.delete("end");
-          return next;
+        setSearchParams((params) => {
+          const newDate = dayjs(value.date).startOf("date");
+          params.delete("p");
+          params.set("date_filter_type", "single");
+          params.set("start", newDate.toISOString());
+          params.set(
+            "end",
+            newDate.add(1, "day").subtract(1, "millisecond").toISOString()
+          );
+          return params;
         });
         return;
       }
 
-      setSearchParams((prev) => {
-        const next = new URLSearchParams(prev);
-        next.set("start", dayjs(value.start).format("YYYY-MM-DD"));
-        next.set("end", dayjs(value.end).format("YYYY-MM-DD"));
-        next.delete("single_date");
-        return next;
+      setSearchParams((params) => {
+        params.delete("p");
+        params.set("date_filter_type", "range");
+        params.set("start", value.start.toISOString());
+        params.set(
+          "end",
+          dayjs(value.end)
+            .add(1, "day")
+            .subtract(1, "millisecond")
+            .toISOString()
+        );
+        return params;
       });
 
       return;

@@ -1,14 +1,21 @@
-import { FileAddOutlined, PlusOutlined } from "@ant-design/icons";
+import {
+  CalendarOutlined,
+  FileAddOutlined,
+  PlusOutlined,
+} from "@ant-design/icons";
 import {
   Await,
+  Link,
   useLoaderData,
   useNavigate,
   useSearchParams,
 } from "@remix-run/react";
 import type { LoaderArgs } from "@remix-run/server-runtime";
 import { defer } from "@remix-run/server-runtime";
-import { Button } from "antd";
+import { Button, Pagination, Tooltip } from "antd";
+import dayjs from "dayjs";
 import { AnimatePresence, motion } from "framer-motion";
+import { ChevronRightIcon, PlusIcon } from "lucide-react";
 import { Suspense, useMemo, useState } from "react";
 import type { PartialDeep } from "type-fest";
 import { getSessionWithProfile } from "~/auth/get-session";
@@ -40,30 +47,44 @@ export async function getMyQuestions({
   request: Request;
   search?: string;
   tags?: string[];
-  dateFilter?:
-    | {
-        type: "range";
-        start: string; // YYYY-MM-DD
-        end: string; // YYYY-MM-DD
-      }
-    | {
-        type: "single";
-        date: string; // YYYY-MM-DD
-      };
+  dateFilter?: {
+    start: string; // YYYY-MM-DDTHH:mm:ss
+    end: string; // YYYY-MM-DDTHH:mm:ss
+  };
 }) {
-  console.log({ dateFilter, search, tags });
-
   const response = new Response();
   const { profile } = await getSessionWithProfile({ request, response });
   const db = getServerSideSupabaseClient();
 
-  const questionsQuery = db
+  let questionsQuery = db
     .from("questions")
     .select("*", { count: "estimated" })
     .eq("creator", profile.id)
     .is("deleted_at", null)
     .order("updated_at", { ascending: false })
     .range((page - 1) * numberPerPage, page * numberPerPage - 1);
+
+  if (dateFilter) {
+    questionsQuery = questionsQuery
+      .lte("created_at", dateFilter.end)
+      .gte("created_at", dateFilter.start);
+  }
+
+  if (tags) {
+    const questionIdsRelRes = await db
+      .from("tags_questions_relation")
+      .select("q, tag!inner(public_id)")
+      .in("tag.public_id", tags);
+
+    if (questionIdsRelRes.error) {
+      throw new Response(questionIdsRelRes.error.message, { status: 500 });
+    }
+
+    questionsQuery = questionsQuery.in(
+      "id",
+      questionIdsRelRes.data.map((rel) => rel.q)
+    );
+  }
 
   const questionsRes = await questionsQuery;
 
@@ -97,19 +118,10 @@ export async function loader({ request }: LoaderArgs) {
 
   const tags = url.searchParams.get("tags")?.split(",") || undefined;
 
-  const singleDate = url.searchParams.get("single_date");
   const start = url.searchParams.get("start");
   const end = url.searchParams.get("end");
 
-  const dateFilter = singleDate
-    ? { type: "single" as const, date: singleDate }
-    : start && end
-    ? {
-        type: "range" as const,
-        start,
-        end,
-      }
-    : undefined;
+  const dateFilter = start && end ? { start, end } : undefined;
 
   return defer({
     question: getMyQuestions({ page, request, search, tags, dateFilter }),
@@ -253,7 +265,7 @@ export default function QuestionList() {
       </header>
 
       {/* await loaded questions promise */}
-      {/* <Suspense fallback={<div>로딩 중...</div>}>
+      <Suspense fallback={<div>로딩 중...</div>}>
         <Await
           resolve={loaded.question}
           errorElement={
@@ -359,7 +371,7 @@ export default function QuestionList() {
             );
           }}
         </Await>
-      </Suspense> */}
+      </Suspense>
     </div>
   );
 }

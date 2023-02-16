@@ -70,6 +70,7 @@ const TagFilterButton: React.FC<{
           setSearchParams(
             (params) => {
               params.delete("tags");
+              params.delete("p");
               return params;
             },
             {
@@ -79,6 +80,7 @@ const TagFilterButton: React.FC<{
         } else {
           setSearchParams(
             (params) => {
+              params.delete("p");
               params.set("tags", newTags.map((t) => t.publicId).join(","));
               return params;
             },
