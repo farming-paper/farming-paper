@@ -41,7 +41,7 @@
     "antd": "^5.1.6",
     "compromise": "^14.8.1",
     "dayjs": "^1.11.7",
-    "framer-motion": "^8.5.5",
+    "framer-motion": "^10.6.0",
     "inquirer": "^9.1.4",
     "katex": "^0.16.4",
     "lru-cache": "^8.0.4",
