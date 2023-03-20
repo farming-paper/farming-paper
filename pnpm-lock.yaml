@@ -39,7 +39,7 @@ specifiers:
   inquirer: ^9.1.4
   jsdom: ^21.1.0
   katex: ^0.16.4
-  lru-cache: ^7.14.1
+  lru-cache: ^8.0.4
   lucide-react: ^0.108.0
   marked: ^4.2.12
   nanoid: ^4.0.0
@@ -84,7 +84,7 @@ dependencies:
   framer-motion: 8.5.5_biqbaboplfbrettd7655fr4n2y
   inquirer: 9.1.4
   katex: 0.16.4
-  lru-cache: 7.14.1
+  lru-cache: 8.0.4
   lucide-react: 0.108.0_react@18.2.0
   marked: 4.2.12
   nanoid: 4.0.0
@@ -7387,6 +7387,12 @@ packages:
   /lru-cache/7.14.1:
     resolution: {integrity: sha512-ysxwsnTKdAx96aTRdhDOCQfDgbHnt8SK0KY8SEjO0wHinhWOFTESbjVCMPbU1uGXg/ch4lifqx0wfjOawU2+WA==}
     engines: {node: '>=12'}
+    dev: true
+
+  /lru-cache/8.0.4:
+    resolution: {integrity: sha512-E9FF6+Oc/uFLqZCuZwRKUzgFt5Raih6LfxknOSAVTjNkrCZkBf7DQCwJxZQgd9l4eHjIJDGR+E+1QKD1RhThPw==}
+    engines: {node: '>=16.14'}
+    dev: false
 
   /lucide-react/0.108.0_react@18.2.0:
     resolution: {integrity: sha512-dL8F1DZibvqcWRhCrMghFSYpovsKLcoAcLbh1oZNWo1UxadrDesl8K8Eh6qYrWJwvj95bdSA69ZKc8k+KRxrvg==}
