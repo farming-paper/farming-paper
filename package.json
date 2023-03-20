@@ -44,7 +44,7 @@
     "framer-motion": "^8.5.5",
     "inquirer": "^9.1.4",
     "katex": "^0.16.4",
-    "lru-cache": "^7.14.1",
+    "lru-cache": "^8.0.4",
     "lucide-react": "^0.108.0",
     "marked": "^4.2.12",
     "nanoid": "^4.0.0",
