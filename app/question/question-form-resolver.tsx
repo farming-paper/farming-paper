@@ -12,8 +12,11 @@ const questionFormResolver: Resolver<QuestionFormValues> = async (values) => {
 
   if (!values.question?.message) {
     errors.question = {
-      type: "required",
-      message: "필수 입력입니다.",
+      // TODO: 기능 테스트
+      root: {
+        type: "required",
+        message: "필수 입력입니다.",
+      },
     };
   }
 
