@@ -1,5 +1,5 @@
 import { createServerClient } from "@supabase/auth-helpers-remix";
-import LRU from "lru-cache";
+import { LRUCache } from "lru-cache";
 import { getServerSideSupabaseConfig } from "~/config";
 import { getServerSideSupabaseClient } from "~/supabase/client";
 import type { Database } from "~/supabase/generated/supabase-types";
@@ -16,19 +16,19 @@ type ProfileFromDB = {
 // @see https://stackoverflow.com/questions/72661999/how-do-i-use-in-memory-cache-in-remix-run-dev-mode
 declare global {
   // eslint-disable-next-line no-var
-  var __profileCache: LRU<string, ProfileFromDB>;
+  var __profileCache: LRUCache<string, ProfileFromDB>;
 }
 
-let profileCache: LRU<string, ProfileFromDB>;
+let profileCache: LRUCache<string, ProfileFromDB>;
 const cacheOptions = {
   max: 500,
 };
 
 if (process.env.NODE_ENV === "production") {
-  profileCache = new LRU<string, ProfileFromDB>(cacheOptions);
+  profileCache = new LRUCache<string, ProfileFromDB>(cacheOptions);
 } else {
   if (!global.__profileCache) {
-    global.__profileCache = new LRU<string, ProfileFromDB>(cacheOptions);
+    global.__profileCache = new LRUCache<string, ProfileFromDB>(cacheOptions);
   }
   profileCache = global.__profileCache;
 }

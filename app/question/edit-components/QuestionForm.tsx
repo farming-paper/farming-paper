@@ -106,7 +106,7 @@ const QuestionForm: React.FC<{
         />
         {errors.question?.message && (
           <ErrorLabel htmlFor="question_message">
-            {errors.question.message}
+            <>{errors.question.message}</>
           </ErrorLabel>
         )}
       </div>
