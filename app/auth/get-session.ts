@@ -95,3 +95,8 @@ export async function getSessionWithProfile({
     supabaseClient,
   };
 }
+
+// TODO: 캐시 전략을 새로 짜기.
+export function deleteProfileCache({ email }: { email: string }) {
+  profileCache.delete(email);
+}
