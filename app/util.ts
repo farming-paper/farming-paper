@@ -193,20 +193,20 @@ export function createSubmit<TActionFunc, TArgs = Record<string, never>>() {
   };
 }
 
-export function createLoad<TActionFunc, TArgs = Record<string, never>>() {
-  return (
-    fetcher: FetcherWithComponents<SerializeFrom<TActionFunc>>,
-    args: TArgs,
-    options?: LoaderOptions
-  ) => {
-    fetcher.load(
-      {
-        data: JSON.stringify(args),
-      },
-      options
-    );
-  };
-}
+// export function createLoad<TActionFunc, TArgs = Record<string, never>>() {
+//   return (
+//     fetcher: FetcherWithComponents<SerializeFrom<TActionFunc>>,
+//     args: TArgs,
+//     options?: LoaderOptions
+//   ) => {
+//     fetcher.load(
+//       {
+//         data: JSON.stringify(args),
+//       },
+//       options
+//     );
+//   };
+// }
 
 export function typedFetcher<TActionFunc, TArgs = Record<string, never>>() {
   return {
