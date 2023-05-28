@@ -1,24 +1,24 @@
-import LRU from "lru-cache";
+import { LRUCache } from "lru-cache";
 import type { FilterTag } from "~/types";
 import { getServerSideSupabaseClient } from "./client";
 
 // @see https://stackoverflow.com/questions/72661999/how-do-i-use-in-memory-cache-in-remix-run-dev-mode
 declare global {
   // eslint-disable-next-line no-var
-  var __filterTagsCache: LRU<number, FilterTag[]>;
+  var __filterTagsCache: LRUCache<number, FilterTag[]>;
 }
 
-let filterTagsCache: LRU<number, FilterTag[]>;
+let filterTagsCache: LRUCache<number, FilterTag[]>;
 
 const cacheOptions = {
   max: 500,
 };
 
 if (process.env.NODE_ENV === "production") {
-  filterTagsCache = new LRU<number, FilterTag[]>(cacheOptions);
+  filterTagsCache = new LRUCache<number, FilterTag[]>(cacheOptions);
 } else {
   if (!global.__filterTagsCache) {
-    global.__filterTagsCache = new LRU<number, FilterTag[]>(cacheOptions);
+    global.__filterTagsCache = new LRUCache<number, FilterTag[]>(cacheOptions);
   }
   filterTagsCache = global.__filterTagsCache;
 }
@@ -50,8 +50,6 @@ export async function getFilterTagsByCreatorId(
     filterTagsCache.set(creatorId, filterTags);
     return filterTags;
   }
-
-  console.log("hoho!!");
 
   throw new Response("No Filter Tags", {
     status: 401,
