@@ -20,6 +20,7 @@ import {
 import { Analytics } from "@vercel/analytics/react";
 import { ConfigProvider } from "antd";
 import antdResetStyles from "antd/dist/reset.css";
+import type { ThemeConfig } from "antd/es/config-provider/context";
 import { useEffect, useState } from "react";
 import GlobalLoading from "./common/components/GlobalLoading";
 import { getClientSideSupabaseConfig } from "./config";
@@ -68,6 +69,14 @@ export const loader = async ({ request }: LoaderArgs) => {
   );
 };
 
+const theme: ThemeConfig = {
+  token: {
+    colorPrimary: "#16a34a",
+    fontSize: 16,
+    controlHeight: 40,
+  },
+};
+
 export default function App() {
   const { env, session } = useLoaderData<typeof loader>();
 
@@ -83,7 +92,10 @@ export default function App() {
     const {
       data: { subscription },
     } = supabase.auth.onAuthStateChange((event, session) => {
-      if (session?.access_token !== serverAccessToken) {
+      if (
+        session?.access_token !== serverAccessToken &&
+        authChangedFetcher.state === "idle"
+      ) {
         // server and client are out of sync.
         // Remix recalls active loaders after actions complete
         authChangedFetcher.submit(null, {
@@ -96,7 +108,7 @@ export default function App() {
     return () => {
       subscription.unsubscribe();
     };
-  }, [authChangedFetcher, serverAccessToken, supabase]);
+  }, [serverAccessToken, supabase, authChangedFetcher]);
 
   return (
     <html lang="ko" className="font-sans bg-gray-50">
@@ -106,15 +118,7 @@ export default function App() {
       </head>
       <body className="relative max-w-md min-h-[100vh] mx-auto bg-white pb-16 @container">
         <GlobalLoading />
-        <ConfigProvider
-          theme={{
-            token: {
-              colorPrimary: "#16a34a",
-              fontSize: 16,
-              controlHeight: 40,
-            },
-          }}
-        >
+        <ConfigProvider theme={theme}>
           <Outlet context={{ supabase, session }} />
         </ConfigProvider>
         <ScrollRestoration />

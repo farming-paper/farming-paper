@@ -1,5 +1,6 @@
-import type { SubmitOptions } from "@remix-run/react";
+import type { FetcherWithComponents, SubmitOptions } from "@remix-run/react";
 import { useFetcher, useSubmit } from "@remix-run/react";
+import type { SerializeFrom } from "@remix-run/server-runtime";
 import dayjsLib from "dayjs";
 import "dayjs/locale/ko"; // import locale
 import relativeTime from "dayjs/plugin/relativeTime"; // import plugin
@@ -144,31 +145,6 @@ export const removeNullDeep = <T extends { [key: string]: any }>(
   return result;
 };
 
-// export async function getJsonFromBody<T>(
-//   req: NextRequest
-// ): Promise<Partial<T>> {
-//   const reader = req.body?.getReader();
-//   if (!reader) {
-//     throw new Error("No reader");
-//   }
-
-//   const decoder = new TextDecoder();
-//   let body = "";
-//   const read = async () => {
-//     const result = await reader.read();
-//     if (result.done) {
-//       return;
-//     }
-//     body += decoder.decode(result.value, { stream: true });
-//     await read();
-//   };
-
-//   await read();
-//   body += decoder.decode();
-
-//   return JSON.parse(body) as T;
-// }
-
 export async function getFormdataFromRequest<T>({
   request,
   keyName,
@@ -202,11 +178,42 @@ export function createFormData<T>(args: T) {
   };
 }
 
+export function createSubmit<TActionFunc, TArgs = Record<string, never>>() {
+  return (
+    fetcher: FetcherWithComponents<SerializeFrom<TActionFunc>>,
+    args: TArgs,
+    options?: SubmitOptions
+  ) => {
+    fetcher.submit(
+      {
+        data: JSON.stringify(args),
+      },
+      options
+    );
+  };
+}
+
+// export function createLoad<TActionFunc, TArgs = Record<string, never>>() {
+//   return (
+//     fetcher: FetcherWithComponents<SerializeFrom<TActionFunc>>,
+//     args: TArgs,
+//     options?: LoaderOptions
+//   ) => {
+//     fetcher.load(
+//       {
+//         data: JSON.stringify(args),
+//       },
+//       options
+//     );
+//   };
+// }
+
 export function typedFetcher<TActionFunc, TArgs = Record<string, never>>() {
   return {
     useFetcher: useFetcher<TActionFunc>,
     getArgsFromRequest: getArgsFromRequest<TArgs>,
     createArgs: createFormData<TArgs>,
+    submit: createSubmit<TActionFunc, TArgs>(),
   };
 }
 
@@ -239,4 +246,9 @@ export async function withDurationLog<T>(
   // eslint-disable-next-line no-console
   console.log(`[time] ${name}: ${end - start}ms`);
   return result;
+}
+
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+export function noopFunction(..._args: any): any {
+  // noop
 }

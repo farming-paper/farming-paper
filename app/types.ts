@@ -32,3 +32,8 @@ export interface ITagWithCount extends ITag {
 }
 
 export type DatabaseTag = Database["public"]["Tables"]["tags"]["Row"];
+
+export type FilterTag = {
+  name: string;
+  publicId: string;
+};

@@ -20,6 +20,7 @@ declare global {
 }
 
 let profileCache: LRUCache<string, ProfileFromDB>;
+
 const cacheOptions = {
   max: 500,
 };
@@ -93,4 +94,9 @@ export async function getSessionWithProfile({
     profile,
     supabaseClient,
   };
+}
+
+// TODO: 캐시 전략을 새로 짜기.
+export function deleteProfileCache({ email }: { email: string }) {
+  profileCache.delete(email);
 }

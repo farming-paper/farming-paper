@@ -53,7 +53,7 @@ export default function Login() {
         message.success("성공적으로 로그아웃되었습니다.");
         break;
       case "deleted_account":
-        message.success("성공적으로 계정이 삭제되었습니다.");
+        message.success("계정이 성공적으로 삭제되었습니다.");
         break;
       default:
         break;
@@ -63,8 +63,9 @@ export default function Login() {
   }, [urlSearchParams]);
 
   const handleGoogleLogin = async () => {
-    const redirectTo = new URL(window.location.href);
-    redirectTo.pathname = "/join";
+    const redirectTo = new URL(window.location.href.split("?")[0] as string);
+    redirectTo.pathname = "/auth/callback";
+
     const { error } = await props.supabase.auth.signInWithOAuth({
       provider: "google",
       options: {
