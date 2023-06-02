@@ -3,5 +3,6 @@
   "extends": ["config:base", "group:all", "schedule:earlyMondays"],
   "rangeStrategy": "bump",
   "prHourlyLimit": 0,
-  "prConcurrentLimit": 0
+  "prConcurrentLimit": 0,
+  "updateNotScheduled": false
 }
