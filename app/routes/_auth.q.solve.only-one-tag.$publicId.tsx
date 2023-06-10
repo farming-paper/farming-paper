@@ -1,4 +1,4 @@
-import { Link, useLoaderData } from "@remix-run/react";
+import { useLoaderData, useNavigate } from "@remix-run/react";
 import type { LoaderArgs } from "@remix-run/server-runtime";
 import { json } from "@remix-run/server-runtime";
 import type { InputRef } from "antd";
@@ -265,6 +265,8 @@ export default function Page() {
     }
   }, [animationState]);
 
+  const navigate = useNavigate();
+
   return (
     <div className="overflow-hidden">
       <header>
@@ -295,18 +297,19 @@ export default function Page() {
               </div>
               <div className="p-4 ">
                 <div className="flex flex-col gap-3">
-                  <Button color="gray" onClick={refreshQuestion}>
-                    패스
-                  </Button>
-                  <Button color="gray" onClick={() => setShowAnswerModal(true)}>
+                  <Button onClick={refreshQuestion}>패스</Button>
+                  <Button onClick={() => setShowAnswerModal(true)}>
                     정답 보기
                   </Button>
-                  <Link
-                    className="flex flex-col"
-                    to={`/q/edit/${display.question.id}`}
+                  <Button
+                    href={`/q/edit/${display.question.id}`}
+                    onClick={(e) => {
+                      e.preventDefault();
+                      navigate(`/q/edit/${display.question.id}`);
+                    }}
                   >
-                    <Button>문제 수정</Button>
-                  </Link>
+                    문제 수정
+                  </Button>
                   <Modal
                     open={showAnswerModal}
                     closable={false}
@@ -368,7 +371,8 @@ export default function Page() {
               <div className="flex flex-col gap-3">
                 <Button
                   ref={nextButtonRef}
-                  color="gray"
+                  type="primary"
+                  className="mb-7"
                   onClick={handleNextClick}
                   disabled={animationState !== "stop_result"}
                 >
@@ -376,7 +380,6 @@ export default function Page() {
                 </Button>
                 {!display.isSuccess && (
                   <Button
-                    color="gray"
                     onClick={handleAgainClick}
                     disabled={animationState !== "stop_result"}
                   >
@@ -385,7 +388,6 @@ export default function Page() {
                 )}
                 {display.isSuccess ? (
                   <Button
-                    color="gray"
                     onClick={handleRegardAsFailure}
                     disabled={animationState !== "stop_result"}
                   >
@@ -393,7 +395,6 @@ export default function Page() {
                   </Button>
                 ) : (
                   <Button
-                    color="gray"
                     onClick={handleRegardAsSuccess}
                     disabled={animationState !== "stop_result"}
                   >
@@ -401,14 +402,15 @@ export default function Page() {
                   </Button>
                 )}
 
-                <Link
-                  className="flex flex-col"
-                  to={`/q/edit/${display.prevQuestion.id}`}
+                <Button
+                  href={`/q/edit/${display.prevQuestion.id}`}
+                  onClick={(e) => {
+                    e.preventDefault();
+                    navigate(`/q/edit/${display.prevQuestion.id}`);
+                  }}
                 >
-                  <Button disabled={animationState !== "stop_result"}>
-                    문제 수정
-                  </Button>
-                </Link>
+                  문제 수정
+                </Button>
               </div>
             </motion.div>
           )}
