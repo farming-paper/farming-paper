@@ -351,10 +351,11 @@ export default function Page() {
                   <Button onClick={passQuestion}>
                     패스 (<code>s</code>)
                   </Button>
+
                   <Button onClick={() => setShowAnswerModal(true)}>
                     정답 보기
                   </Button>
-                  ㄴ
+
                   <Button
                     href={`/q/edit/${display.question.id}`}
                     onClick={(e) => {
