@@ -75,27 +75,26 @@ type QuestionSolveDisplay =
       actual: string;
       given: string;
       isSuccess: boolean;
-      prevQuestion: Question;
-      prevIndex: number;
+      question: Question;
+      index: number;
+    }
+  | {
+      type: "passing";
+      question: Question;
+      index: number;
+      actual: string;
     };
 
 export default function Page() {
   const { questions, name } = useLoaderData<typeof loader>();
   const generator = useConst(() => createQuestionGenerator(questions));
   const [i, setI] = useState(1);
-  const initialized = useRef(false);
   const [animationState, setAnimationState] = useState<
     "stop_question" | "to_question" | "stop_result" | "to_result"
   >("stop_question");
   const [display, setDisplay] = useState<QuestionSolveDisplay>({
     type: "question",
-    index: -1,
-    question: {
-      id: "initialized",
-      type: "short",
-      correct: "",
-      message: "",
-    },
+    ...generator.gen(),
   });
 
   const [showAnswerModal, setShowAnswerModal] = useState(false);
@@ -106,23 +105,14 @@ export default function Page() {
     | RefObject<HTMLTextAreaElement>;
   const antdInputRef = useRef<InputRef>(null);
 
-  useEffect(() => {
-    if (initialized.current) {
-      return;
-    }
-
-    setDisplay({
-      type: "question",
-      ...generator.gen(),
-    });
-  }, [generator]);
-
   const refreshQuestion = useCallback(() => {
     setDisplay({
-      type: "question",
-      ...generator.gen(),
+      type: "passing",
+      question: display.question,
+      index: display.index,
+      actual: getStringAnswer(display.question),
     });
-  }, [generator]);
+  }, [display.index, display.question]);
 
   const handleSuccessQuestion = useCallback(
     ({ given }: ISuccessArgs) => {
@@ -138,8 +128,8 @@ export default function Page() {
         actual: getStringAnswer(question),
         given,
         isSuccess: true,
-        prevQuestion: question,
-        prevIndex: index,
+        question,
+        index,
       });
     },
     [display, generator]
@@ -159,25 +149,21 @@ export default function Page() {
         actual: getStringAnswer(question),
         given,
         isSuccess: false,
-        prevQuestion: question,
-        prevIndex: index,
+        question,
+        index,
       });
     },
     [display, generator]
   );
 
   const handleNextClick = useCallback(() => {
-    if (display.type !== "result") {
-      return;
-    }
-
     setDisplay({
       type: "question",
       ...generator.gen(),
     });
 
     setI((prev) => prev + 1);
-  }, [display, generator]);
+  }, [generator]);
 
   const handleAgainClick = useCallback(() => {
     if (display.type !== "result") {
@@ -186,40 +172,38 @@ export default function Page() {
 
     setDisplay({
       type: "question",
-      question: display.prevQuestion,
-      index: display.prevIndex,
+      question: display.question,
+      index: display.index,
     });
 
     setI((prev) => prev + 1);
   }, [display]);
 
-  const handleRegardAsSuccess = useCallback(() => {
-    if (display.type !== "result") {
-      return;
-    }
+  const handleRegardAsSuccess = useCallback(
+    (passing?: boolean) => {
+      generator.updateWeight(display.index, passing ? 0.1 : 0.01);
+      setDisplay({
+        type: "question",
+        ...generator.gen(),
+      });
 
-    generator.updateWeight(display.prevIndex, 0.01);
-    setDisplay({
-      type: "question",
-      ...generator.gen(),
-    });
+      setI((prev) => prev + 1);
+    },
+    [display, generator]
+  );
 
-    setI((prev) => prev + 1);
-  }, [display, generator]);
+  const handleRegardAsFailure = useCallback(
+    (passing?: boolean) => {
+      generator.updateWeight(display.index, passing ? 10 : 100);
+      setDisplay({
+        type: "question",
+        ...generator.gen(),
+      });
 
-  const handleRegardAsFailure = useCallback(() => {
-    if (display.type !== "result") {
-      return;
-    }
-
-    generator.updateWeight(display.prevIndex, 100);
-    setDisplay({
-      type: "question",
-      ...generator.gen(),
-    });
-
-    setI((prev) => prev + 1);
-  }, [display, generator]);
+      setI((prev) => prev + 1);
+    },
+    [display, generator]
+  );
 
   // const setIsAnimatingFalse = useCallback(() => {
   //   setAnimationState((animationState) => {
@@ -336,7 +320,7 @@ export default function Page() {
                 </div>
               </div>
             </motion.div>
-          ) : (
+          ) : display.type === "result" ? (
             <motion.div
               key={`result-${i}`}
               {...motionProps}
@@ -351,7 +335,7 @@ export default function Page() {
                 {display.isSuccess ? "정답" : "오답"}
               </h2>
 
-              <Render>{display.prevQuestion.message}</Render>
+              <Render>{display.question.message}</Render>
               <div>
                 {display.isSuccess ? (
                   <p className="text-green-500">{display.given}</p>
@@ -388,32 +372,87 @@ export default function Page() {
                 )}
                 {display.isSuccess ? (
                   <Button
-                    onClick={handleRegardAsFailure}
+                    onClick={() => handleRegardAsFailure()}
                     disabled={animationState !== "stop_result"}
                   >
-                    오답으로 처리
+                    <span className="text-red-600">오답으로 처리</span>
                   </Button>
                 ) : (
                   <Button
-                    onClick={handleRegardAsSuccess}
+                    onClick={() => handleRegardAsSuccess()}
                     disabled={animationState !== "stop_result"}
                   >
-                    정답으로 처리
+                    <span className="text-green-600">정답으로 처리</span>
                   </Button>
                 )}
 
                 <Button
-                  href={`/q/edit/${display.prevQuestion.id}`}
+                  href={`/q/edit/${display.question.id}`}
                   onClick={(e) => {
                     e.preventDefault();
-                    navigate(`/q/edit/${display.prevQuestion.id}`);
+                    navigate(`/q/edit/${display.question.id}`);
                   }}
                 >
                   문제 수정
                 </Button>
               </div>
             </motion.div>
-          )}
+          ) : display.type === "passing" ? (
+            <motion.div
+              key={`result-${i}`}
+              {...motionProps}
+              className="relative left-0 right-0 flex flex-col gap-3 p-4 mt-6"
+            >
+              <h2 className="mb-1 text-2xl font-medium">패스</h2>
+
+              <Render>{display.question.message}</Render>
+
+              <p>
+                <span>정답: </span>
+                <span>{display.actual}</span>
+              </p>
+
+              <div className="flex flex-col gap-3">
+                <Button
+                  ref={nextButtonRef}
+                  type="primary"
+                  className="mb-3"
+                  onClick={handleNextClick}
+                  disabled={animationState !== "stop_result"}
+                >
+                  다음
+                </Button>
+
+                <div className="flex gap-3">
+                  <Button
+                    onClick={() => handleRegardAsSuccess(true)}
+                    disabled={animationState !== "stop_result"}
+                    className="flex-1 text-green-600"
+                  >
+                    <span className="text-green-600">정답으로 처리</span>
+                  </Button>
+
+                  <Button
+                    onClick={() => handleRegardAsFailure(true)}
+                    className="flex-1"
+                    disabled={animationState !== "stop_result"}
+                  >
+                    <span className="text-red-600">오답으로 처리</span>
+                  </Button>
+                </div>
+
+                <Button
+                  href={`/q/edit/${display.question.id}`}
+                  onClick={(e) => {
+                    e.preventDefault();
+                    navigate(`/q/edit/${display.question.id}`);
+                  }}
+                >
+                  문제 수정
+                </Button>
+              </div>
+            </motion.div>
+          ) : null}
         </AnimatePresence>
       </main>
     </div>
