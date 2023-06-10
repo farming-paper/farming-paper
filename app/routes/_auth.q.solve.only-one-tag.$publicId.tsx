@@ -15,7 +15,7 @@ import Render, { links as questionRenderLinks } from "~/question/Render";
 import type { ISuccessArgs, Question } from "~/question/types";
 import { getStringAnswer } from "~/question/utils";
 import { getServerSideSupabaseClient } from "~/supabase/client";
-import { useConst } from "~/util";
+import { isUserTypingText, useConst } from "~/util";
 
 export function links() {
   return [...questionRenderLinks()];
@@ -105,7 +105,7 @@ export default function Page() {
     | RefObject<HTMLTextAreaElement>;
   const antdInputRef = useRef<InputRef>(null);
 
-  const refreshQuestion = useCallback(() => {
+  const passQuestion = useCallback(() => {
     setDisplay({
       type: "passing",
       question: display.question,
@@ -205,6 +205,54 @@ export default function Page() {
     [display, generator]
   );
 
+  useEffect(() => {
+    const keydown = (e: KeyboardEvent) => {
+      if (
+        !isUserTypingText() &&
+        e.code === "KeyS" &&
+        !e.shiftKey &&
+        !e.ctrlKey &&
+        !e.metaKey &&
+        !e.altKey
+      ) {
+        if (display.type === "question") {
+          passQuestion();
+        } else if (display.type === "passing") {
+          handleRegardAsSuccess(true);
+        }
+      }
+    };
+
+    document.addEventListener("keydown", keydown);
+
+    return () => {
+      document.removeEventListener("keydown", keydown);
+    };
+  }, [display.type, handleRegardAsSuccess, passQuestion]);
+
+  useEffect(() => {
+    const keydown = (e: KeyboardEvent) => {
+      if (
+        !isUserTypingText() &&
+        e.code === "KeyF" &&
+        !e.shiftKey &&
+        !e.ctrlKey &&
+        !e.metaKey &&
+        !e.altKey
+      ) {
+        if (display.type === "passing") {
+          handleRegardAsFailure(true);
+        }
+      }
+    };
+
+    document.addEventListener("keydown", keydown);
+
+    return () => {
+      document.removeEventListener("keydown", keydown);
+    };
+  }, [display.type, handleRegardAsFailure, passQuestion]);
+
   // const setIsAnimatingFalse = useCallback(() => {
   //   setAnimationState((animationState) => {
   //     if (animationState === "to_question") {
@@ -281,10 +329,13 @@ export default function Page() {
               </div>
               <div className="p-4 ">
                 <div className="flex flex-col gap-3">
-                  <Button onClick={refreshQuestion}>패스</Button>
+                  <Button onClick={passQuestion}>
+                    패스 (<code>s</code>)
+                  </Button>
                   <Button onClick={() => setShowAnswerModal(true)}>
                     정답 보기
                   </Button>
+                  ㄴ
                   <Button
                     href={`/q/edit/${display.question.id}`}
                     onClick={(e) => {
@@ -429,7 +480,9 @@ export default function Page() {
                     disabled={animationState !== "stop_result"}
                     className="flex-1 text-green-600"
                   >
-                    <span className="text-green-600">정답으로 처리</span>
+                    <span className="text-green-600">
+                      정답으로 처리 (<code>s</code>)
+                    </span>
                   </Button>
 
                   <Button
@@ -437,7 +490,9 @@ export default function Page() {
                     className="flex-1"
                     disabled={animationState !== "stop_result"}
                   >
-                    <span className="text-red-600">오답으로 처리</span>
+                    <span className="text-red-600">
+                      오답으로 처리 (<code>f</code>)
+                    </span>
                   </Button>
                 </div>
 

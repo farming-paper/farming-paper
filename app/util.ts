@@ -252,3 +252,17 @@ export async function withDurationLog<T>(
 export function noopFunction(..._args: any): any {
   // noop
 }
+
+export function isUserTypingText() {
+  const activeElement = document.activeElement;
+  if (
+    activeElement?.tagName === "INPUT" ||
+    activeElement?.tagName === "TEXTAREA"
+  ) {
+    return true;
+  }
+  if (activeElement?.attributes.getNamedItem("contenteditable")) {
+    return true;
+  }
+  return false;
+}
