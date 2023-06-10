@@ -14,7 +14,7 @@
     "dev:css": "tailwindcss -w -i ./styles/app.css -o app/styles/app.css",
     "lint": "eslint .",
     "type-check": "tsc --noEmit",
-    "gen:sb": "cat app/supabase/typegen-prefix.txt > app/supabase/generated/supabase-types.ts && supabase gen types typescript --local >> app/supabase/generated/supabase-types.ts && prettier --write app/supabase/generated/supabase-types.ts",
+    "gen:sb": "supabase status && cat app/supabase/typegen-prefix.txt > app/supabase/generated/supabase-types.ts && supabase gen types typescript --local >> app/supabase/generated/supabase-types.ts && prettier --write app/supabase/generated/supabase-types.ts",
     "gen": "concurrently --names js -c bgBlue.bold 'pnpm gen:sb'",
     "sb-diff": "supabase db diff --use-migra -f",
     "sb-push": "supabase db push"
