@@ -89,13 +89,32 @@ export default function Page() {
   const { questions, name } = useLoaderData<typeof loader>();
   const generator = useConst(() => createQuestionGenerator(questions));
   const [i, setI] = useState(1);
+  /** state 안에 바로 넣는 게 아니라 initialized 변수를 이용하는 이유는, hydration 과정에서 차이가 나기 때문에 gen 시점을 무조건 클라이언트 쪽으로 하기 위함. */
+  const initialized = useRef(false);
   const [animationState, setAnimationState] = useState<
     "stop_question" | "to_question" | "stop_result" | "to_result"
   >("stop_question");
   const [display, setDisplay] = useState<QuestionSolveDisplay>({
     type: "question",
-    ...generator.gen(),
+    index: -1,
+    question: {
+      type: "short_order",
+      corrects: [],
+      id: "",
+      message: "",
+    },
   });
+
+  useEffect(() => {
+    if (initialized.current) {
+      return;
+    }
+    initialized.current = true;
+    setDisplay({
+      type: "question",
+      ...generator.gen(),
+    });
+  }, [generator]);
 
   const [showAnswerModal, setShowAnswerModal] = useState(false);
 
