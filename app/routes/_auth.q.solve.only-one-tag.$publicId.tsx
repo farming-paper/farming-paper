@@ -1,18 +1,11 @@
-import { useLoaderData } from "@remix-run/react";
+import { Link, useLoaderData } from "@remix-run/react";
 import type { LoaderArgs } from "@remix-run/server-runtime";
 import { json } from "@remix-run/server-runtime";
 import type { InputRef } from "antd";
 import { Button, Modal } from "antd";
 import { AnimatePresence, motion } from "framer-motion";
-import { nanoid } from "nanoid";
 import type { RefObject } from "react";
-import {
-  useCallback,
-  useEffect,
-  useLayoutEffect,
-  useRef,
-  useState,
-} from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
 import { twMerge } from "tailwind-merge";
 import { getSessionWithProfile } from "~/auth/get-session";
 import { createQuestionGenerator } from "~/question-generator";
@@ -60,7 +53,8 @@ export async function loader({ request, params }: LoaderArgs) {
   }
 
   const questions: Question[] = questionsRes.data.map((q) => {
-    return createQuestionFromJson(q.content);
+    // TODO: fix duplicated question ids. they are in db records and content itself.
+    return { ...createQuestionFromJson(q.content), id: q.public_id };
   });
 
   if (questions.length === 0) {
@@ -97,7 +91,7 @@ export default function Page() {
     type: "question",
     index: -1,
     question: {
-      id: nanoid(),
+      id: "initialized",
       type: "short",
       correct: "",
       message: "",
@@ -259,7 +253,7 @@ export default function Page() {
     }
   }, [display]);
 
-  useLayoutEffect(() => {
+  useEffect(() => {
     if (animationState === "to_question" || animationState === "to_result") {
       return;
     }
@@ -307,6 +301,12 @@ export default function Page() {
                   <Button color="gray" onClick={() => setShowAnswerModal(true)}>
                     정답 보기
                   </Button>
+                  <Link
+                    className="flex flex-col"
+                    to={`/q/edit/${display.question.id}`}
+                  >
+                    <Button>문제 수정</Button>
+                  </Link>
                   <Modal
                     open={showAnswerModal}
                     closable={false}
@@ -400,6 +400,15 @@ export default function Page() {
                     정답으로 처리
                   </Button>
                 )}
+
+                <Link
+                  className="flex flex-col"
+                  to={`/q/edit/${display.prevQuestion.id}`}
+                >
+                  <Button disabled={animationState !== "stop_result"}>
+                    문제 수정
+                  </Button>
+                </Link>
               </div>
             </motion.div>
           )}
