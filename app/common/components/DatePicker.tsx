@@ -1,4 +1,4 @@
-import type { Calendar } from "@rehookify/datepicker";
+import type { DPCalendar } from "@rehookify/datepicker";
 import { useDatePicker } from "@rehookify/datepicker";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import { useCallback, useMemo } from "react";
@@ -69,7 +69,7 @@ const DatePicker: React.FC<{
     },
   });
 
-  const { month, year, days } = calendars[0] as Calendar;
+  const { month, year, days } = calendars[0] as DPCalendar;
 
   return (
     <section>

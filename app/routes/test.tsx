@@ -49,7 +49,7 @@ export async function loader({ request: _r }: LoaderArgs) {
     publicId: questionResult.data.public_id,
     updatedAt: questionResult.data.updated_at,
     tags: tags.data.map((t) => {
-      const tag = t.tag as DatabaseTag;
+      const tag = t.tag as unknown as DatabaseTag;
       return removeNullDeep({
         id: tag.id,
         name: tag.name || "",

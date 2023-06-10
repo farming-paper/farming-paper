@@ -150,7 +150,7 @@ export async function action({ request }: ActionArgs) {
               type: "short_order",
               corrects,
               message,
-            }) as Json,
+            }) as unknown as Json,
           };
         })
       )

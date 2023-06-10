@@ -7,7 +7,6 @@ export interface IBaseQuestion {
   message: string;
   weight?: number;
   ignoreWhitespace?: boolean;
-  [key: string]: unknown;
 }
 
 export interface IShortQuestion extends IBaseQuestion {

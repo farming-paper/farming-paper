@@ -122,7 +122,7 @@ export const loader = async ({ request }: LoaderArgs) => {
               type: "short_order",
               corrects,
               message,
-            }) as Json,
+            }) as unknown as Json,
           };
         })
       )
