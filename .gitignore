@@ -136,9 +136,7 @@ dist
 
 /build/
 /public/build
-/api/index.js
-/api/index.js.map
-/api/_assets
+/api
 
 /app/styles/app.css
 

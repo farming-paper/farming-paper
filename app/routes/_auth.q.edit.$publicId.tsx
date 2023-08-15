@@ -1,15 +1,12 @@
 import { useFetcher, useLoaderData } from "@remix-run/react";
-import type {
-  ActionArgs,
-  LoaderArgs,
-  MetaFunction,
-} from "@remix-run/server-runtime";
+import type { ActionArgs, LoaderArgs } from "@remix-run/server-runtime";
 import { json } from "@remix-run/server-runtime";
 import { withZod } from "@remix-validated-form/with-zod";
 import { Button, message } from "antd";
 import { useEffect, useRef, useState } from "react";
 
 import { PlusOutlined } from "@ant-design/icons";
+import { V2_MetaFunction } from "@remix-run/node";
 import { Input, Select } from "antd";
 import { Trash2 } from "lucide-react";
 import type { PartialDeep } from "type-fest";
@@ -26,10 +23,10 @@ import { rpc } from "~/supabase/rpc";
 import type { DatabaseTag, ITagWithCount } from "~/types";
 import { removeNullDeep } from "~/util";
 
-export const meta: MetaFunction = () => {
-  return {
+export const meta: V2_MetaFunction = () => {
+  return [{
     title: "문제 편집 | Farming Paper",
-  };
+  }];
 };
 
 const questionTypeOptions = [

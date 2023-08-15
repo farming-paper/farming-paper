@@ -8,5 +8,13 @@
     "source.organizeImports": true
   },
   "eslint.lintTask.enable": true,
-  "eslint.lintTask.options": "./.eslintrc.js"
+  "eslint.lintTask.options": "./.eslintrc.js",
+  "search.exclude": {
+    "**/node_modules": true,
+    "**/bower_components": true,
+    "**/*.code-search": true,
+    ".cache": true,
+    "api/**/*": true,
+    "pnpm-lock.yaml": true
+  }
 }

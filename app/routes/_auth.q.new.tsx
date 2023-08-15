@@ -1,5 +1,5 @@
-import { useLoaderData, useNavigate } from "@remix-run/react";
-import type { LoaderArgs, MetaFunction } from "@remix-run/server-runtime";
+import { V2_MetaFunction, useLoaderData, useNavigate } from "@remix-run/react";
+import type { LoaderArgs } from "@remix-run/server-runtime";
 import { json } from "@remix-run/server-runtime";
 import { Button, message } from "antd";
 import { ChevronRight } from "lucide-react";
@@ -19,10 +19,12 @@ import {
   useCreateQuestionFetcher,
 } from "./_auth.q.create";
 
-export const meta: MetaFunction = () => {
-  return {
-    title: "문제 생성 | Farming Paper",
-  };
+export const meta: V2_MetaFunction = () => {
+  return [
+    {
+      title: "문제 생성 | Farming Paper",
+    },
+  ];
 };
 
 export async function loader({ request }: LoaderArgs) {
