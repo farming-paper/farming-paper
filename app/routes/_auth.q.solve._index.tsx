@@ -2,41 +2,49 @@ import { QuestionCircleFilled } from "@ant-design/icons";
 import { Link, useLoaderData } from "@remix-run/react";
 import type { LoaderArgs } from "@remix-run/server-runtime";
 import { json } from "@remix-run/server-runtime";
-import type { PostgrestSingleResponse } from "@supabase/supabase-js";
 import { Tooltip } from "antd";
 import { getSessionWithProfile } from "~/auth/get-session";
 import NumberBall from "~/common/components/NumberBall";
-import { getServerSideSupabaseClient } from "~/supabase/client";
-import type { Database } from "~/supabase/generated/supabase-types";
+import prisma from "~/prisma-client.server";
 import type { ITagWithCount } from "~/types";
+import { bigintToNumber, removeNullDeep } from "~/util";
 
 export async function loader({ request }: LoaderArgs) {
   const response = new Response();
   const { profile } = await getSessionWithProfile({ request, response });
 
-  const db = getServerSideSupabaseClient();
+  const tags = await prisma.tags.findMany({
+    where: {
+      creator: {
+        equals: profile.id,
+      },
+    },
+    select: {
+      id: true,
+      name: true,
+      public_id: true,
+      desc: true,
+      _count: {
+        select: {
+          tags_questions_relation: true,
+        },
+      },
+    },
+  });
 
-  // TODO: function 선언 시 리턴 타입 설정에서 nullable 을 설정할 수 없음. desc 같은 경우 Null 이 올 수도 있지만 타입은 그렇지 않음.
-  // TODO: 타입 수정이 필요함
-  const tagsRes = (await db.rpc("get_solving_tags_by_creator_id", {
-    p_creator: profile.id,
-  })) as PostgrestSingleResponse<
-    Database["public"]["Functions"]["get_solving_tags_by_creator_id"]["Returns"]
-  >;
+  console.log("tags", tags);
 
-  if (tagsRes.error) {
-    throw new Response(tagsRes.error.message, {
-      status: tagsRes.status,
-    });
-  }
+  const tagsForSolve: ITagWithCount[] = tags.map((t) =>
+    removeNullDeep({
+      count: t._count.tags_questions_relation,
+      id: bigintToNumber(t.id),
+      name: t.name || "",
+      publicId: t.public_id,
+      desc: t.desc,
+    })
+  );
 
-  const tagsForSolve: ITagWithCount[] = tagsRes.data.map((t) => ({
-    count: t.count,
-    id: t.id,
-    name: t.name,
-    publicId: t.public_id,
-    desc: t.desc,
-  }));
+  console.log("tagsForSolve");
 
   return json({ tagsForSolve });
 }

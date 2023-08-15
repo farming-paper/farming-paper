@@ -88,14 +88,15 @@ export function useConst<T>(initialValue: T | (() => T)): T {
   return ref.current.value;
 }
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export type NullRemoved<T> = T extends null
   ? undefined
   : T extends Array<infer U>
-  ? Array<U>
+  ? Array<NullRemovedArrayItem<U>>
   : T extends object
   ? { [P in keyof T]: NullRemoved<T[P]> }
   : T;
+
+export type NullRemovedArrayItem<T> = T extends null ? null : NullRemoved<T>;
 
 // TODO: 테스트 추가
 /**
@@ -265,4 +266,8 @@ export function isUserTypingText() {
     return true;
   }
   return false;
+}
+
+export function bigintToNumber(n: bigint) {
+  return Number(n.toString());
 }
