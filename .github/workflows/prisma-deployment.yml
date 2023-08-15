@@ -6,6 +6,8 @@ on:
 
 jobs:
   prisma-deploy:
+    runs-on: ubuntu-22.04
+
     steps:
       - name: Checkout repo
         uses: actions/checkout@v3
