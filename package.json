@@ -8,7 +8,6 @@
     "test": "vitest",
     "test:ci": "vitest run",
     "main": "vite-node ./app/main.ts",
-    "install": "pnpm install && pnpm run gen:prisma",
     "build": "remix build --sourcemap",
     "format": "prettier --write .",
     "dev": "remix dev",
