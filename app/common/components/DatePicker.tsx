@@ -58,7 +58,7 @@ const DatePicker: React.FC<{
 
   const {
     data: { weekDays, calendars },
-    propGetters: { dayButton, previousMonthButton, nextMonthButton },
+    propGetters: { dayButton, addOffset, subtractOffset },
   } = useDatePicker({
     selectedDates,
     onDatesChange,
@@ -76,7 +76,7 @@ const DatePicker: React.FC<{
       <header className="m-3">
         <div className="flex items-center">
           <button
-            {...previousMonthButton()}
+            {...subtractOffset({ months: 1 })}
             className="p-3 transition hover:bg-gray-100"
           >
             <ChevronLeft className="w-5 h-5" />
@@ -85,7 +85,7 @@ const DatePicker: React.FC<{
             {year} {month}
           </p>
           <button
-            {...nextMonthButton()}
+            {...addOffset({ months: 1 })}
             className="p-3 transition hover:bg-gray-100"
           >
             <ChevronRight className="w-5 h-5" />
