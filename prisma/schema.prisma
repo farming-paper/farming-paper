@@ -1,0 +1,90 @@
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+/// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
+model cached {
+  id         BigInt   @unique @default(autoincrement())
+  created_at DateTime @default(now()) @db.Timestamptz(6)
+  updated_at DateTime @default(now()) @db.Timestamptz(6)
+  code       String   @unique @default("")
+  content    Json     @default("{}")
+  expires_in DateTime @db.Timestamptz(6)
+
+  @@id([id, code])
+}
+
+/// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
+model profiles {
+  id         BigInt      @unique(map: "profiles_id_key1") @default(autoincrement())
+  created_at DateTime    @default(now()) @db.Timestamptz(6)
+  updated_at DateTime    @default(now()) @db.Timestamptz(6)
+  deleted_at DateTime?   @db.Timestamptz(6)
+  name       String?
+  photo      String?
+  email      String
+  desc       String?
+  public_id  String
+  questions  questions[]
+  tags       tags[]
+
+  @@id([id, public_id])
+}
+
+/// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
+model questions {
+  id                      BigInt                    @unique @default(autoincrement())
+  created_at              DateTime                  @default(now()) @db.Timestamptz(6)
+  updated_at              DateTime                  @default(now()) @db.Timestamptz(6)
+  deleted_at              DateTime?                 @db.Timestamptz(6)
+  public_id               String                    @unique
+  content                 Json                      @default("{\"type\": \"init\"}")
+  creator                 BigInt
+  profiles                profiles                  @relation(fields: [creator], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  tags_questions_relation tags_questions_relation[]
+
+  @@id([id, public_id])
+  @@index([created_at], map: "question_creation_time_date_idx")
+}
+
+/// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
+model tags {
+  id                      BigInt                    @unique @default(autoincrement())
+  created_at              DateTime                  @default(now()) @db.Timestamptz(6)
+  updated_at              DateTime                  @default(now()) @db.Timestamptz(6)
+  deleted_at              DateTime?                 @db.Timestamptz(6)
+  public_id               String                    @unique
+  creator                 BigInt
+  name                    String?
+  desc                    String?
+  profiles                profiles                  @relation(fields: [creator], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  tags_questions_relation tags_questions_relation[]
+
+  @@id([id, public_id])
+}
+
+/// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
+model tags_questions_relation {
+  id         BigInt    @unique @default(autoincrement())
+  created_at DateTime  @default(now()) @db.Timestamptz(6)
+  updated_at DateTime  @default(now()) @db.Timestamptz(6)
+  deleted_at DateTime? @db.Timestamptz(6)
+  tag        BigInt
+  q          BigInt
+  questions  questions @relation(fields: [q], references: [id], onDelete: NoAction, onUpdate: NoAction)
+  tags       tags      @relation(fields: [tag], references: [id], onDelete: NoAction, onUpdate: NoAction)
+
+  @@id([tag, q])
+}
+
+/// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
+model template {
+  id         BigInt    @unique @default(autoincrement())
+  created_at DateTime  @default(now()) @db.Timestamptz(6)
+  updated_at DateTime  @default(now()) @db.Timestamptz(6)
+  deleted_at DateTime? @db.Timestamptz(6)
+  public_id  String    @unique
+
+  @@id([id, public_id])
+}
