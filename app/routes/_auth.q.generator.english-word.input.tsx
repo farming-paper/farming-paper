@@ -7,9 +7,9 @@ import { Suspense, useCallback, useEffect, useMemo, useState } from "react";
 import { getSessionWithProfile } from "~/auth/get-session";
 import Label from "~/common/components/Label";
 import useCmdEnter from "~/common/hooks/use-cmd-enter";
+import Render from "~/question/Render";
 import { createShortOrderQuestion } from "~/question/create";
 import Tags from "~/question/edit-components/Tags";
-import Render from "~/question/Render";
 import { rpc } from "~/supabase/rpc";
 import type { ITag, ITagWithCount } from "~/types";
 import { removeNullDeep } from "~/util";
@@ -112,7 +112,7 @@ export default function Page() {
       createCreateQuestionArgs({
         question: createShortOrderQuestion({
           message: generated.marked + "\n\n" + generated.translated,
-          corrects: generated.prevWords,
+          corrects: generated.extractedWords,
         }),
 
         tags,
@@ -201,7 +201,7 @@ export default function Page() {
             <div className="py-4 ">
               <dt className="font-medium text-gray-400 ">정답</dt>
               <dd className="mt-1 font-bold">
-                {generated.prevWords.join(", ")}
+                {generated.extractedWords.join(", ")}
               </dd>
             </div>
           </motion.div>

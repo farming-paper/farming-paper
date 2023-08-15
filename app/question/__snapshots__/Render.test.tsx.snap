@@ -1,4 +1,4 @@
-// Vitest Snapshot v1
+// Vitest Snapshot v1, https://vitest.dev/guide/snapshot.html
 
 exports[`Simple Text 1`] = `
 <div>
@@ -35,23 +35,17 @@ exports[`마크다운 렌더링 > 제목이 잘 표시되어야 함 1`] = `
   <div
     class="leading-normal"
   >
-    <h1
-      id="heading-1"
-    >
+    <h1>
       heading 1
     </h1>
     
 
-    <h2
-      id="heading-2"
-    >
+    <h2>
       heading 2
     </h2>
     
 
-    <h3
-      id="heading-3"
-    >
+    <h3>
       heading 3
     </h3>
     

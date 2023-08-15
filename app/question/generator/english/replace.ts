@@ -32,28 +32,30 @@ export default function replace({
 
   const document = nlp(sourceEngSentence);
 
-  const prevWords: string[] = [];
+  const extractedWords: string[] = [];
 
   words.forEach((word) =>
     document.replace(word, (match: View) => {
-      const prevWord = match.text({
+      let extractedWord = match.text({
         keepPunct: false, // '?!' → ?
         acronyms: false, // F.B.I. → FBI
         abbreviations: false, // Mrs. → Mrs
       });
 
-      if (prevWord.includes("'")) {
-        prevWords.push(prevWord.split("'")[0] as string); // what's → what
-      } else {
-        prevWords.push(prevWord);
+      if (extractedWord.includes("'")) {
+        extractedWord = extractedWord.split("'")[0] as string;
       }
+
+      extractedWord = extractedWord.replace(/[^a-zA-Z0-9]/g, "");
+
+      extractedWords.push(extractedWord);
 
       return replacement;
     })
   );
 
   return {
-    prevWords,
+    extractedWords,
     replaced: document.text(),
   };
 }

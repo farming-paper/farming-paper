@@ -140,10 +140,10 @@ export async function generateEnglishQuestion(word: string) {
 
   const translated = await getKorTranslated(sentence);
 
-  const { prevWords, replaced } = replace({
+  const { extractedWords, replaced } = replace({
     sourceEngSentence: sentence,
     word,
   });
 
-  return { sentence, translated, prevWords, marked: replaced };
+  return { sentence, translated, extractedWords, marked: replaced };
 }
