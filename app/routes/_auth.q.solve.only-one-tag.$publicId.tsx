@@ -1,5 +1,5 @@
 import { useLoaderData, useNavigate } from "@remix-run/react";
-import type { LoaderArgs } from "@remix-run/server-runtime";
+import type { LoaderFunctionArgs } from "@remix-run/server-runtime";
 import { json } from "@remix-run/server-runtime";
 import type { InputRef } from "antd";
 import { Button, Modal } from "antd";
@@ -32,7 +32,7 @@ const motionProps = {
   },
 };
 
-export async function loader({ request, params }: LoaderArgs) {
+export async function loader({ request, params }: LoaderFunctionArgs) {
   const response = new Response();
   const { profile } = await getSessionWithProfile({ request, response });
 

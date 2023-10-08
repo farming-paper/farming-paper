@@ -3,20 +3,14 @@ import {
   FileAddOutlined,
   PlusOutlined,
 } from "@ant-design/icons";
-import {
-  Await,
-  Link,
-  useLoaderData,
-  useNavigate,
-  useSearchParams,
-} from "@remix-run/react";
-import type { LoaderArgs } from "@remix-run/server-runtime";
+import { Await, Link, useLoaderData, useNavigate } from "@remix-run/react";
+import type { LoaderFunctionArgs } from "@remix-run/server-runtime";
 import { defer } from "@remix-run/server-runtime";
 import { Button, Pagination, Tooltip } from "antd";
 import dayjs from "dayjs";
 import { AnimatePresence, motion } from "framer-motion";
 import { ChevronRightIcon, PlusIcon } from "lucide-react";
-import { Suspense, useMemo, useState } from "react";
+import { Suspense, useState } from "react";
 import type { PartialDeep } from "type-fest";
 import { getSessionWithProfile } from "~/auth/get-session";
 import DateFilterButton from "~/common/components/DateFilterButton";
@@ -25,8 +19,6 @@ import { createQuestion } from "~/question/create";
 import type { Question } from "~/question/types";
 import { getServerSideSupabaseClient } from "~/supabase/client";
 import { getFilterTagsByCreatorId } from "~/supabase/getters";
-
-import type { GetQuestionsArgs } from "./_auth.q.list.questions";
 
 const numberPerPage = 10;
 
@@ -40,7 +32,6 @@ export async function getMyQuestions({
   page,
   request,
   dateFilter,
-  search,
   tags,
 }: {
   page: number;
@@ -105,7 +96,7 @@ export async function getMyQuestions({
   };
 }
 
-export async function loader({ request }: LoaderArgs) {
+export async function loader({ request }: LoaderFunctionArgs) {
   const url = new URL(request.url);
   const pageStr = url.searchParams.get("p");
 
@@ -134,20 +125,7 @@ export default function QuestionList() {
   const loaded = useLoaderData<typeof loader>();
 
   const navigate = useNavigate();
-  const [search, setSearch] = useState("");
-  const [searchParams] = useSearchParams();
-
-  const page = useMemo(
-    () => Number.parseInt(searchParams.get("p") || "1"),
-    [searchParams]
-  );
-
-  const getQuestionArgs = useMemo<GetQuestionsArgs>(() => {
-    return {
-      page,
-      search,
-    };
-  }, [page, search]);
+  const [search] = useState("");
 
   return (
     <div className="flex flex-col p-4">
@@ -180,65 +158,6 @@ export default function QuestionList() {
             </motion.div>
           )}
         </AnimatePresence>
-
-        {/* Search */}
-        {/* <Form
-          className={twMerge(
-            "flex items-center mt-4 transition",
-            search && "mt-0"
-          )}
-        >
-          <label htmlFor="search" className="sr-only">
-            Search
-          </label>
-          <div className="relative w-full">
-            <div className="absolute inset-y-0 left-0 flex items-center pl-3 pointer-events-none">
-              <svg
-                aria-hidden="true"
-                className="w-5 h-5 text-gray-500 dark:text-gray-400"
-                fill="currentColor"
-                viewBox="0 0 20 20"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <path
-                  fillRule="evenodd"
-                  d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z"
-                  clipRule="evenodd"
-                ></path>
-              </svg>
-            </div>
-            <input
-              type="text"
-              disabled
-              name="search"
-              id="search"
-              className="peer bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-1 focus:ring-offset-0 focus:border-green-500 focus:ring-green-500 block w-full pl-10 p-2.5 transition"
-              placeholder="내용 및 정답 검색... (개발 중)"
-              required
-              value={search}
-              onChange={(e) => {
-                setSearch(e.target.value);
-              }}
-            />
-            <AnimatePresence>
-              {search && (
-                <motion.button
-                  type="button"
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  exit={{ opacity: 0 }}
-                  transition={{ duration: 0.1 }}
-                  className={twMerge(
-                    "absolute inset-y-0 right-0 items-center flex text-gray-500 transition hover:text-gray-900 pr-3"
-                  )}
-                  onClick={() => setSearch("")}
-                >
-                  <CloseCircleFilled className="w-4 h-4" />
-                </motion.button>
-              )}
-            </AnimatePresence>
-          </div>
-        </Form> */}
 
         <div className="-mx-4 overflow-auto scroll">
           <div className="p-4">

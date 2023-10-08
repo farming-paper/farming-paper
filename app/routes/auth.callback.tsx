@@ -1,5 +1,5 @@
 import { redirect } from "@remix-run/node";
-import type { LoaderArgs } from "@remix-run/server-runtime";
+import type { LoaderFunctionArgs } from "@remix-run/server-runtime";
 import { createServerClient } from "@supabase/auth-helpers-remix";
 import { nanoid } from "nanoid";
 import { getClientSideSupabaseConfig } from "~/config";
@@ -7,7 +7,7 @@ import { createQuestion } from "~/question/create";
 import { getServerSideSupabaseClient } from "~/supabase/client";
 import type { Database, Json } from "~/supabase/generated/supabase-types";
 
-export const loader = async ({ request }: LoaderArgs) => {
+export const loader = async ({ request }: LoaderFunctionArgs) => {
   const response = new Response();
   const url = new URL(request.url);
   const code = url.searchParams.get("code");

@@ -37,7 +37,7 @@ renderer.paragraph = (text) => {
   return originParagraph(result);
 };
 
-marked.use({ renderer, mangle: false, headerIds: false });
+marked.use({ renderer });
 
 const Render: React.FC<{ children: string }> = ({ children }) => {
   return (

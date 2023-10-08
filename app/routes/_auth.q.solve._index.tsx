@@ -1,6 +1,6 @@
 import { QuestionCircleFilled } from "@ant-design/icons";
 import { Link, useLoaderData } from "@remix-run/react";
-import type { LoaderArgs } from "@remix-run/server-runtime";
+import type { LoaderFunctionArgs } from "@remix-run/server-runtime";
 import { json } from "@remix-run/server-runtime";
 import { Tooltip } from "antd";
 import { getSessionWithProfile } from "~/auth/get-session";
@@ -9,7 +9,7 @@ import prisma from "~/prisma-client.server";
 import type { ITagWithCount } from "~/types";
 import { bigintToNumber, removeNullDeep } from "~/util";
 
-export async function loader({ request }: LoaderArgs) {
+export async function loader({ request }: LoaderFunctionArgs) {
   const response = new Response();
   const { profile } = await getSessionWithProfile({ request, response });
 
@@ -32,8 +32,6 @@ export async function loader({ request }: LoaderArgs) {
     },
   });
 
-  console.log("tags", tags);
-
   const tagsForSolve: ITagWithCount[] = tags.map((t) =>
     removeNullDeep({
       count: t._count.tags_questions_relation,
@@ -43,8 +41,6 @@ export async function loader({ request }: LoaderArgs) {
       desc: t.desc,
     })
   );
-
-  console.log("tagsForSolve");
 
   return json({ tagsForSolve });
 }

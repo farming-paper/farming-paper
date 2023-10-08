@@ -1,5 +1,5 @@
 import { Await, useLoaderData, useNavigate } from "@remix-run/react";
-import type { LoaderArgs } from "@remix-run/server-runtime";
+import type { LoaderFunctionArgs } from "@remix-run/server-runtime";
 import { defer } from "@remix-run/server-runtime";
 import { Button, Input, message } from "antd";
 import { AnimatePresence, motion } from "framer-motion";
@@ -45,7 +45,7 @@ export async function getExisingTags(profileId: number) {
   return tags;
 }
 
-export async function loader({ request }: LoaderArgs) {
+export async function loader({ request }: LoaderFunctionArgs) {
   const response = new Response();
   const { profile } = await getSessionWithProfile({ request, response });
 
@@ -81,25 +81,25 @@ export default function Page() {
   const createQuestionFetch = useCreateQuestionFetcher();
 
   useEffect(() => {
-    if (createQuestionFetch.type === "done") {
+    if (createQuestionFetch.state === "idle" && createQuestionFetch.data) {
       message.success({
         key: "creating",
         content: "문제가 성공적으로 생성되었습니다.",
       });
     }
-  }, [createQuestionFetch.type]);
+  }, [createQuestionFetch.data, createQuestionFetch.state]);
 
   const generated = useMemo(() => {
     if (
-      generateEnglishQuestionFetcher.type !== "done" ||
-      !generateEnglishQuestionFetcher.data
+      generateEnglishQuestionFetcher.state === "idle" &&
+      generateEnglishQuestionFetcher.data
     ) {
-      return null;
+      return generateEnglishQuestionFetcher.data.question;
     }
-    return generateEnglishQuestionFetcher.data.question;
+    return null;
   }, [
     generateEnglishQuestionFetcher.data,
-    generateEnglishQuestionFetcher.type,
+    generateEnglishQuestionFetcher.state,
   ]);
 
   const [tags, setTags] = useState<ITag[]>([]);
@@ -159,7 +159,8 @@ export default function Page() {
         <Button
           onClick={handleGenerate}
           type={
-            generateEnglishQuestionFetcher.type === "init"
+            generateEnglishQuestionFetcher.state === "idle" &&
+            !generateEnglishQuestionFetcher.data
               ? "primary"
               : "default"
           }

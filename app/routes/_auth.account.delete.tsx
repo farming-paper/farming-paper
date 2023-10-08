@@ -1,4 +1,4 @@
-import type { ActionArgs } from "@remix-run/server-runtime";
+import type { ActionFunctionArgs } from "@remix-run/server-runtime";
 import { json } from "@remix-run/server-runtime";
 import dayjs from "dayjs";
 import { deleteProfileCache, getSessionWithProfile } from "~/auth/get-session";
@@ -95,7 +95,7 @@ async function removeProfile(profileId: number) {
   } as const;
 }
 
-export async function action({ request }: ActionArgs) {
+export async function action({ request }: ActionFunctionArgs) {
   const response = new Response();
   const { profile } = await getSessionWithProfile({ response, request });
 

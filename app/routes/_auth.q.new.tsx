@@ -1,5 +1,6 @@
-import { V2_MetaFunction, useLoaderData, useNavigate } from "@remix-run/react";
-import type { LoaderArgs } from "@remix-run/server-runtime";
+import type { MetaFunction } from "@remix-run/react";
+import { useLoaderData, useNavigate } from "@remix-run/react";
+import type { LoaderFunctionArgs } from "@remix-run/server-runtime";
 import { json } from "@remix-run/server-runtime";
 import { Button, message } from "antd";
 import { ChevronRight } from "lucide-react";
@@ -19,7 +20,7 @@ import {
   useCreateQuestionFetcher,
 } from "./_auth.q.create";
 
-export const meta: V2_MetaFunction = () => {
+export const meta: MetaFunction = () => {
   return [
     {
       title: "문제 생성 | Farming Paper",
@@ -27,7 +28,7 @@ export const meta: V2_MetaFunction = () => {
   ];
 };
 
-export async function loader({ request }: LoaderArgs) {
+export async function loader({ request }: LoaderFunctionArgs) {
   const response = new Response();
   const { profile } = await getSessionWithProfile({ request, response });
 
@@ -94,21 +95,13 @@ export default function QuestionNew() {
   const values = watch();
 
   useEffect(() => {
-    if (createQuestionFetch.type === "done") {
+    if (createQuestionFetch.data && createQuestionFetch.state === "idle") {
       message.success({
         key: "creating",
         content: "문제가 성공적으로 생성되었습니다.",
       });
     }
-    // else if (createQuestionFetch?.data?.error) {
-    //   message.error({ key: "creating", content: "문제 생성이 실패했습니다." });
-    //   // eslint-disable-next-line no-console
-    //   console.error(
-    //     "createNewFetch?.data?.error",
-    //     createQuestionFetch?.data?.error
-    //   );
-    // }
-  }, [createQuestionFetch.type]);
+  }, [createQuestionFetch.data, createQuestionFetch.state]);
 
   useEffect(() => {
     if (createQuestionFetch.state === "submitting") {

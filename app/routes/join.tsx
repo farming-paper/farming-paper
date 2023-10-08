@@ -1,5 +1,8 @@
 import { useLoaderData } from "@remix-run/react";
-import type { ActionArgs, LoaderArgs } from "@remix-run/server-runtime";
+import type {
+  ActionFunctionArgs,
+  LoaderFunctionArgs,
+} from "@remix-run/server-runtime";
 import { json, redirect } from "@remix-run/server-runtime";
 import { createServerClient } from "@supabase/auth-helpers-remix";
 import { nanoid } from "nanoid";
@@ -10,7 +13,7 @@ import { getServerSideSupabaseClient } from "~/supabase/client";
 import type { Database, Json } from "~/supabase/generated/supabase-types";
 import { typedSubmit } from "~/util";
 
-export async function loader({ request }: LoaderArgs) {
+export async function loader({ request }: LoaderFunctionArgs) {
   const response = new Response();
   const { serviceRoleKey, url } = getServerSideSupabaseConfig();
   const supabaseClient = createServerClient<Database>(url, serviceRoleKey, {
@@ -79,7 +82,7 @@ export default function Page() {
   );
 }
 
-export async function action({ request }: ActionArgs) {
+export async function action({ request }: ActionFunctionArgs) {
   const { email } = await getAddAccountArgsFromRequest(request);
 
   const db = getServerSideSupabaseClient();

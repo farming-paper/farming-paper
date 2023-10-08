@@ -1,4 +1,4 @@
-import type { ActionArgs } from "@remix-run/server-runtime";
+import type { ActionFunctionArgs } from "@remix-run/server-runtime";
 import { json, redirect } from "@remix-run/server-runtime";
 import { getSessionWithProfile } from "~/auth/get-session";
 import { getServerSideSupabaseClient } from "~/supabase/client";
@@ -15,7 +15,7 @@ export const getDeletionQuestionArgsFromRequest = getArgsFromRequest;
 
 export const useDeletionQuestionFetcher = useFetcher;
 
-export async function action({ request }: ActionArgs) {
+export async function action({ request }: ActionFunctionArgs) {
   const { publicId } = await getDeletionQuestionArgsFromRequest(request);
   const response = new Response();
   const { profile } = await getSessionWithProfile({ request, response });

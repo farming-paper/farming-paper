@@ -92,7 +92,7 @@ const Tags: React.FC<{
   }, []);
 
   useEffect(() => {
-    if (upsertTagFetcher.type !== "done") {
+    if (upsertTagFetcher.state !== "idle" || !upsertTagFetcher.data) {
       return;
     }
 
@@ -114,7 +114,7 @@ const Tags: React.FC<{
       duration: 2,
       content: `"${newTagRes.data.name}" 태그가 추가되었습니다.`,
     });
-  }, [upsertTagFetcher.data, upsertTagFetcher.type]);
+  }, [upsertTagFetcher.data, upsertTagFetcher.state]);
 
   useEffect(() => {
     if (upsertedTag) {

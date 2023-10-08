@@ -1,4 +1,4 @@
-import type { LoaderArgs, V2_MetaFunction } from "@remix-run/node";
+import type { LoaderFunctionArgs, MetaFunction } from "@remix-run/node";
 import { json } from "@remix-run/node";
 import {
   Links,
@@ -40,7 +40,7 @@ export function links() {
   ];
 }
 
-export const meta: V2_MetaFunction = () => [
+export const meta: MetaFunction = () => [
   {
     title: "Farming Paper",
   },
@@ -48,7 +48,7 @@ export const meta: V2_MetaFunction = () => [
   { name: "viewport", content: "width=device-width,initial-scale=1" },
 ];
 
-export const loader = async ({ request }: LoaderArgs) => {
+export const loader = async ({ request }: LoaderFunctionArgs) => {
   const response = new Response();
   const { anonKey, url } = getClientSideSupabaseConfig();
   const supabase = createServerClient(url, anonKey, {

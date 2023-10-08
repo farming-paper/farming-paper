@@ -1,14 +1,15 @@
+import { PlusOutlined } from "@ant-design/icons";
+import type { MetaFunction } from "@remix-run/node";
 import { useFetcher, useLoaderData } from "@remix-run/react";
-import type { ActionArgs, LoaderArgs } from "@remix-run/server-runtime";
+import type {
+  ActionFunctionArgs,
+  LoaderFunctionArgs,
+} from "@remix-run/server-runtime";
 import { json } from "@remix-run/server-runtime";
 import { withZod } from "@remix-validated-form/with-zod";
-import { Button, message } from "antd";
-import { useEffect, useRef, useState } from "react";
-
-import { PlusOutlined } from "@ant-design/icons";
-import { V2_MetaFunction } from "@remix-run/node";
-import { Input, Select } from "antd";
+import { Button, Input, Select, message } from "antd";
 import { Trash2 } from "lucide-react";
+import { useEffect, useRef, useState } from "react";
 import type { PartialDeep } from "type-fest";
 import { z } from "zod";
 import { getSessionWithProfile } from "~/auth/get-session";
@@ -23,10 +24,12 @@ import { rpc } from "~/supabase/rpc";
 import type { DatabaseTag, ITagWithCount } from "~/types";
 import { removeNullDeep } from "~/util";
 
-export const meta: V2_MetaFunction = () => {
-  return [{
-    title: "문제 편집 | Farming Paper",
-  }];
+export const meta: MetaFunction = () => {
+  return [
+    {
+      title: "문제 편집 | Farming Paper",
+    },
+  ];
 };
 
 const questionTypeOptions = [
@@ -143,7 +146,7 @@ export const actionValidator = withZod(
   ])
 );
 
-export async function loader({ request, params }: LoaderArgs) {
+export async function loader({ request, params }: LoaderFunctionArgs) {
   const publicId = params.publicId;
   if (!publicId) {
     throw new Response("Public Id Not Found", {
@@ -164,7 +167,7 @@ export async function loader({ request, params }: LoaderArgs) {
   });
 }
 
-export async function action({ request }: ActionArgs) {
+export async function action({ request }: ActionFunctionArgs) {
   const formData = await request.formData();
   const data = await actionValidator.validate(formData);
 

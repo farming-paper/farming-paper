@@ -1,4 +1,4 @@
-import type { ActionArgs } from "@remix-run/server-runtime";
+import type { ActionFunctionArgs } from "@remix-run/server-runtime";
 import { json } from "@remix-run/server-runtime";
 import { nanoid } from "nanoid";
 import { getSessionWithProfile } from "~/auth/get-session";
@@ -20,7 +20,7 @@ export const createCreateQuestionArgs = createArgs;
 
 export const useCreateQuestionFetcher = useFetcher;
 
-export async function action({ request }: ActionArgs) {
+export async function action({ request }: ActionFunctionArgs) {
   const { question, tags } = await getArgsFromRequest(request);
 
   const response = new Response();

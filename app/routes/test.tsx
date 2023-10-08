@@ -1,5 +1,5 @@
 import { useLoaderData } from "@remix-run/react";
-import type { LoaderArgs } from "@remix-run/server-runtime";
+import type { LoaderFunctionArgs } from "@remix-run/server-runtime";
 import { json } from "@remix-run/server-runtime";
 import type { PartialDeep } from "type-fest";
 import { createQuestion } from "~/question/create";
@@ -8,7 +8,7 @@ import { getServerSideSupabaseClient } from "~/supabase/client";
 import type { DatabaseTag } from "~/types";
 import { removeNullDeep } from "~/util";
 
-export async function loader({ request: _r }: LoaderArgs) {
+export async function loader({ request: _r }: LoaderFunctionArgs) {
   const db = getServerSideSupabaseClient();
 
   // const result = await db

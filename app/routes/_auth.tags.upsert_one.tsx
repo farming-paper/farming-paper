@@ -1,4 +1,4 @@
-import type { ActionArgs } from "@remix-run/server-runtime";
+import type { ActionFunctionArgs } from "@remix-run/server-runtime";
 import { json } from "@remix-run/server-runtime";
 import { nanoid } from "nanoid";
 import { getSessionWithProfile } from "~/auth/get-session";
@@ -16,7 +16,7 @@ export const createUpsertTagArgs = createArgs;
 
 export const useUpsertTagFetcher = useFetcher;
 
-export async function action({ request }: ActionArgs) {
+export async function action({ request }: ActionFunctionArgs) {
   const response = new Response();
   const [{ name, desc }, { profile }] = await Promise.all([
     getArgsFromRequest(request),

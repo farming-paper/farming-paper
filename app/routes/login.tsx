@@ -1,5 +1,5 @@
 import { useOutletContext, useSearchParams } from "@remix-run/react";
-import type { LoaderArgs } from "@remix-run/server-runtime";
+import type { LoaderFunctionArgs } from "@remix-run/server-runtime";
 import { json, redirect } from "@remix-run/server-runtime";
 import { createServerClient } from "@supabase/auth-helpers-remix";
 import { message } from "antd";
@@ -9,7 +9,7 @@ import { getClientSideSupabaseConfig } from "~/config";
 import google from "~/images/logo/google.svg";
 import type { IOutletProps } from "~/types";
 
-export const loader = async ({ request }: LoaderArgs) => {
+export const loader = async ({ request }: LoaderFunctionArgs) => {
   const response = new Response();
 
   const { anonKey, url } = getClientSideSupabaseConfig();

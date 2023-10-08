@@ -2,12 +2,11 @@ import {
   Link,
   Outlet,
   isRouteErrorResponse,
-  useNavigate,
   useOutletContext,
   useRouteError,
   useSearchParams,
 } from "@remix-run/react";
-import type { LoaderArgs } from "@remix-run/server-runtime";
+import type { LoaderFunctionArgs } from "@remix-run/server-runtime";
 import { json, redirect } from "@remix-run/server-runtime";
 import { message } from "antd";
 import { useEffect } from "react";
@@ -16,7 +15,7 @@ import BottomNav from "~/common/components/BottomNav";
 import type { IOutletProps } from "~/types";
 import { withDurationLog } from "~/util";
 
-export const loader = async ({ request }: LoaderArgs) => {
+export const loader = async ({ request }: LoaderFunctionArgs) => {
   const response = new Response();
   const { profile, session, supabaseClient } = await withDurationLog(
     "_auth_getSessionWithProfile",
@@ -61,13 +60,6 @@ const AuthRouterGroup = () => {
 
 export function ErrorBoundary() {
   const caught = useRouteError();
-  const navigate = useNavigate();
-
-  // useEffect(() => {
-  //   if (isRouteErrorResponse(caught) && caught.status === 401) {
-  //     navigate("/login");
-  //   }
-  // }, [caught, navigate]);
 
   if (!isRouteErrorResponse(caught)) {
     return <div>???</div>;
