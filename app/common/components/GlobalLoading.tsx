@@ -1,10 +1,10 @@
-import { useTransition } from "@remix-run/react";
+import { useNavigation } from "@remix-run/react";
 import { twMerge } from "tailwind-merge";
 import Loader from "./Loader";
 
 function GlobalLoading() {
-  const transition = useTransition();
-  const active = transition.state !== "idle";
+  const navigation = useNavigation();
+  const active = navigation.state !== "idle";
 
   return (
     <div
