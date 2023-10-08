@@ -4,7 +4,19 @@ import { withZod } from "@remix-validated-form/with-zod";
 import { z } from "zod";
 import { getSessionWithProfile } from "~/auth/get-session";
 import prisma from "~/prisma-client.server";
-import { bigintToNumber } from "~/util";
+import type { IProfile } from "~/types";
+import { bigintToNumber, getObjBigintToNumber } from "~/util";
+
+export type DeleteQuestionAction = {
+  intent: "delete_question";
+  public_id: string;
+};
+
+export type EditQuestionAction = {
+  intent: "edit_question";
+  public_id: string;
+  content: string;
+};
 
 export const actionValidator = withZod(
   /** TODO: fix to switch later. @see https://github.com/colinhacks/zod/issues/2106 */
@@ -15,53 +27,60 @@ export const actionValidator = withZod(
       public_id: z.string(),
       content: z.string(),
     }),
+    z.object({
+      intent: z.literal("delete_question"),
+      public_id: z.string(),
+    }),
   ])
 );
 
-async function editSingleQuestion({ request }: ActionFunctionArgs) {
-  const formData = await request.formData();
-  const validated = await actionValidator.validate(formData);
+async function removeSingleQuestion({
+  profile,
+  action,
+}: {
+  profile: IProfile;
+  action: DeleteQuestionAction;
+}) {
+  const { public_id } = action;
 
-  if (validated.error) {
-    return json(
-      {
-        data: null,
-        error: validated.error,
-      },
-      { status: 400 }
-    );
-  }
-
-  if (validated.data.intent === "upsert_tag") {
-    // ...
-    return json(
-      {
-        data: null,
-        error: "Not Implemented",
-      },
-      { status: 501 }
-    );
-  }
-
-  const { content, public_id } = validated.data;
-  const tagPublicIds = formData
-    .getAll("tag_public_id")
-    .map((v) => v.toString());
-
-  const response = new Response();
-
-  const { profile } = await getSessionWithProfile({
-    request,
-    response,
-  });
-
-  const updatedQuestion = await prisma.questions.update({
+  const question = await prisma.questions.findFirst({
     where: {
       public_id,
       creator: profile.id,
     },
+  });
+
+  if (!question) {
+    return json({ data: null, error: "Not Found" }, { status: 404 });
+  }
+
+  const abc = await prisma.questions.update({
+    where: { public_id },
+    data: { deleted_at: new Date() },
+  });
+
+  return json({
+    data: getObjBigintToNumber(abc),
+    error: null,
+  });
+}
+
+async function editSingleQuestion({
+  profile,
+  action,
+  tagPublicIds,
+}: {
+  profile: IProfile;
+  action: EditQuestionAction;
+  tagPublicIds: string[];
+}) {
+  const updatedQuestion = await prisma.questions.update({
+    where: {
+      public_id: action.public_id,
+      creator: profile.id,
+    },
     data: {
-      content: JSON.parse(content),
+      content: JSON.parse(action.content),
     },
   });
 
@@ -118,4 +137,48 @@ async function editSingleQuestion({ request }: ActionFunctionArgs) {
   });
 }
 
-export default editSingleQuestion;
+async function updateSingleQuestion({ request }: ActionFunctionArgs) {
+  const formData = await request.formData();
+  const action = await actionValidator.validate(formData);
+
+  if (action.error) {
+    return json(
+      {
+        data: null,
+        error: action.error,
+      },
+      { status: 400 }
+    );
+  }
+
+  if (action.data.intent === "upsert_tag") {
+    // ...
+    return json(
+      {
+        data: null,
+        error: "Not Implemented",
+      },
+      { status: 501 }
+    );
+  }
+
+  const tagPublicIds = formData
+    .getAll("tag_public_id")
+    .map((v) => v.toString());
+
+  const response = new Response();
+
+  const { profile } = await getSessionWithProfile({
+    request,
+    response,
+  });
+
+  switch (action.data.intent) {
+    case "delete_question":
+      return removeSingleQuestion({ profile, action: action.data });
+    case "edit_question":
+      return editSingleQuestion({ profile, action: action.data, tagPublicIds });
+  }
+}
+
+export default updateSingleQuestion;

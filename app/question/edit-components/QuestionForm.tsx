@@ -118,7 +118,7 @@ const QuestionForm: React.FC<{
           <div className="flex flex-col gap-2 mb-5">
             {values.question.corrects?.map((q, index) => (
               <div key={index} className="flex gap-2">
-                <Space.Compact className="flex">
+                <Space.Compact className="w-full">
                   <Controller
                     control={control}
                     name={`question.corrects.${index}`}

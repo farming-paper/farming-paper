@@ -157,12 +157,12 @@ export default function Page() {
   const loaded = useLoaderData<typeof loader>();
   const [editingContent, setEditingContent] = useState(loaded.row.content);
   const [tags, setTags] = useState(loaded.row.tags);
-  const act = useFetcher<typeof action>();
+  const actionFetcher = useFetcher<typeof action>();
   const formRef = useRef<HTMLFormElement>(null);
   const { message } = App.useApp();
 
   useEffect(() => {
-    if (act.state === "submitting") {
+    if (actionFetcher.state === "submitting") {
       message.loading({
         key: "creating",
         content: "문제를 수정하는 중입니다...",
@@ -171,7 +171,7 @@ export default function Page() {
       return;
     }
 
-    if (act.state === "idle" && act.data?.data) {
+    if (actionFetcher.state === "idle" && actionFetcher.data?.data) {
       message.success({
         key: "creating",
         content: "성공적으로 수정되었습니다.",
@@ -179,30 +179,30 @@ export default function Page() {
       });
       return;
     }
-    if (act.state === "idle" && act.data?.error) {
+    if (actionFetcher.state === "idle" && actionFetcher.data?.error) {
       message.error({
         key: "creating",
         content: "문제 수정에 실패했습니다.",
         duration: 2,
       });
       // eslint-disable-next-line no-console
-      console.error("actionData.error", act.data.error);
+      console.error("actionData.error", actionFetcher.data.error);
       return;
     }
-  }, [act.data, act.state, message]);
+  }, [actionFetcher.data, actionFetcher.state, message]);
 
   /** keyboard shortcut */
   useEffect(() => {
     const submitShortcut = (e: KeyboardEvent) => {
       if (e.key === "Enter" && (e.metaKey || e.ctrlKey) && formRef.current) {
-        act.submit(formRef.current);
+        actionFetcher.submit(formRef.current);
       }
     };
     document.addEventListener("keydown", submitShortcut);
     return () => {
       document.removeEventListener("keydown", submitShortcut);
     };
-  }, [act]);
+  }, [actionFetcher]);
 
   const [deleteModalOpen, setDeleteModalOpen] = useState(false);
 
@@ -219,7 +219,7 @@ export default function Page() {
           </Button>
         </div>
       </header>
-      <act.Form method="post" ref={formRef}>
+      <actionFetcher.Form method="post" ref={formRef}>
         <input type="hidden" name="public_id" value={loaded.row.publicId} />
         <input type="hidden" name="intent" value="edit_question" />
         <input
@@ -279,7 +279,7 @@ export default function Page() {
             <div className="flex flex-col gap-2 mb-5">
               {editingContent.corrects?.map((q, index) => (
                 <div key={index} className="flex gap-2">
-                  <Space.Compact className="flex">
+                  <Space.Compact className="w-full">
                     <Input
                       style={{ width: "calc(100% - 3rem)" }}
                       value={q}
@@ -331,30 +331,29 @@ export default function Page() {
           <Button
             htmlType="submit"
             type="primary"
-            loading={act.state !== "idle"}
+            loading={actionFetcher.state !== "idle"}
           >
             수정
           </Button>
         </div>
-      </act.Form>
-      <DangerModal
-        message="정말 문제를 삭제하시겠습니까? 한번 삭제하면 다시 복구할 수 없습니다."
-        title="문제 삭제"
-        open={deleteModalOpen}
-        setOpen={setDeleteModalOpen}
-        // TODO: 고우..
-        // onSubmit={() => {
-        //   deleteFetcher.submit(
-        //     createDeletionQuestionArgs({
-        //       publicId: loaded.row.publicId,
-        //     }),
-        //     {
-        //       method: "delete",
-        //       action: `/q/delete`,
-        //     }
-        //   );
-        // }}
-      />
+      </actionFetcher.Form>
+      <actionFetcher.Form>
+        <input type="hidden" name="public_id" value={loaded.row.publicId} />
+        <input type="hidden" name="intent" value="delete_question" />
+        <DangerModal
+          message="정말 문제를 삭제하시겠습니까? 한번 삭제하면 다시 복구할 수 없습니다."
+          title="문제 삭제"
+          open={deleteModalOpen}
+          setOpen={setDeleteModalOpen}
+          form={{
+            Form: actionFetcher.Form,
+            hiddenValues: {
+              public_id: loaded.row.publicId,
+              intent: "delete_question",
+            },
+          }}
+        />
+      </actionFetcher.Form>
     </div>
   );
 }

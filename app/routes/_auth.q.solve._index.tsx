@@ -15,9 +15,8 @@ export async function loader({ request }: LoaderFunctionArgs) {
 
   const tags = await prisma.tags.findMany({
     where: {
-      creator: {
-        equals: profile.id,
-      },
+      creator: profile.id,
+      deleted_at: null,
     },
     select: {
       id: true,
@@ -26,7 +25,13 @@ export async function loader({ request }: LoaderFunctionArgs) {
       desc: true,
       _count: {
         select: {
-          tags_questions_relation: true,
+          tags_questions_relation: {
+            where: {
+              questions: {
+                deleted_at: null,
+              },
+            },
+          },
         },
       },
     },

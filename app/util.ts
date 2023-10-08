@@ -271,3 +271,24 @@ export function isUserTypingText() {
 export function bigintToNumber(n: bigint) {
   return Number(n.toString());
 }
+
+export type BigIntToNumber<T extends Record<string, unknown>> = {
+  [key in keyof T]: T[key] extends bigint ? number : T[key];
+};
+
+export function getObjBigintToNumber<T extends Record<string, unknown>>(
+  obj: T
+): BigIntToNumber<T> {
+  const result = { ...obj } as {
+    [key in keyof T]: T[key] extends bigint ? number : T[key];
+  };
+
+  Object.keys(obj).forEach((key) => {
+    const value = obj[key];
+    if (typeof value === "bigint") {
+      Object.assign(result, { [key]: bigintToNumber(value) });
+    }
+  });
+
+  return result;
+}

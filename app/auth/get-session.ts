@@ -1,8 +1,10 @@
+import type { Session, SupabaseClient } from "@supabase/auth-helpers-remix";
 import { createServerClient } from "@supabase/auth-helpers-remix";
 import { LRUCache } from "lru-cache";
 import { getServerSideSupabaseConfig } from "~/config";
 import { getServerSideSupabaseClient } from "~/supabase/client";
 import type { Database } from "~/supabase/generated/supabase-types";
+import type { IProfile } from "~/types";
 import { removeNullDeep } from "~/util";
 
 type ProfileFromDB = {
@@ -66,7 +68,11 @@ export async function getSessionWithProfile({
 }: {
   request: Request;
   response: Response;
-}) {
+}): Promise<{
+  session: Session;
+  profile: IProfile;
+  supabaseClient: SupabaseClient<Database>;
+}> {
   const { serviceRoleKey, url } = getServerSideSupabaseConfig();
   const supabaseClient = createServerClient<Database>(url, serviceRoleKey, {
     request,
