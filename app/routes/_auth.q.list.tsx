@@ -6,11 +6,11 @@ import {
 import { Await, Link, useLoaderData, useNavigate } from "@remix-run/react";
 import type { LoaderFunctionArgs } from "@remix-run/server-runtime";
 import { defer } from "@remix-run/server-runtime";
-import { Button, Pagination, Tooltip } from "antd";
+import { App, Button, Pagination, Tooltip } from "antd";
 import dayjs from "dayjs";
 import { AnimatePresence, motion } from "framer-motion";
 import { ChevronRightIcon, PlusIcon } from "lucide-react";
-import { Suspense, useState } from "react";
+import { Suspense, useEffect, useState } from "react";
 import type { PartialDeep } from "type-fest";
 import { getSessionWithProfile } from "~/auth/get-session";
 import DateFilterButton from "~/common/components/DateFilterButton";
@@ -126,6 +126,20 @@ export default function QuestionList() {
 
   const navigate = useNavigate();
   const [search] = useState("");
+  const { message } = App.useApp();
+
+  useEffect(() => {
+    const url = new URL(document.location.href);
+    const deleted = url.searchParams.get("deleted");
+    message.destroy("question-deleted");
+    message.destroy("edit-question");
+    if (deleted === "1") {
+      message.success({
+        content: "문제가 삭제되었습니다.",
+        key: "question-deleted",
+      });
+    }
+  }, [message]);
 
   return (
     <div className="flex flex-col p-4">

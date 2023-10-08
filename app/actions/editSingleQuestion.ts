@@ -1,11 +1,11 @@
 import type { ActionFunctionArgs } from "@remix-run/server-runtime";
-import { json } from "@remix-run/server-runtime";
+import { json, redirect } from "@remix-run/server-runtime";
 import { withZod } from "@remix-validated-form/with-zod";
 import { z } from "zod";
 import { getSessionWithProfile } from "~/auth/get-session";
 import prisma from "~/prisma-client.server";
 import type { IProfile } from "~/types";
-import { bigintToNumber, getObjBigintToNumber } from "~/util";
+import { bigintToNumber } from "~/util";
 
 export type DeleteQuestionAction = {
   intent: "delete_question";
@@ -54,15 +54,12 @@ async function removeSingleQuestion({
     return json({ data: null, error: "Not Found" }, { status: 404 });
   }
 
-  const abc = await prisma.questions.update({
+  await prisma.questions.update({
     where: { public_id },
     data: { deleted_at: new Date() },
   });
 
-  return json({
-    data: getObjBigintToNumber(abc),
-    error: null,
-  });
+  return redirect("/q/list?deleted=1");
 }
 
 async function editSingleQuestion({

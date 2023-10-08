@@ -164,7 +164,7 @@ export default function Page() {
   useEffect(() => {
     if (actionFetcher.state === "submitting") {
       message.loading({
-        key: "creating",
+        key: "edit-question",
         content: "문제를 수정하는 중입니다...",
         duration: 20,
       });
@@ -173,7 +173,7 @@ export default function Page() {
 
     if (actionFetcher.state === "idle" && actionFetcher.data?.data) {
       message.success({
-        key: "creating",
+        key: "edit-question",
         content: "성공적으로 수정되었습니다.",
         duration: 2,
       });
@@ -181,7 +181,7 @@ export default function Page() {
     }
     if (actionFetcher.state === "idle" && actionFetcher.data?.error) {
       message.error({
-        key: "creating",
+        key: "edit-question",
         content: "문제 수정에 실패했습니다.",
         duration: 2,
       });
