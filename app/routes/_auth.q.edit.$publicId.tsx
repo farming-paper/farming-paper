@@ -3,7 +3,7 @@ import type { MetaFunction } from "@remix-run/node";
 import { useFetcher, useLoaderData } from "@remix-run/react";
 import type { LoaderFunctionArgs } from "@remix-run/server-runtime";
 import { json } from "@remix-run/server-runtime";
-import { Button, Input, Select, message } from "antd";
+import { App, Button, Input, Select, Space } from "antd";
 import { Trash2 } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import type { PartialDeep } from "type-fest";
@@ -159,24 +159,7 @@ export default function Page() {
   const [tags, setTags] = useState(loaded.row.tags);
   const act = useFetcher<typeof action>();
   const formRef = useRef<HTMLFormElement>(null);
-
-  useEffect(() => {
-    if (!act.data) {
-      return;
-    }
-
-    if (act.data.data) {
-      message.success({
-        key: "creating",
-        content: "성공적으로 수정되었습니다.",
-        duration: 2,
-      });
-      return;
-    }
-
-    // eslint-disable-next-line no-console
-    console.error("actionData.error", act.data.error);
-  }, [act.data]);
+  const { message } = App.useApp();
 
   useEffect(() => {
     if (act.state === "submitting") {
@@ -185,8 +168,28 @@ export default function Page() {
         content: "문제를 수정하는 중입니다...",
         duration: 20,
       });
+      return;
     }
-  }, [act.state]);
+
+    if (act.state === "idle" && act.data?.data) {
+      message.success({
+        key: "creating",
+        content: "성공적으로 수정되었습니다.",
+        duration: 2,
+      });
+      return;
+    }
+    if (act.state === "idle" && act.data?.error) {
+      message.error({
+        key: "creating",
+        content: "문제 수정에 실패했습니다.",
+        duration: 2,
+      });
+      // eslint-disable-next-line no-console
+      console.error("actionData.error", act.data.error);
+      return;
+    }
+  }, [act.data, act.state, message]);
 
   /** keyboard shortcut */
   useEffect(() => {
@@ -276,7 +279,7 @@ export default function Page() {
             <div className="flex flex-col gap-2 mb-5">
               {editingContent.corrects?.map((q, index) => (
                 <div key={index} className="flex gap-2">
-                  <Input.Group compact className="flex">
+                  <Space.Compact className="flex">
                     <Input
                       style={{ width: "calc(100% - 3rem)" }}
                       value={q}
@@ -302,7 +305,7 @@ export default function Page() {
                     >
                       <Trash2 className="h-[1em] mx-auto" />
                     </Button>
-                  </Input.Group>
+                  </Space.Compact>
                 </div>
               ))}
             </div>

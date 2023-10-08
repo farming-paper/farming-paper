@@ -8,7 +8,7 @@ import {
 } from "@remix-run/react";
 import type { LoaderFunctionArgs } from "@remix-run/server-runtime";
 import { json, redirect } from "@remix-run/server-runtime";
-import { message } from "antd";
+import { App } from "antd";
 import { useEffect } from "react";
 import { getSessionWithProfile } from "~/auth/get-session";
 import BottomNav from "~/common/components/BottomNav";
@@ -17,6 +17,7 @@ import { withDurationLog } from "~/util";
 
 export const loader = async ({ request }: LoaderFunctionArgs) => {
   const response = new Response();
+
   const { profile, session, supabaseClient } = await withDurationLog(
     "_auth_getSessionWithProfile",
     getSessionWithProfile({
@@ -42,13 +43,14 @@ const AuthRouterGroup = () => {
   // const messaged = useRef(false);
   const context = useOutletContext<IOutletProps>();
   const [params] = useSearchParams();
+  const { message } = App.useApp();
 
   useEffect(() => {
     const status = params.get("status");
     if (status === "already_logged_in") {
       message.info("이미 로그인되어 있습니다.");
     }
-  }, [params]);
+  }, [message, params]);
 
   return (
     <>
@@ -62,7 +64,7 @@ export function ErrorBoundary() {
   const caught = useRouteError();
 
   if (!isRouteErrorResponse(caught)) {
-    return <div>???</div>;
+    return <div>??? {JSON.stringify(caught)}</div>;
   }
 
   return (

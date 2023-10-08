@@ -1,5 +1,6 @@
 import { disassembleHangul } from "@toss/hangul";
-import { message, theme } from "antd";
+import { App, theme } from "antd";
+
 import { PlusIcon } from "lucide-react";
 import React, {
   useCallback,
@@ -24,8 +25,6 @@ import {
   useUpsertTagFetcher,
 } from "~/routes/_auth.tags.upsert_one";
 import type { ITag, ITagWithCount } from "~/types";
-
-const { useToken } = theme;
 
 type SelectItem = {
   label: string;
@@ -83,6 +82,7 @@ const Tags: React.FC<{
     upsertingTagsReducer,
     []
   );
+  const { message } = App.useApp();
   const [upsertedTag, setUpsertedTag] = useState<ITag | null>(null);
   const [isBrowser, setIsBrowser] = useState(false);
   const upsertTagFetcher = useUpsertTagFetcher();
@@ -114,7 +114,7 @@ const Tags: React.FC<{
       duration: 2,
       content: `"${newTagRes.data.name}" 태그가 추가되었습니다.`,
     });
-  }, [upsertTagFetcher.data, upsertTagFetcher.state]);
+  }, [message, upsertTagFetcher.data, upsertTagFetcher.state]);
 
   useEffect(() => {
     if (upsertedTag) {
@@ -124,7 +124,7 @@ const Tags: React.FC<{
     }
   }, [onChange, upsertedTag, value]);
 
-  const { token } = useToken();
+  const { token } = theme.useToken();
 
   const options = useMemo(() => {
     return existingTags.map((tag) => {

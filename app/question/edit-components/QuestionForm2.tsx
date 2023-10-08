@@ -1,6 +1,6 @@
 import { PlusOutlined } from "@ant-design/icons";
 import { Form } from "@remix-run/react";
-import { Button, Input, Select } from "antd";
+import { Button, Input, Select, Space } from "antd";
 import { Trash2 } from "lucide-react";
 import { useEffect, useMemo } from "react";
 import type { WatchObserver } from "react-hook-form";
@@ -143,7 +143,7 @@ const QuestionForm2: React.FC<{
           <div className="flex flex-col gap-2 mb-5">
             {values.question.corrects?.map((q, index) => (
               <div key={index} className="flex gap-2">
-                <Input.Group compact className="flex">
+                <Space.Compact className="flex">
                   <Controller
                     control={control}
                     name={`question.corrects.${index}`}
@@ -173,7 +173,7 @@ const QuestionForm2: React.FC<{
                   >
                     <Trash2 className="h-[1em] mx-auto" />
                   </Button>
-                </Input.Group>
+                </Space.Compact>
               </div>
             ))}
           </div>

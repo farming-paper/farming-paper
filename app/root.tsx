@@ -15,7 +15,7 @@ import {
   createServerClient,
 } from "@supabase/auth-helpers-remix";
 import { Analytics } from "@vercel/analytics/react";
-import { ConfigProvider } from "antd";
+import { App, ConfigProvider } from "antd";
 import antdResetStyles from "antd/dist/reset.css";
 import type { ThemeConfig } from "antd/es/config-provider/context";
 import { useEffect, useState } from "react";
@@ -76,7 +76,7 @@ const theme: ThemeConfig = {
   },
 };
 
-export default function App() {
+export default function Root() {
   const { env, session } = useLoaderData<typeof loader>();
 
   const [supabase] = useState(() =>
@@ -118,7 +118,9 @@ export default function App() {
       <body className="relative max-w-md min-h-[100vh] mx-auto bg-white pb-16 @container">
         <GlobalLoading />
         <ConfigProvider theme={theme}>
-          <Outlet context={{ supabase, session }} />
+          <App>
+            <Outlet context={{ supabase, session }} />
+          </App>
         </ConfigProvider>
         <ScrollRestoration />
         <Scripts />

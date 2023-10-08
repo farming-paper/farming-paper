@@ -1,7 +1,7 @@
 import { Await, useLoaderData, useNavigate } from "@remix-run/react";
 import type { LoaderFunctionArgs } from "@remix-run/server-runtime";
 import { defer } from "@remix-run/server-runtime";
-import { Button, Input, message } from "antd";
+import { App, Button, Input } from "antd";
 import { AnimatePresence, motion } from "framer-motion";
 import { Suspense, useCallback, useEffect, useMemo, useState } from "react";
 import { getSessionWithProfile } from "~/auth/get-session";
@@ -59,6 +59,7 @@ export default function Page() {
   const navigate = useNavigate();
   // const [formValues, setFormValues] = useState<QuestionFormValues>({});
   const loaded = useLoaderData<typeof loader>();
+  const { message } = App.useApp();
 
   const handleNext = useCallback(() => {
     navigate("/q/generator/english-word/sentence-auto-select/" + word);
@@ -87,7 +88,7 @@ export default function Page() {
         content: "문제가 성공적으로 생성되었습니다.",
       });
     }
-  }, [createQuestionFetch.data, createQuestionFetch.state]);
+  }, [createQuestionFetch.data, createQuestionFetch.state, message]);
 
   const generated = useMemo(() => {
     if (

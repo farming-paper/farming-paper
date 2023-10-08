@@ -2,7 +2,7 @@ import { useOutletContext, useSearchParams } from "@remix-run/react";
 import type { LoaderFunctionArgs } from "@remix-run/server-runtime";
 import { json, redirect } from "@remix-run/server-runtime";
 import { createServerClient } from "@supabase/auth-helpers-remix";
-import { message } from "antd";
+import { App } from "antd";
 import { ExternalLink } from "lucide-react";
 import { useEffect, useRef } from "react";
 import { getClientSideSupabaseConfig } from "~/config";
@@ -41,6 +41,7 @@ export default function Login() {
   const props = useOutletContext<IOutletProps>();
   const [urlSearchParams] = useSearchParams();
   const statusMessaged = useRef(false);
+  const { message } = App.useApp();
 
   useEffect(() => {
     if (statusMessaged.current) {
@@ -60,7 +61,7 @@ export default function Login() {
     }
 
     statusMessaged.current = true;
-  }, [urlSearchParams]);
+  }, [message, urlSearchParams]);
 
   const handleGoogleLogin = async () => {
     const redirectTo = new URL(window.location.href.split("?")[0] as string);

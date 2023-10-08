@@ -20,19 +20,19 @@ export const actionValidator = withZod(
 
 async function editSingleQuestion({ request }: ActionFunctionArgs) {
   const formData = await request.formData();
-  const data = await actionValidator.validate(formData);
+  const validated = await actionValidator.validate(formData);
 
-  if (data.error) {
+  if (validated.error) {
     return json(
       {
         data: null,
-        error: data.error,
+        error: validated.error,
       },
       { status: 400 }
     );
   }
 
-  if (data.data.intent === "upsert_tag") {
+  if (validated.data.intent === "upsert_tag") {
     // ...
     return json(
       {
@@ -43,12 +43,13 @@ async function editSingleQuestion({ request }: ActionFunctionArgs) {
     );
   }
 
-  const { content, public_id } = data.data;
+  const { content, public_id } = validated.data;
   const tagPublicIds = formData
     .getAll("tag_public_id")
     .map((v) => v.toString());
 
   const response = new Response();
+
   const { profile } = await getSessionWithProfile({
     request,
     response,

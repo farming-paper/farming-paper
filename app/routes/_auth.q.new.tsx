@@ -2,7 +2,7 @@ import type { MetaFunction } from "@remix-run/react";
 import { useLoaderData, useNavigate } from "@remix-run/react";
 import type { LoaderFunctionArgs } from "@remix-run/server-runtime";
 import { json } from "@remix-run/server-runtime";
-import { Button, message } from "antd";
+import { App, Button } from "antd";
 import { ChevronRight } from "lucide-react";
 import { useEffect, useMemo } from "react";
 import { useForm } from "react-hook-form";
@@ -59,6 +59,7 @@ export async function loader({ request }: LoaderFunctionArgs) {
 export default function QuestionNew() {
   const { tags } = useLoaderData<typeof loader>();
   const navigate = useNavigate();
+  const { message } = App.useApp();
 
   const { handleSubmit, formState, control, watch, setValue, setFocus } =
     useForm({
@@ -101,7 +102,7 @@ export default function QuestionNew() {
         content: "문제가 성공적으로 생성되었습니다.",
       });
     }
-  }, [createQuestionFetch.data, createQuestionFetch.state]);
+  }, [createQuestionFetch.data, createQuestionFetch.state, message]);
 
   useEffect(() => {
     if (createQuestionFetch.state === "submitting") {
@@ -115,7 +116,7 @@ export default function QuestionNew() {
         setFocus("question.message");
       });
     }
-  }, [createQuestionFetch.state, setFocus, setValue]);
+  }, [createQuestionFetch.state, message, setFocus, setValue]);
 
   useCmdEnter(onSubmit);
 
