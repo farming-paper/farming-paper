@@ -4,7 +4,6 @@ import { withZod } from "@remix-validated-form/with-zod";
 import { z } from "zod";
 import { getSessionWithProfile } from "~/auth/get-session";
 import prisma from "~/prisma-client.server";
-import { getServerSideSupabaseClient } from "~/supabase/client";
 import { bigintToNumber } from "~/util";
 
 export const actionValidator = withZod(
@@ -66,64 +65,17 @@ async function editSingleQuestion({ request }: ActionFunctionArgs) {
     },
   });
 
-  const db = getServerSideSupabaseClient();
-
-  // const updatedQuestion = await db
-  //   .from("questions")
-  //   .update({
-  //     content: JSON.parse(content),
-  //   })
-  //   .eq("creator", profile.id)
-  //   .eq("public_id", public_id)
-  //   .select("*")
-  //   .single();
-
-  // if (!updatedQuestion.data) {
-  //   return json({
-  //     data: null,
-  //     error: updatedQuestion.error?.message || "",
-  //   });
-  // }
-
   // 현재 문제와 태그의 관계를 가져옵니다.
   const [existingTagsRes, editingDataTagsRes] = await Promise.all([
-    // db
-    //   .from("tags_questions_relation")
-    //   .select("tag (*)")
-    //   .eq("q", updatedQuestion.data.id),
     prisma.tags_questions_relation.findMany({
       where: { q: updatedQuestion.id },
       include: { tags: true },
     }),
-    // db
-    //   .from("tags")
-    //   .select("id, public_id")
-    //   .is("deleted_at", null)
-    //   .in("public_id", tagPublicIds),
     prisma.tags.findMany({
       where: { public_id: { in: tagPublicIds }, deleted_at: null },
     }),
   ]);
 
-  // if (!existingTagsRes.data) {
-  //   return json({
-  //     data: null,
-  //     error: "existingTagsRes " + (existingTagsRes.error?.message || ""),
-  //   });
-  // }
-
-  // if (!editingDataTagsRes.data) {
-  //   return json({
-  //     data: null,
-  //     error: "editingDataTagsRes " + (editingDataTagsRes.error?.message || ""),
-  //   });
-  // }
-
-  // const existingTags = existingTagsRes.data.map(
-  //   // TODO: fix typing
-  //   (t) => t.tag as unknown as DatabaseTag
-  // );
-  // const editingDataTags = editingDataTagsRes.data;
   const existingTags = existingTagsRes.map((t) => t.tags);
   const editingDataTags = editingDataTagsRes;
 
@@ -140,13 +92,7 @@ async function editSingleQuestion({ request }: ActionFunctionArgs) {
     (newTag) => !existingTags.some((tag) => tag.public_id === newTag.public_id)
   );
 
-  const [removeResult, addResult] = await Promise.all([
-    // db
-    //   .from("tags_questions_relation")
-    //   .delete()
-    //   .in("tag", removingTagIds)
-    //   .eq("q", updatedQuestion.data.id)
-    //   .select("*"),
+  await Promise.all([
     prisma.tags_questions_relation.deleteMany({
       where: {
         tag: { in: removingTags.map((t) => t.id) },
@@ -154,15 +100,6 @@ async function editSingleQuestion({ request }: ActionFunctionArgs) {
       },
     }),
 
-    // db
-    //   .from("tags_questions_relation")
-    //   .insert(
-    //     addingTags.map((addingTagId) => ({
-    //       q: updatedQuestion.data.id,
-    //       tag: addingTagId,
-    //     }))
-    //   )
-    //   .select("*"),
     prisma.tags_questions_relation.createMany({
       data: addingTags.map((addingTag) => ({
         q: updatedQuestion.id,
@@ -170,13 +107,6 @@ async function editSingleQuestion({ request }: ActionFunctionArgs) {
       })),
     }),
   ] as const);
-
-  // if (!removeResult.data || !addResult.data) {
-  //   return json({
-  //     data: null,
-  //     error: removeResult.error?.message || addResult.error?.message || "",
-  //   });
-  // }
 
   return json({
     data: {
