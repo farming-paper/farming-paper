@@ -74,6 +74,9 @@ dependencies:
   inquirer:
     specifier: ^9.2.11
     version: 9.2.11
+  jotai:
+    specifier: ^2.4.3
+    version: 2.4.3(@types/react@18.2.25)(react@18.2.0)
   katex:
     specifier: ^0.16.9
     version: 0.16.9
@@ -5302,6 +5305,22 @@ packages:
 
   /jose@4.15.2:
     resolution: {integrity: sha512-IY73F228OXRl9ar3jJagh7Vnuhj/GzBunPiZP13K0lOl7Am9SoWW3kEzq3MCllJMTtZqHTiDXQvoRd4U95aU6A==}
+    dev: false
+
+  /jotai@2.4.3(@types/react@18.2.25)(react@18.2.0):
+    resolution: {integrity: sha512-CSAHX9LqWG5WCrU8OgBoZbBJ+Bo9rQU0mPusEF4e0CZ/SNFgurG26vb3UpgvCSJZgYVcUQNiUBM5q86PA8rstQ==}
+    engines: {node: '>=12.20.0'}
+    peerDependencies:
+      '@types/react': '>=17.0.0'
+      react: '>=17.0.0'
+    peerDependenciesMeta:
+      '@types/react':
+        optional: true
+      react:
+        optional: true
+    dependencies:
+      '@types/react': 18.2.25
+      react: 18.2.0
     dev: false
 
   /js-tokens@4.0.0:

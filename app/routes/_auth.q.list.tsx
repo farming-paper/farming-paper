@@ -290,6 +290,7 @@ export default function QuestionList() {
 
                 <div className="flex flex-col items-center justify-center my-4">
                   <Pagination
+                    size="small"
                     defaultCurrent={loaded.page}
                     pageSize={numberPerPage}
                     total={total}

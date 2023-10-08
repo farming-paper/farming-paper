@@ -1,5 +1,6 @@
 /* eslint-disable @typescript-eslint/no-var-requires */
 const defaultTheme = require("tailwindcss/defaultTheme");
+const colors = require("tailwindcss/colors");
 
 /** @type {import('tailwindcss').Config} */
 module.exports = {
@@ -9,9 +10,8 @@ module.exports = {
   ],
   theme: {
     extend: {
-      fontFamily: {
-        sans: ["Pretendard", ...defaultTheme.fontFamily.sans],
-      },
+      fontFamily: { sans: ["Pretendard", ...defaultTheme.fontFamily.sans] },
+      colors: { primary: colors.green },
     },
   },
   // plugins: [require("@tailwindcss/forms")],

@@ -71,6 +71,7 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
 const theme: ThemeConfig = {
   token: {
     colorPrimary: "#16a34a",
+    colorLink: "#16a34a",
     fontSize: 16,
     controlHeight: 40,
   },
