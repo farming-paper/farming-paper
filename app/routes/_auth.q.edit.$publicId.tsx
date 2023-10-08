@@ -1,6 +1,12 @@
 import { PlusOutlined } from "@ant-design/icons";
 import type { MetaFunction } from "@remix-run/node";
-import { useFetcher, useLoaderData } from "@remix-run/react";
+import {
+  Form,
+  useActionData,
+  useLoaderData,
+  useNavigation,
+  useSubmit,
+} from "@remix-run/react";
 import type { LoaderFunctionArgs } from "@remix-run/server-runtime";
 import { json } from "@remix-run/server-runtime";
 import { App, Button, Input, Select, Space } from "antd";
@@ -157,12 +163,16 @@ export default function Page() {
   const loaded = useLoaderData<typeof loader>();
   const [editingContent, setEditingContent] = useState(loaded.row.content);
   const [tags, setTags] = useState(loaded.row.tags);
-  const actionFetcher = useFetcher<typeof action>();
+
+  const navigation = useNavigation();
+  const submit = useSubmit();
+  const actionData = useActionData<typeof action>();
+
   const formRef = useRef<HTMLFormElement>(null);
   const { message } = App.useApp();
 
   useEffect(() => {
-    if (actionFetcher.state === "submitting") {
+    if (navigation.state === "submitting") {
       message.loading({
         key: "edit-question",
         content: "문제를 수정하는 중입니다...",
@@ -171,7 +181,7 @@ export default function Page() {
       return;
     }
 
-    if (actionFetcher.state === "idle" && actionFetcher.data?.data) {
+    if (navigation.state === "idle" && actionData?.data) {
       message.success({
         key: "edit-question",
         content: "성공적으로 수정되었습니다.",
@@ -179,30 +189,30 @@ export default function Page() {
       });
       return;
     }
-    if (actionFetcher.state === "idle" && actionFetcher.data?.error) {
+    if (navigation.state === "idle" && actionData?.error) {
       message.error({
         key: "edit-question",
         content: "문제 수정에 실패했습니다.",
         duration: 2,
       });
       // eslint-disable-next-line no-console
-      console.error("actionData.error", actionFetcher.data.error);
+      console.error("actionData.error", actionData.error);
       return;
     }
-  }, [actionFetcher.data, actionFetcher.state, message]);
+  }, [actionData, navigation.state, message]);
 
   /** keyboard shortcut */
   useEffect(() => {
     const submitShortcut = (e: KeyboardEvent) => {
       if (e.key === "Enter" && (e.metaKey || e.ctrlKey) && formRef.current) {
-        actionFetcher.submit(formRef.current);
+        submit(formRef.current);
       }
     };
     document.addEventListener("keydown", submitShortcut);
     return () => {
       document.removeEventListener("keydown", submitShortcut);
     };
-  }, [actionFetcher]);
+  }, [navigation, submit]);
 
   const [deleteModalOpen, setDeleteModalOpen] = useState(false);
 
@@ -219,7 +229,7 @@ export default function Page() {
           </Button>
         </div>
       </header>
-      <actionFetcher.Form method="post" ref={formRef}>
+      <Form method="post" ref={formRef}>
         <input type="hidden" name="public_id" value={loaded.row.publicId} />
         <input type="hidden" name="intent" value="edit_question" />
         <input
@@ -331,13 +341,13 @@ export default function Page() {
           <Button
             htmlType="submit"
             type="primary"
-            loading={actionFetcher.state !== "idle"}
+            loading={navigation.state !== "idle"}
           >
             수정
           </Button>
         </div>
-      </actionFetcher.Form>
-      <actionFetcher.Form>
+      </Form>
+      <Form>
         <input type="hidden" name="public_id" value={loaded.row.publicId} />
         <input type="hidden" name="intent" value="delete_question" />
         <DangerModal
@@ -346,14 +356,13 @@ export default function Page() {
           open={deleteModalOpen}
           setOpen={setDeleteModalOpen}
           form={{
-            Form: actionFetcher.Form,
             hiddenValues: {
               public_id: loaded.row.publicId,
               intent: "delete_question",
             },
           }}
         />
-      </actionFetcher.Form>
+      </Form>
     </div>
   );
 }

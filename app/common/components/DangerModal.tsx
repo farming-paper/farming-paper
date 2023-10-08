@@ -1,9 +1,8 @@
 import { Dialog, Transition } from "@headlessui/react";
 import { ExclamationTriangleIcon } from "@heroicons/react/24/outline";
+import { Form } from "@remix-run/react";
 
-import type { ForwardRefExoticComponent, RefAttributes } from "react";
 import { Fragment, useCallback, useRef, useState } from "react";
-import type { FetcherFormProps } from "react-router-dom";
 
 export default function DangerModal({
   setOpen,
@@ -19,9 +18,6 @@ export default function DangerModal({
   open: boolean;
   setOpen: React.Dispatch<React.SetStateAction<boolean>>;
   form?: {
-    Form: ForwardRefExoticComponent<
-      FetcherFormProps & RefAttributes<HTMLFormElement>
-    >;
     hiddenValues: Record<string, string>;
   };
   onCancel?: () => Promise<void> | void;
@@ -126,12 +122,12 @@ export default function DangerModal({
             >
               <Dialog.Panel className="relative px-4 pt-5 pb-4 overflow-hidden text-left transition-all transform bg-white rounded-lg shadow-xl sm:my-8 sm:w-full sm:max-w-lg sm:p-6">
                 {form ? (
-                  <form.Form method="post">
+                  <Form method="post">
                     {Object.entries(form.hiddenValues).map(([key, value]) => (
                       <input key={key} type="hidden" name={key} value={value} />
                     ))}
                     <PanelChildren />
-                  </form.Form>
+                  </Form>
                 ) : (
                   <PanelChildren />
                 )}
