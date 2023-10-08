@@ -1,12 +1,9 @@
-import {
-  CalendarOutlined,
-  FileAddOutlined,
-  PlusOutlined,
-} from "@ant-design/icons";
+import { CalendarOutlined, FileAddOutlined } from "@ant-design/icons";
+import type { Prisma } from "@prisma/client";
 import { Await, Link, useLoaderData, useNavigate } from "@remix-run/react";
 import type { LoaderFunctionArgs } from "@remix-run/server-runtime";
 import { defer } from "@remix-run/server-runtime";
-import { App, Button, Pagination, Tooltip } from "antd";
+import { App, Pagination, Tooltip } from "antd";
 import dayjs from "dayjs";
 import { AnimatePresence, motion } from "framer-motion";
 import { ChevronRightIcon, PlusIcon } from "lucide-react";
@@ -15,10 +12,11 @@ import type { PartialDeep } from "type-fest";
 import { getSessionWithProfile } from "~/auth/get-session";
 import DateFilterButton from "~/common/components/DateFilterButton";
 import TagFilterButton from "~/common/components/TagFilterButton";
+import prisma from "~/prisma-client.server";
 import { createQuestion } from "~/question/create";
 import type { Question } from "~/question/types";
-import { getServerSideSupabaseClient } from "~/supabase/client";
 import { getFilterTagsByCreatorId } from "~/supabase/getters";
+import { getObjBigintToNumber } from "~/util";
 
 const numberPerPage = 10;
 
@@ -45,54 +43,52 @@ export async function getMyQuestions({
 }) {
   const response = new Response();
   const { profile } = await getSessionWithProfile({ request, response });
-  const db = getServerSideSupabaseClient();
 
-  let questionsQuery = db
-    .from("questions")
-    .select("*", { count: "estimated" })
-    .eq("creator", profile.id)
-    .is("deleted_at", null)
-    .order("updated_at", { ascending: false })
-    .range((page - 1) * numberPerPage, page * numberPerPage - 1);
+  const where: Prisma.questionsWhereInput = {
+    creator: profile.id,
+    deleted_at: null,
+  };
 
   if (dateFilter) {
-    questionsQuery = questionsQuery
-      .lte("created_at", dateFilter.end)
-      .gte("created_at", dateFilter.start);
+    where.created_at = {
+      gte: dateFilter.start,
+      lte: dateFilter.end,
+    };
   }
 
   if (tags) {
-    const questionIdsRelRes = await db
-      .from("tags_questions_relation")
-      .select("q, tag!inner(public_id)")
-      .in("tag.public_id", tags);
+    // TODO: tags_questions_relation 가져오는 서브쿼리 구성에 버그가 있음. 수정이 되었을 시 간단하게 수정할 것.
+    const tagContainedQuestionIds =
+      await prisma.tags_questions_relation.findMany({
+        where: { tags: { public_id: { in: tags } } },
+        select: { q: true },
+      });
 
-    if (questionIdsRelRes.error) {
-      throw new Response(questionIdsRelRes.error.message, { status: 500 });
-    }
-
-    questionsQuery = questionsQuery.in(
-      "id",
-      questionIdsRelRes.data.map((rel) => rel.q)
-    );
+    where.id = {
+      in: tagContainedQuestionIds.map((rel) => rel.q),
+    };
   }
 
-  const questionsRes = await questionsQuery;
-
-  if (questionsRes.error) {
-    throw new Response(questionsRes.error.message, { status: 500 });
-  }
-
-  if (questionsRes.count === null) {
-    throw new Response("questionsRes.count is null", { status: 500 });
-  }
+  const [questions, total] = await Promise.all([
+    prisma.questions.findMany({
+      where,
+      orderBy: { created_at: "desc" },
+      skip: (page - 1) * numberPerPage,
+      take: numberPerPage,
+    }),
+    prisma.questions.count({
+      where,
+    }),
+  ]);
 
   return {
-    items: questionsRes.data.map((q) => ({
-      ...q,
-      content: createQuestion(q.content as PartialDeep<Question>),
-    })),
-    total: questionsRes.count,
+    items: questions.map((q) => {
+      return {
+        ...getObjBigintToNumber(q),
+        content: createQuestion(q.content as PartialDeep<Question>),
+      };
+    }),
+    total,
   };
 }
 
@@ -147,7 +143,6 @@ export default function QuestionList() {
         <AnimatePresence mode="wait" initial={false}>
           {!search && (
             <motion.div
-              className="overflow-hidden"
               initial={{
                 height: 0,
                 opacity: 0,
@@ -165,9 +160,14 @@ export default function QuestionList() {
                 <div className="flex items-center gap-4">
                   <h1 className="m-0 text-xl font-medium">문제 리스트</h1>
                 </div>
-                <Button type="primary" icon={<PlusOutlined />}>
+                <Link
+                  to="/q/new"
+                  type="button"
+                  className="inline-flex items-center px-4 py-2 text-sm font-medium text-white transition bg-green-600 border border-transparent rounded-md shadow-sm hover:bg-green-700 focus:outline-none hover:text-white focus:ring-2 focus:ring-green-500 focus:ring-offset-2"
+                >
+                  <PlusIcon className="w-5 h-5 mr-2 -ml-1" aria-hidden="true" />
                   추가
-                </Button>
+                </Link>
               </div>
             </motion.div>
           )}
@@ -225,7 +225,7 @@ export default function QuestionList() {
                   <Link
                     to="/q/new"
                     type="button"
-                    className="inline-flex items-center px-4 py-2 text-sm font-medium text-white transition bg-green-600 border border-transparent rounded-md shadow-sm hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2"
+                    className="inline-flex items-center px-4 py-2 text-sm font-medium text-white transition bg-green-600 border border-transparent rounded-md shadow-sm hover:bg-green-700 focus:outline-none hover:text-white focus:ring-2 focus:ring-green-500 focus:ring-offset-2"
                   >
                     <PlusIcon
                       className="w-5 h-5 mr-2 -ml-1"
