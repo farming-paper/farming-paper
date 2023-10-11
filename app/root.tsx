@@ -12,6 +12,7 @@ import {
   useLoaderData,
 } from "@remix-run/react";
 
+import { NextUIProvider } from "@nextui-org/react";
 import {
   createBrowserClient,
   createServerClient,
@@ -122,9 +123,11 @@ export default function Root() {
       <body className="relative max-w-md min-h-[100vh] mx-auto bg-white pb-16 @container">
         <GlobalLoading />
         <ConfigProvider theme={theme}>
-          <App>
-            <Outlet context={{ supabase, session }} />
-          </App>
+          <NextUIProvider>
+            <App>
+              <Outlet context={{ supabase, session }} />
+            </App>
+          </NextUIProvider>
         </ConfigProvider>
         <ScrollRestoration />
         <Scripts />

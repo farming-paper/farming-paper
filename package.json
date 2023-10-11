@@ -33,6 +33,7 @@
     "@floating-ui/react": "^0.26.0",
     "@headlessui/react": "^1.7.17",
     "@heroicons/react": "^2.0.18",
+    "@nextui-org/react": "^2.1.13",
     "@prisma/client": "^5.4.1",
     "@rehookify/datepicker": "^6.2.0",
     "@remix-run/css-bundle": "^2.0.1",

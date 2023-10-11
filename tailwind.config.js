@@ -1,12 +1,14 @@
 /* eslint-disable @typescript-eslint/no-var-requires */
-const defaultTheme = require("tailwindcss/defaultTheme");
-const colors = require("tailwindcss/colors");
+import { nextui } from "@nextui-org/react";
+import colors from "tailwindcss/colors";
+import defaultTheme from "tailwindcss/defaultTheme";
 
 /** @type {import('tailwindcss').Config} */
-module.exports = {
+export default {
   content: [
     "./app/**/*.{js,ts,jsx,tsx}",
     "./node_modules/react-tailwindcss-datepicker/dist/index.esm.js",
+    "./node_modules/@nextui-org/theme/dist/**/*.{js,ts,jsx,tsx}",
   ],
   theme: {
     extend: {
@@ -14,5 +16,6 @@ module.exports = {
       colors: { primary: colors.green },
     },
   },
-  // plugins: [require("@tailwindcss/forms")],
+  darkMode: "class",
+  plugins: [nextui()],
 };

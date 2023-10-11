@@ -1,3 +1,4 @@
+import { Select, SelectItem } from "@nextui-org/react";
 import type { MetaFunction } from "@remix-run/node";
 import {
   Form,
@@ -8,7 +9,7 @@ import {
 } from "@remix-run/react";
 import type { LoaderFunctionArgs } from "@remix-run/server-runtime";
 import { json } from "@remix-run/server-runtime";
-import { App, Button, Input, Select, Space } from "antd";
+import { App, Button, Input, Space } from "antd";
 import { Plus, Trash2 } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import type { PartialDeep } from "type-fest";
@@ -259,13 +260,19 @@ export default function Page() {
         </div>
 
         <div className="flex flex-col mb-4">
-          <Label htmlFor="question_type">문제 유형</Label>
           {/* TODO: implement */}
           <Select
-            options={questionTypeOptions}
-            id="question_type"
-            value={loaded.row.content.type}
-          />
+            label="문제 유형을 선택하세요"
+            className="max-w-xs"
+            selectionMode="single"
+            selectedKeys={[loaded.row.content.type]}
+          >
+            {questionTypeOptions.map((questionType) => (
+              <SelectItem key={questionType.value} value={questionType.value}>
+                {questionType.label}
+              </SelectItem>
+            ))}
+          </Select>
         </div>
 
         <div className="flex flex-col mb-4">
