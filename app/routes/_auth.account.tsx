@@ -1,7 +1,6 @@
-import { GithubOutlined } from "@ant-design/icons";
 import { useNavigate, useOutletContext } from "@remix-run/react";
 import { Button } from "antd";
-import { ExternalLink } from "lucide-react";
+import { ExternalLink, Github } from "lucide-react";
 import { useCallback, useEffect, useState } from "react";
 import DangerModal from "~/common/components/DangerModal";
 import type { IOutletProps } from "~/types";
@@ -101,7 +100,7 @@ export default function Account() {
             rel="noopener noreferrer"
             className="inline-flex items-center gap-2"
           >
-            <GithubOutlined />
+            <Github className="w-4 h-4" />
             <span style={{ marginInlineStart: 0 }}>Github</span>
             <span className="inline-flex opacity-40">
               <ExternalLink className="w-4 h-4" />

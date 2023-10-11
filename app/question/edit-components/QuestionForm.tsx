@@ -1,7 +1,6 @@
-import { PlusOutlined } from "@ant-design/icons";
 import { Form } from "@remix-run/react";
 import { Button, Input, Select, Space } from "antd";
-import { Trash2 } from "lucide-react";
+import { Plus, Trash2 } from "lucide-react";
 import type { Control, FormState, UseFormSetValue } from "react-hook-form";
 import { Controller } from "react-hook-form";
 import ErrorLabel from "~/common/components/ErrorLabel";
@@ -156,6 +155,7 @@ const QuestionForm: React.FC<{
             <Button
               size="small"
               type="dashed"
+              className="inline-flex items-center gap-1"
               onClick={() => {
                 if (values.question?.type === "short_order") {
                   setValue(`question.corrects`, [
@@ -165,8 +165,7 @@ const QuestionForm: React.FC<{
                 }
               }}
             >
-              <PlusOutlined />
-              <span>정답 추가</span>
+              <Plus className="w-4 h-4" /> 정답 추가
             </Button>
           </div>
         </div>

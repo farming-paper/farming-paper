@@ -1,4 +1,3 @@
-import { CalendarOutlined, FileAddOutlined } from "@ant-design/icons";
 import type { Prisma } from "@prisma/client";
 import { Await, Link, useLoaderData, useNavigate } from "@remix-run/react";
 import type { LoaderFunctionArgs } from "@remix-run/server-runtime";
@@ -6,7 +5,7 @@ import { defer } from "@remix-run/server-runtime";
 import { App, Pagination, Tooltip } from "antd";
 import dayjs from "dayjs";
 import { AnimatePresence, motion } from "framer-motion";
-import { ChevronRightIcon, PlusIcon } from "lucide-react";
+import { Calendar, ChevronRightIcon, FilePlus, PlusIcon } from "lucide-react";
 import { Suspense, useEffect, useState } from "react";
 import type { PartialDeep } from "type-fest";
 import { getSessionWithProfile } from "~/auth/get-session";
@@ -182,7 +181,7 @@ export default function QuestionList() {
                   resolve={loaded.tags}
                   errorElement={
                     <div className="py-20 text-center">
-                      <FileAddOutlined className="text-3xl text-gray-400" />
+                      <FilePlus className="text-3xl text-gray-400" />
                       <h3 className="mt-2 text-sm font-medium text-gray-900">
                         태그를 불러오는 중 오류가 발생했습니다.
                       </h3>
@@ -203,7 +202,7 @@ export default function QuestionList() {
           resolve={loaded.question}
           errorElement={
             <div className="py-20 text-center">
-              <FileAddOutlined className="text-3xl text-gray-400" />
+              <FilePlus className="text-3xl text-gray-400" />
               <h3 className="mt-2 text-sm font-medium text-gray-900">
                 문제를 불러오는 중 오류가 발생했습니다.
               </h3>
@@ -213,8 +212,8 @@ export default function QuestionList() {
         >
           {({ items, total }) => {
             return loaded.page === 1 && items.length === 0 ? (
-              <div className="py-20 text-center">
-                <FileAddOutlined className="text-3xl text-gray-400" />
+              <div className="flex flex-col items-center py-20">
+                <FilePlus className="text-3xl text-gray-400" />
                 <h3 className="mt-2 text-sm font-medium text-gray-900">
                   문제가 없습니다.
                 </h3>
@@ -254,7 +253,7 @@ export default function QuestionList() {
                               </div>
                               <div className="flex mt-2">
                                 <div className="flex items-center text-sm font-light text-gray-500">
-                                  <CalendarOutlined
+                                  <Calendar
                                     className="mr-1.5 h-4 w-4 flex-shrink-0 text-gray-400"
                                     aria-hidden="true"
                                   />

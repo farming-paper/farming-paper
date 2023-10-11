@@ -1,10 +1,9 @@
-import { CloseCircleFilled } from "@ant-design/icons";
 import { Dialog, Transition } from "@headlessui/react";
 import { Form, useSearchParams } from "@remix-run/react";
 import { disassembleHangul } from "@toss/hangul";
 import { Button } from "antd";
-import { AnimatePresence, motion, Reorder } from "framer-motion";
-import { Check, ChevronDown, Tag } from "lucide-react";
+import { AnimatePresence, Reorder, motion } from "framer-motion";
+import { Check, ChevronDown, Tag, XCircle } from "lucide-react";
 import { Fragment, useCallback, useMemo, useRef, useState } from "react";
 import { twMerge } from "tailwind-merge";
 import type { FilterTag } from "~/types";
@@ -235,7 +234,7 @@ const TagFilterButton: React.FC<{
                         )}
                         onClick={() => setSearch("")}
                       >
-                        <CloseCircleFilled className="w-4 h-4" />
+                        <XCircle className="w-4 h-4" />
                       </button>
                     </div>
                   </Form>

@@ -1,3 +1,4 @@
+import { cssBundleHref } from "@remix-run/css-bundle";
 import type { LoaderFunctionArgs, MetaFunction } from "@remix-run/node";
 import { json } from "@remix-run/node";
 import {
@@ -10,6 +11,7 @@ import {
   useFetcher,
   useLoaderData,
 } from "@remix-run/react";
+
 import {
   createBrowserClient,
   createServerClient,
@@ -37,6 +39,7 @@ export function links() {
       rel: "stylesheet",
       href: "https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.6/dist/web/static/pretendard.css",
     },
+    ...(cssBundleHref ? [{ rel: "stylesheet", href: cssBundleHref }] : []),
   ];
 }
 

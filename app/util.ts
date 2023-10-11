@@ -2,8 +2,8 @@ import type { FetcherWithComponents, SubmitOptions } from "@remix-run/react";
 import { useFetcher, useSubmit } from "@remix-run/react";
 import type { SerializeFrom } from "@remix-run/server-runtime";
 import dayjsLib from "dayjs";
-import "dayjs/locale/ko"; // import locale
-import relativeTime from "dayjs/plugin/relativeTime"; // import plugin
+import "dayjs/locale/ko.js"; // import locale
+import relativeTime from "dayjs/plugin/relativeTime.js"; // import plugin
 import React from "react";
 import rfdc from "rfdc";
 

@@ -1,8 +1,8 @@
-import { QuestionCircleFilled } from "@ant-design/icons";
 import { Link, useLoaderData } from "@remix-run/react";
 import type { LoaderFunctionArgs } from "@remix-run/server-runtime";
 import { json } from "@remix-run/server-runtime";
 import { Tooltip } from "antd";
+import { HelpCircle } from "lucide-react";
 import { getSessionWithProfile } from "~/auth/get-session";
 import NumberBall from "~/common/components/NumberBall";
 import prisma from "~/prisma-client.server";
@@ -26,11 +26,7 @@ export async function loader({ request }: LoaderFunctionArgs) {
       _count: {
         select: {
           tags_questions_relation: {
-            where: {
-              questions: {
-                deleted_at: null,
-              },
-            },
+            where: { questions: { deleted_at: null } },
           },
         },
       },
@@ -67,7 +63,7 @@ export default function Page() {
               </span>
             }
           >
-            <QuestionCircleFilled className="w-4 h-4" />
+            <HelpCircle className="w-4 h-4" />
           </Tooltip>
         </span>
       </p>

@@ -1,4 +1,3 @@
-import { PlusOutlined } from "@ant-design/icons";
 import type { MetaFunction } from "@remix-run/node";
 import {
   Form,
@@ -10,7 +9,7 @@ import {
 import type { LoaderFunctionArgs } from "@remix-run/server-runtime";
 import { json } from "@remix-run/server-runtime";
 import { App, Button, Input, Select, Space } from "antd";
-import { Trash2 } from "lucide-react";
+import { Plus, Trash2 } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import type { PartialDeep } from "type-fest";
 import editSingleQuestion from "~/actions/editSingleQuestion";
@@ -323,6 +322,7 @@ export default function Page() {
               <Button
                 size="small"
                 type="dashed"
+                className="inline-flex items-center gap-1"
                 onClick={() => {
                   setEditingContent({
                     ...editingContent,
@@ -330,8 +330,7 @@ export default function Page() {
                   });
                 }}
               >
-                <PlusOutlined />
-                <span>정답 추가</span>
+                <Plus className="w-4 h-4" /> 정답 추가
               </Button>
             </div>
           </div>

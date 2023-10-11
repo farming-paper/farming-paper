@@ -1,13 +1,9 @@
-import {
-  PlayCircleFilled,
-  TagOutlined,
-  UnorderedListOutlined,
-  UserOutlined,
-} from "@ant-design/icons";
 import { Dialog, Transition } from "@headlessui/react";
 import { Cog6ToothIcon, XMarkIcon } from "@heroicons/react/24/outline";
 import { NavLink } from "@remix-run/react";
 import { useAtom } from "jotai";
+import { List, PlayCircle, Tag, User2 } from "lucide-react";
+
 import { Fragment, useMemo } from "react";
 import { twMerge } from "tailwind-merge";
 import openSideMenuAtom from "~/atoms/openSideMenu";
@@ -21,23 +17,23 @@ const teams = [
 const links = [
   {
     to: "/q/solve",
-    icon: PlayCircleFilled,
+    icon: PlayCircle,
     name: "Go!",
     primary: true,
   },
   {
     to: "/q/list",
-    icon: UnorderedListOutlined,
+    icon: List,
     name: "문제 관리",
   },
   {
     to: "/tag/list",
-    icon: TagOutlined,
+    icon: Tag,
     name: "태그 관리",
   },
   {
     to: "/account",
-    icon: UserOutlined,
+    icon: User2,
     name: "계정",
   },
 ];
