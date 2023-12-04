@@ -4,8 +4,6 @@ import katexStyle from "katex/dist/katex.min.css";
 import { marked } from "marked";
 import React from "react";
 
-const renderer = new marked.Renderer();
-
 const renderKatex = (text: string, displayMode: boolean) => {
   return katex.renderToString(text, {
     displayMode,
@@ -21,23 +19,21 @@ export function links() {
   return [{ rel: "stylesheet", href: katexStyle }];
 }
 
-const originParagraph = renderer.paragraph.bind(renderer);
+marked.use({
+  renderer: {
+    paragraph(text) {
+      let result = text;
+      result = result.replace(/(\$\$((.|\n)+?)\$\$)/gm, (match, p1, p2) => {
+        return renderKatex(p2, true);
+      });
 
-renderer.paragraph = (text) => {
-  let result = text;
-
-  result = result.replace(/(\$\$((.|\n)+?)\$\$)/gm, (match, p1, p2) => {
-    return renderKatex(p2, true);
-  });
-
-  result = result.replace(/(\$((.|\n)+?)\$)/gm, (match, p1, p2) => {
-    return renderKatex(p2, false);
-  });
-
-  return originParagraph(result);
-};
-
-marked.use({ renderer });
+      result = result.replace(/(\$((.|\n)+?)\$)/gm, (match, p1, p2) => {
+        return renderKatex(p2, false);
+      });
+      return `<p>${result}</p>`;
+    },
+  },
+});
 
 const Render: React.FC<{ children: string }> = ({ children }) => {
   return (

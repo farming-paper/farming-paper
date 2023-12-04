@@ -8,8 +8,6 @@ exports[`Simple Text 1`] = `
     <p>
       Simple Text
     </p>
-    
-
   </div>
 </div>
 `;
@@ -24,8 +22,6 @@ exports[`마크다운 렌더링 > 굵게가 잘 표시되어야 함 1`] = `
         bold
       </strong>
     </p>
-    
-
   </div>
 </div>
 `;
@@ -151,8 +147,6 @@ exports[`수학 렌더링 (KaTeX) > Block Math 가 잘 렌더링되어야 함 1`
         </span>
       </span>
     </p>
-    
-
   </div>
 </div>
 `;
@@ -249,8 +243,6 @@ exports[`수학 렌더링 (KaTeX) > Inline Math 가 잘 렌더링되어야 함 1
         </span>
       </span>
     </p>
-    
-
   </div>
 </div>
 `;
