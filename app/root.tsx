@@ -115,12 +115,12 @@ export default function Root() {
   }, [serverAccessToken, supabase, authChangedFetcher]);
 
   return (
-    <html lang="ko" className="font-sans bg-gray-50">
+    <html lang="ko" className="font-sans">
       <head>
         <Meta />
         <Links />
       </head>
-      <body className="relative max-w-md min-h-[100vh] mx-auto bg-white pb-16 @container">
+      <body className="@container">
         <GlobalLoading />
         <ConfigProvider theme={theme}>
           <NextUIProvider>
