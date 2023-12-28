@@ -1,17 +1,16 @@
 import { useLoaderData, useNavigate } from "@remix-run/react";
 import type { LoaderFunctionArgs } from "@remix-run/server-runtime";
 import { json } from "@remix-run/server-runtime";
-import type { InputRef } from "antd";
-import { Button, Modal } from "antd";
 import { AnimatePresence, motion } from "framer-motion";
 import type { RefObject } from "react";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { twMerge } from "tailwind-merge";
 import { getSessionWithProfile } from "~/auth/get-session";
+import { Button, Modal } from "~/common/components/mockups";
 import { createQuestionGenerator } from "~/question-generator";
+import Render, { links as questionRenderLinks } from "~/question/Render";
 import { createQuestionFromJson } from "~/question/create";
 import QuestionInput from "~/question/input-components/QuestionInput";
-import Render, { links as questionRenderLinks } from "~/question/Render";
 import type { ISuccessArgs, Question } from "~/question/types";
 import { getStringAnswer } from "~/question/utils";
 import { getServerSideSupabaseClient } from "~/supabase/client";
@@ -122,7 +121,7 @@ export default function Page() {
   const questionInputRef = useRef(null) as
     | RefObject<HTMLInputElement>
     | RefObject<HTMLTextAreaElement>;
-  const antdInputRef = useRef<InputRef>(null);
+  const antdInputRef = useRef<any>(null);
 
   const passQuestion = useCallback(() => {
     setDisplay({
@@ -358,7 +357,7 @@ export default function Page() {
 
                   <Button
                     href={`/q/edit/${display.question.id}`}
-                    onClick={(e) => {
+                    onClick={(e: any) => {
                       e.preventDefault();
                       navigate(`/q/edit/${display.question.id}`);
                     }}
@@ -459,7 +458,7 @@ export default function Page() {
 
                 <Button
                   href={`/q/edit/${display.question.id}`}
-                  onClick={(e) => {
+                  onClick={(e: any) => {
                     e.preventDefault();
                     navigate(`/q/edit/${display.question.id}`);
                   }}
@@ -518,7 +517,7 @@ export default function Page() {
 
                 <Button
                   href={`/q/edit/${display.question.id}`}
-                  onClick={(e) => {
+                  onClick={(e: any) => {
                     e.preventDefault();
                     navigate(`/q/edit/${display.question.id}`);
                   }}

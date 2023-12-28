@@ -1,10 +1,11 @@
 import { Link, useLoaderData } from "@remix-run/react";
 import type { LoaderFunctionArgs } from "@remix-run/server-runtime";
 import { json } from "@remix-run/server-runtime";
-import { Tooltip } from "antd";
+
 import { HelpCircle } from "lucide-react";
 import { getSessionWithProfile } from "~/auth/get-session";
 import NumberBall from "~/common/components/NumberBall";
+import { Tooltip } from "~/common/components/mockups";
 import prisma from "~/prisma-client.server";
 import type { ITagWithCount } from "~/types";
 import { bigintToNumber, removeNullDeep } from "~/util";

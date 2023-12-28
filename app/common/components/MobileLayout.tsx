@@ -1,5 +1,5 @@
 import { Bars3Icon } from "@heroicons/react/24/outline";
-import { App } from "antd";
+
 import { useAtom } from "jotai";
 import type { ReactNode } from "react";
 import { useEffect } from "react";
@@ -9,15 +9,13 @@ import SideMenu from "./SideMenu";
 export default function MobileLayout({ children }: { children: ReactNode }) {
   const [_, setOpenSideMenu] = useAtom(openSideMenuAtom);
 
-  const { message } = App.useApp();
-
-  useEffect(() => {
-    const params = new URLSearchParams(window.location.search);
-    const status = params.get("status");
-    if (status === "already_logged_in") {
-      message.info("이미 로그인되어 있습니다.");
-    }
-  }, [message]);
+  // useEffect(() => {
+  //   const params = new URLSearchParams(window.location.search);
+  //   const status = params.get("status");
+  //   if (status === "already_logged_in") {
+  //     message.info("이미 로그인되어 있습니다.");
+  //   }
+  // }, [message]);
 
   // set OpenSideMenu to false when the history changes
   useEffect(() => {

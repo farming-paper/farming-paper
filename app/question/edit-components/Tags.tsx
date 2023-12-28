@@ -1,5 +1,4 @@
 import { disassembleHangul } from "@toss/hangul";
-import { App, theme } from "antd";
 
 import { PlusIcon } from "lucide-react";
 import React, {

@@ -2,7 +2,7 @@ import { useOutletContext, useSearchParams } from "@remix-run/react";
 import type { LoaderFunctionArgs } from "@remix-run/server-runtime";
 import { json, redirect } from "@remix-run/server-runtime";
 import { createServerClient } from "@supabase/auth-helpers-remix";
-import { App } from "antd";
+
 import { ExternalLink } from "lucide-react";
 import { useEffect, useRef } from "react";
 import { getClientSideSupabaseConfig } from "~/config";

@@ -1,5 +1,6 @@
 import { useNavigate, useOutletContext } from "@remix-run/react";
-import { Button } from "antd";
+import { Button } from "~/common/components/mockups";
+
 import { ExternalLink, Github } from "lucide-react";
 import { useCallback, useEffect, useState } from "react";
 import DangerModal from "~/common/components/DangerModal";

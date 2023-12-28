@@ -1,10 +1,10 @@
 import { Form } from "@remix-run/react";
-import { Button, Input, Select, Space } from "antd";
 import { Plus, Trash2 } from "lucide-react";
 import type { Control, FormState, UseFormSetValue } from "react-hook-form";
 import { Controller } from "react-hook-form";
 import ErrorLabel from "~/common/components/ErrorLabel";
 import Label from "~/common/components/Label";
+import { Button, Input, Select, Space } from "~/common/components/mockups";
 import { createTag } from "~/tag/create";
 import type { ITagWithCount } from "~/types";
 import type { QuestionFormValues } from "../question-form-resolver";

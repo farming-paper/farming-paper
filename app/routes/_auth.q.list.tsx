@@ -2,16 +2,16 @@ import type { Prisma } from "@prisma/client";
 import { Await, Link, useLoaderData, useNavigate } from "@remix-run/react";
 import type { LoaderFunctionArgs } from "@remix-run/server-runtime";
 import { defer } from "@remix-run/server-runtime";
-import { App, Pagination, Tooltip } from "antd";
 import dayjs from "dayjs";
 import { AnimatePresence, motion } from "framer-motion";
 import { Calendar, ChevronRightIcon, FilePlus, PlusIcon } from "lucide-react";
-import { Suspense, useEffect, useState } from "react";
+import { Suspense, useState } from "react";
 import type { PartialDeep } from "type-fest";
 import { getSessionWithProfile } from "~/auth/get-session";
 import DateFilterButton from "~/common/components/DateFilterButton";
 import MobileLayout from "~/common/components/MobileLayout";
 import TagFilterButton from "~/common/components/TagFilterButton";
+import { Pagination, Tooltip } from "~/common/components/mockups";
 import prisma from "~/prisma-client.server";
 import { createQuestion } from "~/question/create";
 import type { Question } from "~/question/types";
@@ -122,20 +122,19 @@ export default function QuestionList() {
 
   const navigate = useNavigate();
   const [search] = useState("");
-  const { message } = App.useApp();
 
-  useEffect(() => {
-    const url = new URL(document.location.href);
-    const deleted = url.searchParams.get("deleted");
-    message.destroy("question-deleted");
-    message.destroy("edit-question");
-    if (deleted === "1") {
-      message.success({
-        content: "문제가 삭제되었습니다.",
-        key: "question-deleted",
-      });
-    }
-  }, [message]);
+  // useEffect(() => {
+  //   const url = new URL(document.location.href);
+  //   const deleted = url.searchParams.get("deleted");
+  //   message.destroy("question-deleted");
+  //   message.destroy("edit-question");
+  //   if (deleted === "1") {
+  //     message.success({
+  //       content: "문제가 삭제되었습니다.",
+  //       key: "question-deleted",
+  //     });
+  //   }
+  // }, [message]);
 
   return (
     <MobileLayout>
@@ -300,7 +299,7 @@ export default function QuestionList() {
                       defaultCurrent={loaded.page}
                       pageSize={numberPerPage}
                       total={total}
-                      onChange={(e) => {
+                      onChange={(e: any) => {
                         const dest = new URL(document.location.href);
                         dest.searchParams.set("p", e.toString());
                         navigate(`${dest.pathname}${dest.search}`);

@@ -18,24 +18,16 @@ import {
   createServerClient,
 } from "@supabase/auth-helpers-remix";
 import { Analytics } from "@vercel/analytics/react";
-import { App, ConfigProvider } from "antd";
-import antdResetStyles from "antd/dist/reset.css";
-import type { ThemeConfig } from "antd/es/config-provider/context";
 import { useEffect, useState } from "react";
 import GlobalLoading from "./common/components/GlobalLoading";
 import { getClientSideSupabaseConfig } from "./config";
-import antdStyles from "./styles/antd.css";
 import tailwindStyles from "./styles/app.css";
-import tailwindResetStyles from "./styles/tailwind.reset.css";
 import type { Database } from "./supabase/generated/supabase-types";
 import { withDurationLog } from "./util";
 
 export function links() {
   return [
-    { rel: "stylesheet", href: tailwindResetStyles },
-    { rel: "stylesheet", href: antdResetStyles },
     { rel: "stylesheet", href: tailwindStyles },
-    { rel: "stylesheet", href: antdStyles },
     {
       rel: "stylesheet",
       href: "https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.6/dist/web/static/pretendard.css",
@@ -70,15 +62,6 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
       headers: response.headers,
     }
   );
-};
-
-const theme: ThemeConfig = {
-  token: {
-    colorPrimary: "#16a34a",
-    colorLink: "#16a34a",
-    fontSize: 16,
-    controlHeight: 40,
-  },
 };
 
 export default function Root() {
@@ -122,13 +105,9 @@ export default function Root() {
       </head>
       <body className="@container">
         <GlobalLoading />
-        <ConfigProvider theme={theme}>
-          <NextUIProvider>
-            <App>
-              <Outlet context={{ supabase, session }} />
-            </App>
-          </NextUIProvider>
-        </ConfigProvider>
+        <NextUIProvider>
+          <Outlet context={{ supabase, session }} />
+        </NextUIProvider>
         <ScrollRestoration />
         <Scripts />
         <LiveReload />

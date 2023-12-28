@@ -9,7 +9,6 @@ import {
 } from "@remix-run/react";
 import type { LoaderFunctionArgs } from "@remix-run/server-runtime";
 import { json } from "@remix-run/server-runtime";
-import { App, Button, Input, Space } from "antd";
 import { Plus, Trash2 } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import type { PartialDeep } from "type-fest";
@@ -17,6 +16,7 @@ import editSingleQuestion from "~/actions/editSingleQuestion";
 import { getSessionWithProfile } from "~/auth/get-session";
 import DangerModal from "~/common/components/DangerModal";
 import Label from "~/common/components/Label";
+import { Button, Input, Space } from "~/common/components/mockups";
 import { createQuestion } from "~/question/create";
 import Tags from "~/question/edit-components/Tags";
 import type { Question, QuestionRow } from "~/question/types";
@@ -166,40 +166,39 @@ export default function Page() {
 
   const navigation = useNavigation();
   const submit = useSubmit();
-  const actionData = useActionData<typeof action>();
+  const _actionData = useActionData<typeof action>();
 
   const formRef = useRef<HTMLFormElement>(null);
-  const { message } = App.useApp();
 
-  useEffect(() => {
-    if (navigation.state === "submitting") {
-      message.loading({
-        key: "edit-question",
-        content: "문제를 수정하는 중입니다...",
-        duration: 20,
-      });
-      return;
-    }
+  // useEffect(() => {
+  //   if (navigation.state === "submitting") {
+  //     message.loading({
+  //       key: "edit-question",
+  //       content: "문제를 수정하는 중입니다...",
+  //       duration: 20,
+  //     });
+  //     return;
+  //   }
 
-    if (navigation.state === "idle" && actionData?.data) {
-      message.success({
-        key: "edit-question",
-        content: "성공적으로 수정되었습니다.",
-        duration: 2,
-      });
-      return;
-    }
-    if (navigation.state === "idle" && actionData?.error) {
-      message.error({
-        key: "edit-question",
-        content: "문제 수정에 실패했습니다.",
-        duration: 2,
-      });
-      // eslint-disable-next-line no-console
-      console.error("actionData.error", actionData.error);
-      return;
-    }
-  }, [actionData, navigation.state, message]);
+  //   if (navigation.state === "idle" && actionData?.data) {
+  //     message.success({
+  //       key: "edit-question",
+  //       content: "성공적으로 수정되었습니다.",
+  //       duration: 2,
+  //     });
+  //     return;
+  //   }
+  //   if (navigation.state === "idle" && actionData?.error) {
+  //     message.error({
+  //       key: "edit-question",
+  //       content: "문제 수정에 실패했습니다.",
+  //       duration: 2,
+  //     });
+  //     // eslint-disable-next-line no-console
+  //     console.error("actionData.error", actionData.error);
+  //     return;
+  //   }
+  // }, [actionData, navigation.state, message]);
 
   /** keyboard shortcut */
   useEffect(() => {
@@ -281,7 +280,7 @@ export default function Page() {
             autoSize={{ minRows: 3 }}
             required
             value={editingContent.message}
-            onChange={(e) =>
+            onChange={(e: any) =>
               setEditingContent({ ...editingContent, message: e.target.value })
             }
             placeholder="내용을 작성하세요"
@@ -299,7 +298,7 @@ export default function Page() {
                     <Input
                       style={{ width: "calc(100% - 3rem)" }}
                       value={q}
-                      onChange={(e) => {
+                      onChange={(e: any) => {
                         setEditingContent({
                           ...editingContent,
                           corrects: editingContent.corrects.map((c, i) =>

@@ -1,8 +1,8 @@
 import { ArrowRightIcon } from "@heroicons/react/24/outline";
 import { Link } from "@remix-run/react";
 import { redirect } from "@remix-run/server-runtime";
-import { Button } from "antd";
 import { useMemo, useState } from "react";
+import { Button } from "~/common/components/mockups";
 import { getQuestionGroups } from "~/question/utils";
 
 export async function loader() {

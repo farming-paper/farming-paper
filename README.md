@@ -14,9 +14,11 @@ Farming Paper 서비스에 관심이 있으신 **당신**!
 
 모든 방식의 협업, 제안, 건의사항, 대화는 언제나 열려있습니다.
 
-[Issues](https://github.com/farming-paper/farming-paper/issues)에 이야깃거리를 남겨주거나 개발자 이메일 (eszqsc112@gmail.com)로 메시지를 남겨주세요.
+[Issues](https://github.com/farming-paper/farming-paper/issues)에 이야깃거리를 남겨주거나 개발자 이메일 (<eszqsc112@gmail.com>)로 메시지를 남겨주세요.
 
+## 개발 공지
 
+- <https://github.com/remix-run/remix/issues/7466> 땜에 `remix dev --manual`로 실행해야 합니다.
 
 ## 주기능
 
