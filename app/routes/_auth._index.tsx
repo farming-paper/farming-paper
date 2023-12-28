@@ -1,5 +1,5 @@
 import { redirect } from "@remix-run/server-runtime";
 
 export const loader = async () => {
-  return redirect("/q/solve");
+  return redirect("/dashboard");
 };

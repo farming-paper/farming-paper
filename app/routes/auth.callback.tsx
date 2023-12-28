@@ -49,9 +49,9 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
     .eq("email", email)
     .is("deleted_at", null);
 
-  // 이미 가입한 사용자는 /q/solve 로 보냄.
+  // 이미 가입한 사용자는 /dashboard 로 보냄.
   if (typeof existingUser.count === "number" && existingUser.count > 0) {
-    return redirect("/q/solve?status=already_joined", {
+    return redirect("/dashboard?status=already_joined", {
       headers: response.headers,
     });
   }
@@ -194,7 +194,7 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
     );
   }
 
-  return redirect("/q/solve?status=entry", { headers: response.headers });
+  return redirect("/dashboard?status=entry", { headers: response.headers });
 };
 
 export default function AuthCallback() {
