@@ -1,8 +1,12 @@
-import { Link, isRouteErrorResponse, useRouteError } from "@remix-run/react";
+import { Button, Link } from "@nextui-org/react";
+import {
+  Link as RemixLink,
+  isRouteErrorResponse,
+  useRouteError,
+} from "@remix-run/react";
 import type { LoaderFunctionArgs } from "@remix-run/server-runtime";
 import { json, redirect } from "@remix-run/server-runtime";
 import { getSessionWithProfile } from "~/auth/get-session";
-
 import { withDurationLog } from "~/util";
 
 export const loader = async ({ request }: LoaderFunctionArgs) => {
@@ -57,28 +61,30 @@ export function ErrorBoundary() {
             </div>
             {caught.status === 404 && (
               <div className="flex mt-10 space-x-3 @sm:border-l @sm:border-transparent @sm:pl-6">
-                <Link
+                <RemixLink
                   to="/"
                   className="inline-flex items-center px-4 py-2 text-sm font-medium text-white bg-green-600 border border-transparent rounded-md shadow-sm hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2 "
                 >
                   홈으로 돌아가기
-                </Link>
-                <Link
+                </RemixLink>
+                <RemixLink
                   to="/account"
                   className="inline-flex items-center px-4 py-2 text-sm font-medium text-green-700 bg-green-100 border border-transparent rounded-md hover:bg-green-200 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2"
                 >
                   문의하기
-                </Link>
+                </RemixLink>
               </div>
             )}
             {caught.status === 401 && (
               <div className="flex mt-10 space-x-3 @sm:border-l @sm:border-transparent @sm:pl-6">
-                <Link
-                  to="/login"
-                  className="inline-flex items-center px-4 py-2 text-sm font-medium text-white bg-green-600 border border-transparent rounded-md shadow-sm hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2 "
+                <Button
+                  as={Link}
+                  href="/login"
+                  color="primary"
+                  variant="solid"
                 >
                   로그인 페이지로 이동
-                </Link>
+                </Button>
               </div>
             )}
           </div>

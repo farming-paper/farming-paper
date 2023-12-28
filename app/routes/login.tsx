@@ -2,9 +2,9 @@ import { useOutletContext, useSearchParams } from "@remix-run/react";
 import type { LoaderFunctionArgs } from "@remix-run/server-runtime";
 import { json, redirect } from "@remix-run/server-runtime";
 import { createServerClient } from "@supabase/auth-helpers-remix";
-
 import { ExternalLink } from "lucide-react";
 import { useEffect, useRef } from "react";
+import { toast } from "react-toastify";
 import { getClientSideSupabaseConfig } from "~/config";
 import google from "~/images/logo/google.svg";
 import type { IOutletProps } from "~/types";
@@ -41,7 +41,6 @@ export default function Login() {
   const props = useOutletContext<IOutletProps>();
   const [urlSearchParams] = useSearchParams();
   const statusMessaged = useRef(false);
-  const { message } = App.useApp();
 
   useEffect(() => {
     if (statusMessaged.current) {
@@ -51,17 +50,17 @@ export default function Login() {
 
     switch (status) {
       case "logged_out":
-        message.success("성공적으로 로그아웃되었습니다.");
+        toast.success("성공적으로 로그아웃되었습니다.");
         break;
       case "deleted_account":
-        message.success("계정이 성공적으로 삭제되었습니다.");
+        toast.success("계정이 성공적으로 삭제되었습니다.");
         break;
       default:
         break;
     }
 
     statusMessaged.current = true;
-  }, [message, urlSearchParams]);
+  }, [urlSearchParams]);
 
   const handleGoogleLogin = async () => {
     const redirectTo = new URL(window.location.href.split("?")[0] as string);

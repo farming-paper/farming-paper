@@ -10,7 +10,9 @@ import {
   ScrollRestoration,
   useFetcher,
   useLoaderData,
+  useNavigate,
 } from "@remix-run/react";
+import { Slide, ToastContainer } from "react-toastify";
 
 import { NextUIProvider } from "@nextui-org/react";
 import {
@@ -24,6 +26,8 @@ import { getClientSideSupabaseConfig } from "./config";
 import tailwindStyles from "./styles/app.css";
 import type { Database } from "./supabase/generated/supabase-types";
 import { withDurationLog } from "./util";
+
+import "react-toastify/dist/ReactToastify.min.css";
 
 export function links() {
   return [
@@ -66,6 +70,7 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
 
 export default function Root() {
   const { env, session } = useLoaderData<typeof loader>();
+  const navigate = useNavigate();
 
   const [supabase] = useState(() =>
     createBrowserClient<Database>(env.url, env.anonKey)
@@ -103,15 +108,21 @@ export default function Root() {
         <Meta />
         <Links />
       </head>
-      <body className="@container">
+      <body className="@container text-foreground bg-background light">
         <GlobalLoading />
-        <NextUIProvider>
+        <NextUIProvider navigate={navigate}>
           <Outlet context={{ supabase, session }} />
         </NextUIProvider>
         <ScrollRestoration />
         <Scripts />
         <LiveReload />
         <Analytics />
+        <ToastContainer
+          autoClose={2000}
+          hideProgressBar
+          position="top-center"
+          transition={Slide}
+        />
       </body>
     </html>
   );
