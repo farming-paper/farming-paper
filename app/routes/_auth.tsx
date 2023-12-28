@@ -1,4 +1,3 @@
-import { Bars3Icon } from "@heroicons/react/24/outline";
 import {
   Link,
   Outlet,
@@ -8,13 +7,9 @@ import {
 } from "@remix-run/react";
 import type { LoaderFunctionArgs } from "@remix-run/server-runtime";
 import { json, redirect } from "@remix-run/server-runtime";
-import { App } from "antd";
-import { useAtom } from "jotai";
-import { useEffect } from "react";
-import openSideMenuAtom from "~/atoms/openSideMenu";
 import { getSessionWithProfile } from "~/auth/get-session";
+import MobileLayout from "~/common/components/MobileLayout";
 
-import SideMenu from "~/common/components/SideMenu";
 import type { IOutletProps } from "~/types";
 import { withDurationLog } from "~/util";
 
@@ -43,42 +38,11 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
 
 const AuthRouterGroup = () => {
   const context = useOutletContext<IOutletProps>();
-  const [_, setOpenSideMenu] = useAtom(openSideMenuAtom);
-
-  const { message } = App.useApp();
-
-  useEffect(() => {
-    const params = new URLSearchParams(window.location.search);
-    const status = params.get("status");
-    if (status === "already_logged_in") {
-      message.info("이미 로그인되어 있습니다.");
-    }
-  }, [message]);
-
-  // set OpenSideMenu to false when the history changes
-  useEffect(() => {
-    const setOpensideMenuFalse = () => setOpenSideMenu(false);
-    window.addEventListener("popstate", setOpensideMenuFalse);
-
-    return () => {
-      window.removeEventListener("popstate", setOpensideMenuFalse);
-    };
-  }, [setOpenSideMenu]);
 
   return (
-    <>
-      <SideMenu />
-      <div className="px-4 py-2.5">
-        <button
-          className="-m-2.5 p-2.5 text-gray-700"
-          onClick={() => setOpenSideMenu(true)}
-        >
-          <span className="sr-only">Open sidebar</span>
-          <Bars3Icon className="w-6 h-6" aria-hidden="true" />
-        </button>
-      </div>
+    <MobileLayout>
       <Outlet context={context} />
-    </>
+    </MobileLayout>
   );
 };
 
