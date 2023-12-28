@@ -1,16 +1,8 @@
-import {
-  Link,
-  Outlet,
-  isRouteErrorResponse,
-  useOutletContext,
-  useRouteError,
-} from "@remix-run/react";
+import { Link, isRouteErrorResponse, useRouteError } from "@remix-run/react";
 import type { LoaderFunctionArgs } from "@remix-run/server-runtime";
 import { json, redirect } from "@remix-run/server-runtime";
 import { getSessionWithProfile } from "~/auth/get-session";
-import MobileLayout from "~/common/components/MobileLayout";
 
-import type { IOutletProps } from "~/types";
 import { withDurationLog } from "~/util";
 
 export const loader = async ({ request }: LoaderFunctionArgs) => {
@@ -34,16 +26,6 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
   return json({
     profile,
   });
-};
-
-const AuthRouterGroup = () => {
-  const context = useOutletContext<IOutletProps>();
-
-  return (
-    <MobileLayout>
-      <Outlet context={context} />
-    </MobileLayout>
-  );
 };
 
 export function ErrorBoundary() {
@@ -106,4 +88,4 @@ export function ErrorBoundary() {
   );
 }
 
-export default AuthRouterGroup;
+// export default AuthRouterGroup;
