@@ -21,7 +21,6 @@ import {
 } from "@supabase/auth-helpers-remix";
 import { Analytics } from "@vercel/analytics/react";
 import { useEffect, useState } from "react";
-import GlobalLoading from "./common/components/GlobalLoading";
 import { getClientSideSupabaseConfig } from "./config";
 import tailwindStyles from "./styles/app.css";
 import type { Database } from "./supabase/generated/supabase-types";
@@ -109,7 +108,6 @@ export default function Root() {
         <Links />
       </head>
       <body className="@container text-foreground bg-background light">
-        <GlobalLoading />
         <NextUIProvider navigate={navigate}>
           <Outlet context={{ supabase, session }} />
         </NextUIProvider>
