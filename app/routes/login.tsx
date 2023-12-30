@@ -94,7 +94,7 @@ export default function Login() {
           <button
             type="button"
             onClick={handleGoogleLogin}
-            className="inline-flex items-center justify-center w-full px-5 py-3 text-base font-medium text-gray-600 bg-white border border-transparent rounded-md hover:bg-green-50 @sm:w-auto transition shadow-xl"
+            className="inline-flex items-center justify-center w-full px-5 py-3 text-base font-medium text-gray-600 transition bg-white border border-transparent rounded-md shadow-xl hover:bg-green-50"
           >
             <span>
               <img
