@@ -4,39 +4,17 @@ import {
   isRouteErrorResponse,
   useRouteError,
 } from "@remix-run/react";
-import type { LoaderFunctionArgs } from "@remix-run/server-runtime";
-import { json, redirect } from "@remix-run/server-runtime";
-import { getSessionWithProfile } from "~/auth/get-session";
-import { withDurationLog } from "~/util";
-
-export const loader = async ({ request }: LoaderFunctionArgs) => {
-  const response = new Response();
-
-  const { profile, session, supabaseClient } = await withDurationLog(
-    "_auth_getSessionWithProfile",
-    getSessionWithProfile({
-      request,
-      response,
-    })
-  );
-
-  if (!session || !profile) {
-    await supabaseClient.auth.signOut();
-    return redirect("/login", {
-      headers: response.headers,
-    });
-  }
-
-  return json({
-    profile,
-  });
-};
 
 export function ErrorBoundary() {
   const caught = useRouteError();
 
   if (!isRouteErrorResponse(caught)) {
-    return <div>??? {JSON.stringify(caught)}</div>;
+    return (
+      <div>
+        <p>unknown error</p>
+        <pre>{JSON.stringify(caught, null, 2)}</pre>
+      </div>
+    );
   }
 
   return (
@@ -77,12 +55,7 @@ export function ErrorBoundary() {
             )}
             {caught.status === 401 && (
               <div className="flex mt-10 space-x-3 @sm:border-l @sm:border-transparent @sm:pl-6">
-                <Button
-                  as={Link}
-                  href="/login"
-                  color="primary"
-                  variant="solid"
-                >
+                <Button as={Link} href="/login" color="primary" variant="solid">
                   로그인 페이지로 이동
                 </Button>
               </div>
@@ -93,5 +66,3 @@ export function ErrorBoundary() {
     </div>
   );
 }
-
-// export default AuthRouterGroup;

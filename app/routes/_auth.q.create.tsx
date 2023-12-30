@@ -1,7 +1,7 @@
 import type { ActionFunctionArgs } from "@remix-run/server-runtime";
 import { json } from "@remix-run/server-runtime";
 import { nanoid } from "nanoid";
-import { getSessionWithProfile } from "~/auth/get-session";
+import { requireAuth } from "~/auth/get-session";
 import type { Question } from "~/question/types";
 import { getServerSideSupabaseClient } from "~/supabase/client";
 import type { Json } from "~/supabase/generated/supabase-types";
@@ -21,13 +21,8 @@ export const createCreateQuestionArgs = createArgs;
 export const useCreateQuestionFetcher = useFetcher;
 
 export async function action({ request }: ActionFunctionArgs) {
+  const { profile } = await requireAuth(request);
   const { question, tags } = await getArgsFromRequest(request);
-
-  const response = new Response();
-  const { profile } = await getSessionWithProfile({
-    request,
-    response,
-  });
 
   const db = getServerSideSupabaseClient();
 

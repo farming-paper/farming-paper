@@ -2,7 +2,7 @@ import type { ActionFunctionArgs } from "@remix-run/server-runtime";
 import { json, redirect } from "@remix-run/server-runtime";
 import { withZod } from "@remix-validated-form/with-zod";
 import { z } from "zod";
-import { getSessionWithProfile } from "~/auth/get-session";
+import { requireAuth } from "~/auth/get-session";
 import prisma from "~/prisma-client.server";
 import type { IProfile } from "~/types";
 import { bigintToNumber } from "~/util";
@@ -135,6 +135,7 @@ async function editSingleQuestion({
 }
 
 async function updateSingleQuestion({ request }: ActionFunctionArgs) {
+  const { profile } = await requireAuth(request);
   const formData = await request.formData();
   const action = await actionValidator.validate(formData);
 
@@ -162,13 +163,6 @@ async function updateSingleQuestion({ request }: ActionFunctionArgs) {
   const tagPublicIds = formData
     .getAll("tag_public_id")
     .map((v) => v.toString());
-
-  const response = new Response();
-
-  const { profile } = await getSessionWithProfile({
-    request,
-    response,
-  });
 
   switch (action.data.intent) {
     case "delete_question":

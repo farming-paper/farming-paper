@@ -5,7 +5,7 @@ import { AnimatePresence, motion } from "framer-motion";
 import type { RefObject } from "react";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { twMerge } from "tailwind-merge";
-import { getSessionWithProfile } from "~/auth/get-session";
+import { requireAuth } from "~/auth/get-session";
 import { Button, Modal } from "~/common/components/mockups";
 import { createQuestionGenerator } from "~/question-generator";
 import Render, { links as questionRenderLinks } from "~/question/Render";
@@ -32,8 +32,7 @@ const motionProps = {
 };
 
 export async function loader({ request, params }: LoaderFunctionArgs) {
-  const response = new Response();
-  const { profile } = await getSessionWithProfile({ request, response });
+  const { profile } = await requireAuth(request);
 
   const db = getServerSideSupabaseClient();
   const tagPublicId = params.publicId;

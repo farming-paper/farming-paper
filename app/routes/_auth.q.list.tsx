@@ -7,7 +7,7 @@ import { AnimatePresence, motion } from "framer-motion";
 import { Calendar, ChevronRightIcon, FilePlus, PlusIcon } from "lucide-react";
 import { Suspense, useState } from "react";
 import type { PartialDeep } from "type-fest";
-import { getSessionWithProfile } from "~/auth/get-session";
+import { requireAuth } from "~/auth/get-session";
 import DateFilterButton from "~/common/components/DateFilterButton";
 import MobileLayout from "~/common/components/MobileLayout";
 import TagFilterButton from "~/common/components/TagFilterButton";
@@ -21,8 +21,7 @@ import { getObjBigintToNumber } from "~/util";
 const numberPerPage = 10;
 
 export async function getMyTagNames({ request }: { request: Request }) {
-  const response = new Response();
-  const { profile } = await getSessionWithProfile({ request, response });
+  const { profile } = await requireAuth(request);
   return getFilterTagsByCreatorId(profile.id);
 }
 
@@ -41,8 +40,7 @@ export async function getMyQuestions({
     end: string; // YYYY-MM-DDTHH:mm:ss
   };
 }) {
-  const response = new Response();
-  const { profile } = await getSessionWithProfile({ request, response });
+  const { profile } = await requireAuth(request);
 
   const where: Prisma.questionsWhereInput = {
     creator: profile.id,

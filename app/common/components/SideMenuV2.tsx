@@ -1,6 +1,5 @@
 import { NavLink } from "@remix-run/react";
 import { FileText, Tags } from "lucide-react";
-
 import { twMerge } from "tailwind-merge";
 
 const links = [

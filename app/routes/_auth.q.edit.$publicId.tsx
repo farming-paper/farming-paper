@@ -1,3 +1,4 @@
+// BEST PRACTICE
 import { Select, SelectItem } from "@nextui-org/react";
 import type { MetaFunction } from "@remix-run/node";
 import {
@@ -13,7 +14,7 @@ import { Plus, Trash2 } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
 import type { PartialDeep } from "type-fest";
 import editSingleQuestion from "~/actions/editSingleQuestion";
-import { getSessionWithProfile } from "~/auth/get-session";
+import { requireAuth } from "~/auth/get-session";
 import DangerModal from "~/common/components/DangerModal";
 import Label from "~/common/components/Label";
 import { Button, Input, Space } from "~/common/components/mockups";
@@ -138,13 +139,13 @@ export async function getAllTags({ profileId }: { profileId: number }) {
 
 export async function loader({ request, params }: LoaderFunctionArgs) {
   const publicId = params.publicId;
+  const { profile } = await requireAuth(request);
+
   if (!publicId) {
     throw new Response("Public Id Not Found", {
       status: 404,
     });
   }
-  const response = new Response();
-  const { profile } = await getSessionWithProfile({ request, response });
 
   const [row, tags] = await Promise.all([
     getQuestionRow({ profileId: profile.id, publicId }),

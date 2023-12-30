@@ -5,7 +5,7 @@ import { json } from "@remix-run/server-runtime";
 import { ChevronRight } from "lucide-react";
 import { useMemo } from "react";
 import { useForm } from "react-hook-form";
-import { getSessionWithProfile } from "~/auth/get-session";
+import { requireAuth } from "~/auth/get-session";
 import { Button } from "~/common/components/mockups";
 import useCmdEnter from "~/common/hooks/use-cmd-enter";
 import { createQuestion, removeUndefined } from "~/question/create";
@@ -29,8 +29,7 @@ export const meta: MetaFunction = () => {
 };
 
 export async function loader({ request }: LoaderFunctionArgs) {
-  const response = new Response();
-  const { profile } = await getSessionWithProfile({ request, response });
+  const { profile } = await requireAuth(request);
 
   const tagsRes = await rpc("get_tags_by_creator_with_count", {
     p_creator: profile.id,

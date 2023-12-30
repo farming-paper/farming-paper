@@ -5,7 +5,7 @@ import { Button, Input } from "~/common/components/mockups";
 
 import { AnimatePresence, motion } from "framer-motion";
 import { Suspense, useCallback, useMemo, useState } from "react";
-import { getSessionWithProfile } from "~/auth/get-session";
+import { requireAuth } from "~/auth/get-session";
 import Label from "~/common/components/Label";
 import useCmdEnter from "~/common/hooks/use-cmd-enter";
 import Render from "~/question/Render";
@@ -47,8 +47,7 @@ export async function getExisingTags(profileId: number) {
 }
 
 export async function loader({ request }: LoaderFunctionArgs) {
-  const response = new Response();
-  const { profile } = await getSessionWithProfile({ request, response });
+  const { profile } = await requireAuth(request);
 
   return defer({
     existingTags: getExisingTags(profile.id),

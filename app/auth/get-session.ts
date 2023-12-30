@@ -5,7 +5,7 @@ import { getServerSideSupabaseConfig } from "~/config";
 import { getServerSideSupabaseClient } from "~/supabase/client";
 import type { Database } from "~/supabase/generated/supabase-types";
 import type { IProfile } from "~/types";
-import { removeNullDeep } from "~/util";
+import { removeNullDeep, withDurationLog } from "~/util";
 
 type ProfileFromDB = {
   id: number;
@@ -36,7 +36,7 @@ if (process.env.NODE_ENV === "production") {
   profileCache = global.__profileCache;
 }
 
-export async function getProfile(email: string): Promise<ProfileFromDB> {
+export async function getProfile(email: string): Promise<ProfileFromDB | null> {
   const cached = profileCache.get(email);
   if (cached) {
     return cached;
@@ -57,10 +57,21 @@ export async function getProfile(email: string): Promise<ProfileFromDB> {
     return profile;
   }
 
-  throw new Response("No Profile", {
-    status: 401,
-  });
+  profileCache.delete(email);
+  return null;
 }
+
+type GetSessionWithProfileResult =
+  | {
+      type: "no_session" | "session_exists_but_no_user";
+      client: SupabaseClient;
+    }
+  | {
+      type: "session_exists_and_user_exists";
+      session: Session;
+      profile: IProfile;
+      client: SupabaseClient;
+    };
 
 export async function getSessionWithProfile({
   request,
@@ -68,11 +79,7 @@ export async function getSessionWithProfile({
 }: {
   request: Request;
   response: Response;
-}): Promise<{
-  session: Session;
-  profile: IProfile;
-  supabaseClient: SupabaseClient<Database>;
-}> {
+}): Promise<GetSessionWithProfileResult> {
   const { serviceRoleKey, url } = getServerSideSupabaseConfig();
   const supabaseClient = createServerClient<Database>(url, serviceRoleKey, {
     request,
@@ -85,21 +92,57 @@ export async function getSessionWithProfile({
 
   const email = session?.user?.email;
   if (!email) {
-    throw new Response("No email in session", {
-      status: 401,
-    });
+    return {
+      type: "no_session",
+      client: supabaseClient,
+    };
+  }
+
+  const profileFromDB = await getProfile(email);
+  if (!profileFromDB) {
+    return {
+      type: "session_exists_but_no_user",
+      client: supabaseClient,
+    };
   }
 
   const profile = removeNullDeep({
     email,
-    ...(await getProfile(email)),
+    ...profileFromDB,
   });
 
   return {
+    type: "session_exists_and_user_exists",
     session,
     profile,
-    supabaseClient,
+    client: supabaseClient,
   };
+}
+
+export async function requireAuth(request: Request) {
+  const response = new Response();
+  const auth = await withDurationLog(
+    "requireAuth_getSessionWithProfile",
+    getSessionWithProfile({
+      request,
+      response,
+    })
+  );
+
+  switch (auth.type) {
+    case "no_session":
+    case "session_exists_but_no_user":
+      throw new Response(null, {
+        status: 401,
+        headers: response.headers,
+      });
+    case "session_exists_and_user_exists":
+      return {
+        session: auth.session,
+        profile: auth.profile,
+        client: auth.client,
+      };
+  }
 }
 
 // TODO: 캐시 전략을 새로 짜기.

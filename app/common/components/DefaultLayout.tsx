@@ -15,7 +15,7 @@ export default function DefaultLayout({
 }) {
   return (
     <div className="flex">
-      <div className="flex flex-col justify-between w-12 h-screen text-gray-300 bg-gray-700">
+      <div className="flex flex-col justify-between flex-none w-12 h-screen text-gray-300 bg-gray-700">
         <div>{sidebarTop}</div>
         <div>{sidebarBottom}</div>
       </div>
