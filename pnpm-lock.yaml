@@ -71,6 +71,9 @@ dependencies:
   framer-motion:
     specifier: ^10.16.16
     version: 10.16.16(react-dom@18.2.0)(react@18.2.0)
+  isbot:
+    specifier: 3.7.1-deprecated
+    version: 3.7.1-deprecated
   jotai:
     specifier: ^2.6.0
     version: 2.6.0(@types/react@18.2.45)(react@18.2.0)
@@ -7605,6 +7608,11 @@ packages:
 
   /isbot@3.7.1:
     resolution: {integrity: sha512-JfqOaY3O1lcWt2nc+D6Mq231CNpwZrBboLa59Go0J8hjGH+gY/Sy0CA/YLUSIScINmAVwTdJZIsOTk4PfBtRuw==}
+    engines: {node: '>=12'}
+    dev: false
+
+  /isbot@3.7.1-deprecated:
+    resolution: {integrity: sha512-i1IhrvmVpZRMHpm55i8lhuR8xVUUlxgOYa+NuW1iL+yNdUm0wKXxpAkMenlGuOXIkXvZc7IZnIRx2/jBZ5RNLw==}
     engines: {node: '>=12'}
     dev: false
 

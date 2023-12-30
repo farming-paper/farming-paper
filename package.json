@@ -51,6 +51,7 @@
     "compromise": "^14.11.0",
     "dayjs": "^1.11.10",
     "framer-motion": "^10.16.16",
+    "isbot": "3.7.1-deprecated",
     "jotai": "^2.6.0",
     "katex": "^0.16.9",
     "lru-cache": "^10.1.0",
