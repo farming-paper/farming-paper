@@ -1,12 +1,11 @@
-import { Button } from "@nextui-org/react";
-import { useFetcher } from "@remix-run/react";
-import { useEffect, useMemo, useState } from "react";
+import { Form, useSubmit } from "@remix-run/react";
+import { useCallback, useMemo, useRef, useState } from "react";
 import { Editor, Element, Range, Transforms, createEditor } from "slate";
 import { withHistory } from "slate-history";
 import type { RenderElementProps, RenderLeafProps } from "slate-react";
 import { Editable, Slate, useSelected, withReact } from "slate-react";
 import { twMerge } from "tailwind-merge";
-import type dashboardAction from "~/actions/dashboard";
+import useThrottleFunc from "~/common/hooks/use-throttle-func";
 import { useQuestion } from "../context";
 import { convertMarkdownToDescendants, type BlankElement } from "../slate";
 import type { QuestionContent } from "../types";
@@ -37,8 +36,13 @@ const wrapBlank = (editor: Editor, blankText: string) => {
 };
 
 const withInlines = (editor: Editor) => {
-  const { insertData, insertText, isInline, isElementReadOnly, isSelectable } =
-    editor;
+  const {
+    insertData,
+    insertText: _1,
+    isInline,
+    isElementReadOnly: _2,
+    isSelectable: _3,
+  } = editor;
 
   editor.isInline = (element: Element) =>
     ["blank"].includes(element.type) || isInline(element);
@@ -58,9 +62,9 @@ const withInlines = (editor: Editor) => {
   // };
 
   editor.insertData = (data) => {
-    const text = data.getData("text/html");
+    const _text = data.getData("text/html");
 
-    console.log(text);
+    // console.log(text);
     return insertData(data);
   };
 
@@ -140,7 +144,8 @@ export default function ParagrahEditor() {
     []
   );
 
-  const fetcher = useFetcher<typeof dashboardAction>();
+  const formRef = useRef<HTMLFormElement>(null);
+  const submit = useSubmit();
 
   const converted = useMemo(
     () => convertMarkdownToDescendants(question.content.message),
@@ -151,10 +156,6 @@ export default function ParagrahEditor() {
     question.content.descendants ? question.content.descendants : converted
   );
 
-  useEffect(() => {
-    console.log("fetcher.", fetcher.data);
-  }, [fetcher.data]);
-
   const questionContent = useMemo((): QuestionContent => {
     return {
       ...question.content,
@@ -162,13 +163,21 @@ export default function ParagrahEditor() {
     };
   }, [question.content, value]);
 
+  const throttledSubmit = useThrottleFunc(
+    useCallback(() => {
+      submit(formRef.current);
+    }, [submit]),
+    3000
+  );
+
   return (
-    <fetcher.Form method="post">
+    <Form method="post" ref={formRef}>
       <Slate
         editor={editor}
         initialValue={value}
-        onChange={(value) => {
+        onValueChange={(value) => {
           setValue(value);
+          throttledSubmit();
         }}
       >
         {/* <Toolbar>
@@ -192,15 +201,7 @@ export default function ParagrahEditor() {
       <input type="hidden" name="intent" value="update_question_content" />
       <input type="hidden" name="public_id" value={question.publicId} />
 
-      <Button
-        type="submit"
-        onClick={() => {
-          console.log(value);
-        }}
-      >
-        적용(임시)
-      </Button>
-      <span>{question.publicId}</span>
-    </fetcher.Form>
+      {/* <span>{question.publicId}</span> */}
+    </Form>
   );
 }
