@@ -273,15 +273,17 @@ export function bigintToNumber(n: bigint) {
 }
 
 export type BigIntToNumber<T extends Record<string, unknown>> = {
-  [key in keyof T]: T[key] extends bigint ? number : T[key];
+  [key in keyof T]: T[key] extends bigint
+    ? number
+    : T[key] extends bigint | null
+    ? number | null
+    : T[key];
 };
 
 export function getObjBigintToNumber<T extends Record<string, unknown>>(
   obj: T
 ): BigIntToNumber<T> {
-  const result = { ...obj } as {
-    [key in keyof T]: T[key] extends bigint ? number : T[key];
-  };
+  const result = { ...obj } as BigIntToNumber<T>;
 
   Object.keys(obj).forEach((key) => {
     const value = obj[key];

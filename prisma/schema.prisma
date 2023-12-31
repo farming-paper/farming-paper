@@ -40,6 +40,8 @@ model profiles {
 /// This model contains row level security and requires additional setup for migrations. Visit https://pris.ly/d/row-level-security for more info.
 model questions {
   id                      BigInt                    @unique @default(autoincrement())
+  original_id             BigInt?
+  original                questions?                @relation("ContentHistory", fields: [original_id], references: [id], onDelete: NoAction, onUpdate: NoAction)
   created_at              DateTime                  @default(now()) @db.Timestamptz(6)
   updated_at              DateTime                  @default(now()) @db.Timestamptz(6)
   deleted_at              DateTime?                 @db.Timestamptz(6)
@@ -48,6 +50,7 @@ model questions {
   creator                 BigInt
   profiles                profiles                  @relation(fields: [creator], references: [id], onDelete: NoAction, onUpdate: NoAction)
   tags_questions_relation tags_questions_relation[]
+  clones                  questions[]               @relation("ContentHistory")
 
   @@id([id, public_id])
   @@index([created_at], map: "question_creation_time_date_idx")

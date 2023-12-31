@@ -7,7 +7,7 @@ import { questions as enQuestions } from "./data/exercise-and-nutrition";
 import { questions as msQuestions } from "./data/mathematical-statistics";
 import { questions as plQuestions } from "./data/programming-linguistics";
 import { questions as sstQuestions } from "./data/sample-survey-theory";
-import type { Question } from "./types";
+import type { QuestionContent } from "./types";
 
 export function getQuestionGroups() {
   return new Map([
@@ -36,7 +36,7 @@ export function getQuestionGroups() {
 
 export type QuestionId = MapKey<ReturnType<typeof getQuestionGroups>>;
 
-export function getStringAnswer(question: Question) {
+export function getStringAnswer(question: QuestionContent) {
   switch (question.type) {
     case "pick_multi":
     case "pick_order":

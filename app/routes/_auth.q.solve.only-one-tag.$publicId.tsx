@@ -11,7 +11,7 @@ import { createQuestionGenerator } from "~/question-generator";
 import Render, { links as questionRenderLinks } from "~/question/Render";
 import { createQuestionFromJson } from "~/question/create";
 import QuestionInput from "~/question/input-components/QuestionInput";
-import type { ISuccessArgs, Question } from "~/question/types";
+import type { ISuccessArgs, QuestionContent } from "~/question/types";
 import { getStringAnswer } from "~/question/utils";
 import { getServerSideSupabaseClient } from "~/supabase/client";
 import { isUserTypingText, useConst } from "~/util";
@@ -50,7 +50,7 @@ export async function loader({ request, params }: LoaderFunctionArgs) {
     throw new Response(questionsRes.error.message, { status: 500 });
   }
 
-  const questions: Question[] = questionsRes.data.map((q) => {
+  const questions: QuestionContent[] = questionsRes.data.map((q) => {
     // TODO: fix duplicated question ids. they are in db records and content itself.
     return { ...createQuestionFromJson(q.content), id: q.public_id };
   });
@@ -66,19 +66,19 @@ type QuestionSolveDisplay =
   | {
       type: "question";
       index: number;
-      question: Question;
+      question: QuestionContent;
     }
   | {
       type: "result";
       actual: string;
       given: string;
       isSuccess: boolean;
-      question: Question;
+      question: QuestionContent;
       index: number;
     }
   | {
       type: "passing";
-      question: Question;
+      question: QuestionContent;
       index: number;
       actual: string;
     };

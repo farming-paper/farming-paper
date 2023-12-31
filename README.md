@@ -83,8 +83,15 @@ brew upgrade supabase
 - `get`: 값을 가져오지만, 실패하거나 값이 없을 시에는 `null`을 반환합니다.
 - `require`: 값을 가져오지만, 실패하거나 값이 없을 시에는 `throw new Response(...)`를 합니다. 파라미터 값을 가져올 때 validation은 Zod를 적극적으로 활용합시다.
 - `tailwind.config.js`` 등 root 차원의 파일을 수정할 때에는 변경사항이 자동으로 적용되지 않을 수 있으므로 dev server 를 재시작하는 게 권장됩니다.
+- Zod 에서 Discriminated Union 을 사용할 때에는 일단 `discriminatedUnion`를 사용하지만, 추후 `switch` 등으로 변경될 수 있습니다. [관련 이슈](https://github.com/colinhacks/zod/issues/2106) 참조.
+- DB 마이그레이션 하는 방법
+  1. `schema.prisma` 파일 수정
+  2. `npx prisma migrate dev` 명령으로 마이그레이션 파일 생성 + DB에 적용
+  3. main 에 머지되면 자동으로 운영에 적용됨 (`prisma-deployment.yml` 참조. `npx prisma migrate deploy` 명령이 사용됨)
+- prisma 에서 `update`, `delete` 등은 unique 한 레코드를 찾을 수 없을 때 예외를 던집니다.
 
 ## 참고
 
 - [예전문서 (깃랩)](https://gitlab.com/EzKorry/kestion/-/wikis/home)
 - [[Markdown] An option to highlight a "Note" and "Warning" using blockquote (Beta)](https://github.com/orgs/community/discussions/16925)
+- [랜덤 마크다운 만들어주는 도구 (lorem-markdownum)](https://jaspervdj.be/lorem-markdownum/)

@@ -1,10 +1,10 @@
 import { expect, test } from "vitest";
 import { createQuestionGenerator } from "./question-generator";
 import { createQuestion } from "./question/create";
-import type { Question } from "./question/types";
+import type { QuestionContent } from "./question/types";
 
 test("문제가 하나 있을 시 동작", () => {
-  const problems: Question[] = [
+  const problems: QuestionContent[] = [
     createQuestion({ type: "short", message: "test q", correct: "test a" }),
   ];
   const generator = createQuestionGenerator(problems);
@@ -21,7 +21,7 @@ test("문제가 하나 있을 시 동작", () => {
 });
 
 test("가중치가 큰 것이 앞에 있을 때 잘 동작해야 함", () => {
-  const problems: Question[] = (
+  const problems: QuestionContent[] = (
     [
       {
         type: "short",
@@ -46,7 +46,7 @@ test("가중치가 큰 것이 앞에 있을 때 잘 동작해야 함", () => {
 });
 
 test("가중치가 큰 것이 뒤에 있을 때 잘 동작해야 함", () => {
-  const problems: Question[] = (
+  const problems: QuestionContent[] = (
     [
       { type: "short", message: "one", correct: "test a" },
       {
@@ -71,7 +71,7 @@ test("가중치가 큰 것이 뒤에 있을 때 잘 동작해야 함", () => {
 });
 
 test("가중치 대로 나와야 함", () => {
-  const problems: Question[] = (
+  const problems: QuestionContent[] = (
     [
       { type: "short", message: "one", weight: 1, correct: "test a" },
       { type: "short", message: "two", weight: 2, correct: "test a" },

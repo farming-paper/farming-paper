@@ -14,7 +14,7 @@ import TagFilterButton from "~/common/components/TagFilterButton";
 import { Pagination, Tooltip } from "~/common/components/mockups";
 import prisma from "~/prisma-client.server";
 import { createQuestion } from "~/question/create";
-import type { Question } from "~/question/types";
+import type { QuestionContent } from "~/question/types";
 import { getFilterTagsByCreatorId } from "~/supabase/getters";
 import { getObjBigintToNumber } from "~/util";
 
@@ -83,7 +83,7 @@ export async function getMyQuestions({
     items: questions.map((q) => {
       return {
         ...getObjBigintToNumber(q),
-        content: createQuestion(q.content as PartialDeep<Question>),
+        content: createQuestion(q.content as PartialDeep<QuestionContent>),
       };
     }),
     total,

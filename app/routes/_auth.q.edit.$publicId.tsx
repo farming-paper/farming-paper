@@ -20,12 +20,12 @@ import Label from "~/common/components/Label";
 import { Button, Input, Space } from "~/common/components/mockups";
 import { createQuestion } from "~/question/create";
 import Tags from "~/question/edit-components/Tags";
-import type { Question, QuestionRow } from "~/question/types";
+import type { Question, QuestionContent } from "~/question/types";
 import { getServerSideSupabaseClient } from "~/supabase/client";
 import type { Database } from "~/supabase/generated/supabase-types";
 import { rpc } from "~/supabase/rpc";
 import type { ITagWithCount } from "~/types";
-import { removeNullDeep } from "~/util";
+import { dayjs, removeNullDeep } from "~/util";
 
 export const meta: MetaFunction = () => {
   return [
@@ -96,10 +96,16 @@ export async function getQuestionRow({
     });
   }
 
-  const row: QuestionRow = {
-    content: createQuestion(questionRes.data?.content as PartialDeep<Question>),
+  const row: Question = {
+    content: createQuestion(
+      questionRes.data?.content as PartialDeep<QuestionContent>
+    ),
     publicId: questionRes.data.public_id,
-    updatedAt: questionRes.data.updated_at,
+    updatedAt: dayjs(questionRes.data.updated_at),
+    createdAt: dayjs(questionRes.data.created_at),
+    deletedAt: questionRes.data.deleted_at
+      ? dayjs(questionRes.data.deleted_at)
+      : null,
     tags: questionRes.data.tags_questions_relation.map((relation) => {
       const tag = relation.tag;
       return removeNullDeep({

@@ -74,6 +74,9 @@ dependencies:
   framer-motion:
     specifier: ^10.16.16
     version: 10.16.16(react-dom@18.2.0)(react@18.2.0)
+  immer:
+    specifier: ^10.0.3
+    version: 10.0.3
   isbot:
     specifier: 3.7.1-deprecated
     version: 3.7.1-deprecated

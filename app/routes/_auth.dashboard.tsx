@@ -14,13 +14,15 @@ import {
 } from "lucide-react";
 import { useMemo } from "react";
 import { z } from "zod";
+import dashboardAction from "~/actions/dashboard";
 import { requireAuth } from "~/auth/get-session";
 import DefaultLayout from "~/common/components/DefaultLayout";
 import SideMenuV2 from "~/common/components/SideMenuV2";
 import prisma from "~/prisma-client.server";
-import Render from "~/question/Render";
+import { QuestionProvider } from "~/question/context";
 import { createQuestion } from "~/question/create";
-import type { Question } from "~/question/types";
+import ParagrahEditor from "~/question/edit-components/ParagraphEditor";
+import type { Question, QuestionContent } from "~/question/types";
 import TagFilterChip from "~/tag/component/tag-filter-chip";
 import useAddTagFilter from "~/tag/use-add-tag-filter";
 import useDeleteTagFilter from "~/tag/use-delete-tag-filter";
@@ -85,12 +87,12 @@ export async function loader({ request }: LoaderFunctionArgs) {
           ? { some: { tags: { public_id: { in: tags } } } }
           : undefined,
       },
-      orderBy: {
-        created_at: "desc",
-      },
+      orderBy: [{ created_at: "desc" }, { original_id: "asc" }],
       skip: (page - 1) * 10,
       take: 10,
       select: {
+        id: true,
+        original_id: true,
         content: true,
         created_at: true,
         updated_at: true,
@@ -131,7 +133,7 @@ export async function loader({ request }: LoaderFunctionArgs) {
     questions: questions.map((q) => {
       return {
         ...getObjBigintToNumber(q),
-        content: createQuestion(q.content as PartialDeep<Question>),
+        content: createQuestion(q.content as PartialDeep<QuestionContent>),
       };
     }),
     count,
@@ -143,7 +145,7 @@ export async function loader({ request }: LoaderFunctionArgs) {
 export default function Dashboard() {
   const data = useLoaderData<typeof loader>();
 
-  const { count, questions, recentTags, activeTagPublicIds } = data;
+  const { count, recentTags, activeTagPublicIds } = data;
 
   const tagFilters = useMemo(() => {
     const activeTagPublicIdsSet = new Set(activeTagPublicIds);
@@ -157,6 +159,28 @@ export default function Dashboard() {
   const addTagFilter = useAddTagFilter();
 
   const deleteTagFilter = useDeleteTagFilter();
+
+  const questions: Question[] = useMemo(
+    () =>
+      data.questions.map(
+        (q): Question => ({
+          id: q.id,
+          originalId: q.original_id,
+          content: q.content,
+          createdAt: dayjs(q.created_at),
+          updatedAt: dayjs(q.updated_at),
+          deletedAt: q.deleted_at ? dayjs(q.deleted_at) : null,
+          publicId: q.public_id,
+          tags: q.tags_questions_relation.map((t) => {
+            return {
+              name: t.tags.name || "",
+              publicId: t.tags.public_id,
+            };
+          }),
+        })
+      ),
+    [data.questions]
+  );
 
   return (
     <DefaultLayout sidebarTop={<SideMenuV2 />}>
@@ -232,63 +256,65 @@ export default function Dashboard() {
           {questions.map((question, index) => {
             return (
               // question group
-              <div key={question.public_id}>
-                {/* question header */}
-                <div className="flex">
-                  <div
-                    className="flex items-center py-1 text-xs text-gray-400 rounded-md shadow-inner px-2.5  gap-2.5 overflow-hidden select-none mb-1"
-                    style={{ backgroundColor: "rgba(249, 250, 251, 0.3)" }}
-                  >
-                    <span className="font-mono font-bold">
-                      {dayjs(question.created_at).format("YYYY.MM.DD.")}
-                    </span>
-                    <div className="flex items-center gap-0.5">
-                      <Tag className="w-2.5 h-2.5 text-gray-300" />
-                      <span>
-                        {question.tags_questions_relation
-                          .map((t) => t.tags.name)
-                          .join(", ")}
-                      </span>
-                    </div>
-                    <Button
-                      variant="light"
-                      className="h-auto min-w-0 pl-0.5 py-0.5 pr-1 -ml-0.5 -my-0.5 -mr-1 text-xs font-bold rounded-sm text-inherit gap-0.5"
-                      startContent={<Plus className="w-3 h-3 text-gray-300 " />}
+              <QuestionProvider
+                key={question.originalId || question.id}
+                question={question}
+              >
+                <div>
+                  {/* question header */}
+                  <div className="flex">
+                    <div
+                      className="flex items-center py-1 text-xs text-gray-400 rounded-md shadow-inner px-2.5  gap-2.5 overflow-hidden select-none mb-1"
+                      style={{ backgroundColor: "rgba(249, 250, 251, 0.3)" }}
                     >
-                      태그 추가
-                    </Button>
-                  </div>
-                </div>
-
-                {/* question content */}
-                <div className="flex">
-                  <span
-                    className="flex-none ml-1 mr-2 font-mono text-xs text-gray-400 select-none"
-                    style={{ lineHeight: "1.75rem" }}
-                  >
-                    {index + 1}.
-                  </span>
-                  <div className="flex-1 text-gray-800">
-                    <div className="">
-                      <Render>{question.content.message}</Render>
-                    </div>
-                    {question.content.type === "short_order" && (
-                      <div className="text-right">
-                        <span className="text-sm font-bold text-gray-400 select-none">
-                          정답:{" "}
-                        </span>
-                        <span>{question.content.corrects.join(", ")}</span>
+                      <span className="font-mono font-bold">
+                        {question.createdAt.format("YYYY.MM.DD.")}
+                      </span>
+                      <div className="flex items-center gap-0.5">
+                        <Tag className="w-2.5 h-2.5 text-gray-300" />
+                        <span>{question.tags.map((t) => t.name)}</span>
                       </div>
-                    )}
+                      <Button
+                        variant="light"
+                        className="h-auto min-w-0 pl-0.5 py-0.5 pr-1 -ml-0.5 -my-0.5 -mr-1 text-xs font-bold rounded-sm text-inherit gap-0.5"
+                        startContent={
+                          <Plus className="w-3 h-3 text-gray-300 " />
+                        }
+                      >
+                        태그 추가
+                      </Button>
+                    </div>
+                  </div>
+
+                  {/* question content */}
+                  <div className="flex">
+                    <span
+                      className="flex-none ml-1 mr-2 font-mono text-xs text-gray-400 select-none"
+                      style={{ lineHeight: "1.75rem" }}
+                    >
+                      {index + 1}.
+                    </span>
+                    <div className="flex-1 text-gray-800">
+                      <ParagrahEditor />
+
+                      {question.content.type === "short_order" && (
+                        <div className="text-right">
+                          <span className="text-sm font-bold text-gray-400 select-none">
+                            정답:{" "}
+                          </span>
+                          <span>{question.content.corrects.join(", ")}</span>
+                        </div>
+                      )}
+                    </div>
                   </div>
                 </div>
-              </div>
+              </QuestionProvider>
             );
           })}
-
-          <div></div>
         </div>
       </div>
     </DefaultLayout>
   );
 }
+
+export const action = dashboardAction;

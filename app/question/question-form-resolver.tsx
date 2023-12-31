@@ -1,9 +1,9 @@
 import type { FieldErrors, Resolver } from "react-hook-form";
 import type { ITag, PartialDeep } from "~/types";
-import type { Question } from "./types";
+import type { QuestionContent } from "./types";
 
 export type QuestionFormValues = {
-  question?: PartialDeep<Question>;
+  question?: PartialDeep<QuestionContent>;
   tags?: PartialDeep<ITag[]>;
 };
 

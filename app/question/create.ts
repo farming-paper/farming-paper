@@ -9,10 +9,12 @@ import type {
   IShortMultiAnswerQuestion,
   IShortOrderQuestion,
   IShortQuestion,
-  Question,
+  QuestionContent,
 } from "./types";
 
-export function createQuestion(args?: PartialDeep<Question>): Question {
+export function createQuestion(
+  args?: PartialDeep<QuestionContent>
+): QuestionContent {
   switch (args?.type) {
     case "pick_different":
       return createPickDifferentQuestion(args);
@@ -33,8 +35,8 @@ export function createQuestion(args?: PartialDeep<Question>): Question {
   }
 }
 
-export function createQuestionFromJson(json: Json): Question {
-  return createQuestion(json as unknown as PartialDeep<Question>);
+export function createQuestionFromJson(json: Json): QuestionContent {
+  return createQuestion(json as unknown as PartialDeep<QuestionContent>);
 }
 
 // export function createQuestionRow(row?: PartialDeep<QuestionRow>) {
