@@ -18,6 +18,7 @@ import { requireAuth } from "~/auth/get-session";
 import DefaultLayout from "~/common/components/DefaultLayout";
 import SideMenuV2 from "~/common/components/SideMenuV2";
 import prisma from "~/prisma-client.server";
+import Render from "~/question/Render";
 import { createQuestion } from "~/question/create";
 import type { Question } from "~/question/types";
 import TagFilterChip from "~/tag/component/tag-filter-chip";
@@ -159,7 +160,10 @@ export default function Dashboard() {
 
   return (
     <DefaultLayout sidebarTop={<SideMenuV2 />}>
-      <div className="mx-auto mt-40" style={{ minWidth: "700px" }}>
+      <div
+        className="box-border px-6 mx-auto mt-40"
+        style={{ width: "calc(700px + 3rem)" }}
+      >
         {/* tags */}
         <div className="flex gap-2.5 mb-4">
           {tagFilters.map((tag) => {
@@ -187,7 +191,7 @@ export default function Dashboard() {
         <div className="flex items-center gap-4 mb-10">
           {(activeTagPublicIds || []).length > 0 && (
             <>
-              <div className="flex font-bold text-gray-600 gap-1.5 items-center font-mono">
+              <div className="flex font-bold text-gray-600 gap-1.5 items-center font-mono select-none">
                 <ArrowDownToLine className="w-4 h-4" />
                 <span>{count}</span>
               </div>
@@ -224,37 +228,59 @@ export default function Dashboard() {
         </div>
 
         {/* questions */}
-        <div className="">
-          {questions.map((question) => {
+        <div className="space-y-6">
+          {questions.map((question, index) => {
             return (
-              // question
-              <div
-                className="flex flex-col items-start"
-                key={question.public_id}
-              >
+              // question group
+              <div key={question.public_id}>
                 {/* question header */}
-                <div
-                  className="flex text-gray-400 items-center gap-2.5 shadow-inner text-xs px-2.5 py-1 rounded-md"
-                  style={{ backgroundColor: "rgba(249, 250, 251, 0.3)" }}
-                >
-                  <span className="font-mono font-bold">
-                    {dayjs(question.created_at).format("YYYY.MM.DD.")}
-                  </span>
-                  <div className="flex items-center gap-0.5">
-                    <Tag className="w-2.5 h-2.5 text-gray-300" />
-                    <span>
-                      {question.tags_questions_relation
-                        .map((t) => t.tags.name)
-                        .join(", ")}
-                    </span>
-                  </div>
-                  <Button
-                    variant="light"
-                    className="h-auto min-w-0 p-0 text-xs font-bold text-inherit gap-0.5 rounded-sm"
-                    startContent={<Plus className="w-3 h-3 text-gray-300 " />}
+                <div className="flex">
+                  <div
+                    className="flex items-center py-1 text-xs text-gray-400 rounded-md shadow-inner px-2.5  gap-2.5 overflow-hidden select-none mb-1"
+                    style={{ backgroundColor: "rgba(249, 250, 251, 0.3)" }}
                   >
-                    태그 추가
-                  </Button>
+                    <span className="font-mono font-bold">
+                      {dayjs(question.created_at).format("YYYY.MM.DD.")}
+                    </span>
+                    <div className="flex items-center gap-0.5">
+                      <Tag className="w-2.5 h-2.5 text-gray-300" />
+                      <span>
+                        {question.tags_questions_relation
+                          .map((t) => t.tags.name)
+                          .join(", ")}
+                      </span>
+                    </div>
+                    <Button
+                      variant="light"
+                      className="h-auto min-w-0 pl-1 py-0.5 pr-1.5 -ml-1 -my-0.5 -mr-1.5 text-xs font-bold rounded-sm text-inherit gap-0.5"
+                      startContent={<Plus className="w-3 h-3 text-gray-300 " />}
+                    >
+                      태그 추가
+                    </Button>
+                  </div>
+                </div>
+
+                {/* question content */}
+                <div className="flex">
+                  <span
+                    className="flex-none ml-1 mr-2 font-mono text-xs text-gray-400 select-none"
+                    style={{ lineHeight: "1.75rem" }}
+                  >
+                    {index + 1}.
+                  </span>
+                  <div className="flex-1 text-gray-800">
+                    <div className="">
+                      <Render>{question.content.message}</Render>
+                    </div>
+                    {question.content.type === "short_order" && (
+                      <div className="text-right">
+                        <span className="text-sm font-bold text-gray-400 select-none">
+                          정답:{" "}
+                        </span>
+                        <span>{question.content.corrects.join(", ")}</span>
+                      </div>
+                    )}
+                  </div>
                 </div>
               </div>
             );
@@ -263,7 +289,6 @@ export default function Dashboard() {
           <div></div>
         </div>
       </div>
-      <pre className="whitespace-pre-wrap">{JSON.stringify(data, null, 2)}</pre>
     </DefaultLayout>
   );
 }
