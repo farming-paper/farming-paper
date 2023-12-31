@@ -252,7 +252,7 @@ export default function Dashboard() {
                     </div>
                     <Button
                       variant="light"
-                      className="h-auto min-w-0 pl-1 py-0.5 pr-1.5 -ml-1 -my-0.5 -mr-1.5 text-xs font-bold rounded-sm text-inherit gap-0.5"
+                      className="h-auto min-w-0 pl-0.5 py-0.5 pr-1 -ml-0.5 -my-0.5 -mr-1 text-xs font-bold rounded-sm text-inherit gap-0.5"
                       startContent={<Plus className="w-3 h-3 text-gray-300 " />}
                     >
                       태그 추가
