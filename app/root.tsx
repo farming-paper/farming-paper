@@ -21,19 +21,21 @@ import {
 } from "@supabase/auth-helpers-remix";
 import { Analytics } from "@vercel/analytics/react";
 import { useEffect, useState } from "react";
+import reatToastifyMinCss from "react-toastify/dist/ReactToastify.min.css";
 import { getClientSideSupabaseConfig } from "./config";
 import tailwindStyles from "./styles/app.css";
+import tailwindCss from "./styles/pretendard.css";
 import type { Database } from "./supabase/generated/supabase-types";
 import { withDurationLog } from "./util";
-
-import "react-toastify/dist/ReactToastify.min.css";
 
 export function links() {
   return [
     { rel: "stylesheet", href: tailwindStyles },
+    { rel: "stylesheet", href: reatToastifyMinCss },
+    { rel: "stylesheet", href: tailwindCss },
     {
       rel: "stylesheet",
-      href: "https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.6/dist/web/static/pretendard.css",
+      href: "//fonts.googleapis.com/css?family=Ubuntu+Mono",
     },
     ...(cssBundleHref ? [{ rel: "stylesheet", href: cssBundleHref }] : []),
   ];

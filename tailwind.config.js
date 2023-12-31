@@ -12,8 +12,13 @@ export default {
   ],
   theme: {
     extend: {
-      fontFamily: { sans: ["Pretendard", ...defaultTheme.fontFamily.sans] },
+      fontFamily: {
+        sans: ["Pretendard Variable", ...defaultTheme.fontFamily.sans],
+        mono: ["Ubuntu Mono", ...defaultTheme.fontFamily.mono],
+      },
       colors: { primary: { ...colors.green, DEFAULT: colors.green[500] } },
+      width: { 4.5: "1.125rem" },
+      height: { 4.5: "1.125rem" },
     },
   },
   darkMode: "class",

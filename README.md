@@ -76,10 +76,13 @@ supabase start
 brew upgrade supabase
 ```
 
-## 스타일 가이드 및 개발 공지
+## 개발 스타일 가이드
 
 - <https://github.com/remix-run/remix/issues/7466> 땜에 `remix dev --manual`로 실행해야 합니다.
 - `throw new Response("page is NaN", { status: 400 });` 와 같이 `loader` 단의 중간에서 쉽게 응답을 날릴 수 있습니다. validation 등에 적극 활용합시다.
+- `get`: 값을 가져오지만, 실패하거나 값이 없을 시에는 `null`을 반환합니다.
+- `require`: 값을 가져오지만, 실패하거나 값이 없을 시에는 `throw new Response(...)`를 합니다. 파라미터 값을 가져올 때 validation은 Zod를 적극적으로 활용합시다.
+- `tailwind.config.js`` 등 root 차원의 파일을 수정할 때에는 변경사항이 자동으로 적용되지 않을 수 있으므로 dev server 를 재시작하는 게 권장됩니다.
 
 ## 참고
 
