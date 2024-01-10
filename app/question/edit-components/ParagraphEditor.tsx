@@ -1,39 +1,19 @@
 import { Form, useSubmit } from "@remix-run/react";
 import { useCallback, useMemo, useRef, useState } from "react";
-import { Editor, Element, Range, Transforms, createEditor } from "slate";
+import type { Editor, Element } from "slate";
+import { createEditor } from "slate";
 import { withHistory } from "slate-history";
 import type { RenderElementProps, RenderLeafProps } from "slate-react";
 import { Editable, Slate, useSelected, withReact } from "slate-react";
 import { twMerge } from "tailwind-merge";
+import { ClientOnly } from "~/common/components/ClientOnly";
 import useThrottleFunc from "~/common/hooks/use-throttle-func";
 import { useQuestion } from "../context";
-import { convertMarkdownToDescendants, type BlankElement } from "../slate";
+import { convertMarkdownToDescendants } from "../slate";
 import type { QuestionContent } from "../types";
+import HoveringToolbar from "./HoveringToolbar";
 
 /** @see https://github.com/ianstormtaylor/slate/blob/main/site/examples/inlines.tsx */
-
-const unwrapBlank = (editor: Editor) => {
-  Transforms.unwrapNodes(editor, {
-    match: (n) =>
-      !Editor.isEditor(n) && Element.isElement(n) && n.type === "blank",
-  });
-};
-
-const wrapBlank = (editor: Editor, blankText: string) => {
-  const { selection } = editor;
-  const isCollapsed = selection && Range.isCollapsed(selection);
-  const blankElement: BlankElement = {
-    type: "blank",
-    children: isCollapsed ? [{ text: blankText }] : [],
-  };
-
-  if (isCollapsed) {
-    Transforms.insertNodes(editor, blankElement);
-  } else {
-    Transforms.wrapNodes(editor, blankElement, { split: true });
-    Transforms.collapse(editor, { edge: "end" });
-  }
-};
 
 const withInlines = (editor: Editor) => {
   const {
@@ -180,6 +160,7 @@ export default function ParagrahEditor() {
           throttledSubmit();
         }}
       >
+        <ClientOnly>{() => <HoveringToolbar />}</ClientOnly>
         {/* <Toolbar>
         <AddLinkButton />
         <RemoveLinkButton />
@@ -190,6 +171,21 @@ export default function ParagrahEditor() {
           renderElement={ElementComponent}
           renderLeaf={TextComponent}
           placeholder="학습한 내용을 주저리주저리 써보시게나."
+          // onDOMBeforeInput={(event: InputEvent) => {
+          //    console.log("event", event);
+          //    switch (event.inputType) {
+          //      case "formatBold":
+          //        event.preventDefault();
+          //        return toggleMark(editor, "bold");
+          //      case "formatItalic":
+          //        event.preventDefault();
+          //        return toggleMark(editor, "italic");
+          //      case "formatUnderline":
+          //        event.preventDefault();
+          //        return toggleMark(editor, "underlined");
+          //    }
+          // }}
+
           // onKeyDown={onKeyDown}
         />
       </Slate>
