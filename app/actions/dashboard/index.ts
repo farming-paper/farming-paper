@@ -3,6 +3,7 @@ import { json } from "@remix-run/server-runtime";
 import { withZod } from "@remix-validated-form/with-zod";
 import { z } from "zod";
 import { requireAuth } from "~/auth/get-session";
+import prisma from "~/prisma-client.server";
 import updateQuestionContent from "./update-question-content";
 
 export const validator = withZod(
@@ -62,10 +63,22 @@ export default async function dashboardAction({ request }: ActionFunctionArgs) {
   switch (data.intent) {
     case "update_question_content":
       return updateQuestionContent({ ...data, creator: profile.id });
+    case "remove_question": {
+      await prisma.questions.update({
+        where: {
+          public_id: data.public_id,
+          creator: profile.id,
+          deleted_at: null,
+        },
+        data: {
+          deleted_at: new Date(),
+        },
+      });
+      return json({ data: "success", error: null });
+    }
     case "add_existing_tag_to_question":
     case "add_new_tag_to_question":
     case "delete_tag_from_question":
-    case "remove_question":
     case "create_question":
       return json({ data: null, error: "Not Implemented" }, { status: 501 });
   }

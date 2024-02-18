@@ -4,12 +4,13 @@ import type { LoaderFunctionArgs, MetaFunction } from "@remix-run/node";
 import { json } from "@remix-run/node";
 import { useLoaderData } from "@remix-run/react";
 import dayjs from "dayjs";
-import { Play, Plus, Tag } from "lucide-react";
+import { Play, Plus, Tag, Trash2 } from "lucide-react";
 import { useMemo } from "react";
 import { z } from "zod";
 import dashboardAction from "~/actions/dashboard";
 import { requireAuth } from "~/auth/get-session";
 import DefaultLayout from "~/common/components/DefaultLayout";
+import { DeleteQuestionModalWithButton } from "~/common/components/DeleteQuestionModalWithButton";
 import SideMenuV2 from "~/common/components/SideMenuV2";
 import prisma from "~/prisma-client.server";
 import { QuestionProvider } from "~/question/context";
@@ -262,10 +263,12 @@ export default function Dashboard() {
                       <span className="font-mono font-bold">
                         {question.createdAt.format("YYYY.MM.DD.")}
                       </span>
-                      <div className="flex items-center gap-0.5">
-                        <Tag className="w-2.5 h-2.5 text-gray-300" />
-                        <span>{question.tags.map((t) => t.name)}</span>
-                      </div>
+                      {question.tags.length > 0 && (
+                        <div className="flex items-center gap-0.5">
+                          <Tag className="w-2.5 h-2.5 text-gray-300" />
+                          <span>{question.tags.map((t) => t.name)}</span>
+                        </div>
+                      )}
                       <Button
                         variant="light"
                         className="h-auto min-w-0 pl-0.5 py-0.5 pr-1  text-xs font-bold rounded-sm text-inherit gap-0.5"
@@ -275,6 +278,19 @@ export default function Dashboard() {
                       >
                         태그 추가
                       </Button>
+
+                      <DeleteQuestionModalWithButton
+                        OpenModalButton={({ onPress }) => (
+                          <Button
+                            onPress={onPress}
+                            variant="light"
+                            color="danger"
+                            className="h-auto min-w-0 px-1 py-1 rounded-sm text-inherit"
+                          >
+                            <Trash2 className="w-3.5 h-3.5 " />
+                          </Button>
+                        )}
+                      />
                     </div>
                   </div>
 
