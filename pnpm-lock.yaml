@@ -77,6 +77,9 @@ dependencies:
   immer:
     specifier: ^10.0.3
     version: 10.0.3
+  is-hotkey:
+    specifier: ^0.2.0
+    version: 0.2.0
   isbot:
     specifier: 3.7.1-deprecated
     version: 3.7.1-deprecated
@@ -163,6 +166,9 @@ devDependencies:
   '@testing-library/react':
     specifier: ^14.1.2
     version: 14.1.2(react-dom@18.2.0)(react@18.2.0)
+  '@types/is-hotkey':
+    specifier: ^0.1.10
+    version: 0.1.10
   '@types/katex':
     specifier: ^0.16.7
     version: 0.16.7
@@ -4514,7 +4520,6 @@ packages:
 
   /@types/is-hotkey@0.1.10:
     resolution: {integrity: sha512-RvC8KMw5BCac1NvRRyaHgMMEtBaZ6wh0pyPTBu7izn4Sj/AX9Y4aXU5c7rX8PnM/knsuUpC1IeoBkANtxBypsQ==}
-    dev: false
 
   /@types/json-schema@7.0.15:
     resolution: {integrity: sha512-5+fP8P8MFNC+AyZCDxrB2pkZFPGzqQWUzpSeuuVLvm8VMcorNYavBqoFcxK8bQz4Qsbn4oUEEem4wDLfcysGHA==}
