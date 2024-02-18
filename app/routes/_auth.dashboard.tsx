@@ -2,7 +2,7 @@ import { Button, ButtonGroup } from "@nextui-org/react";
 import type { tags } from "@prisma/client";
 import type { LoaderFunctionArgs, MetaFunction } from "@remix-run/node";
 import { json } from "@remix-run/node";
-import { useLoaderData } from "@remix-run/react";
+import { Form, useLoaderData } from "@remix-run/react";
 import dayjs from "dayjs";
 import { Play, Plus, Tag, Trash2 } from "lucide-react";
 import { useMemo } from "react";
@@ -206,14 +206,18 @@ export default function Dashboard() {
 
         {/* header toolbar */}
         <div className="flex items-center gap-4 mb-10 ">
-          <Button
-            isIconOnly
-            variant="shadow"
-            className="text-white bg-primary min-w-11"
-          >
-            <span className="sr-only">단락 추가</span>
-            <Plus className="w-4.5 h-4.5 " aria-hidden />
-          </Button>
+          <Form method="post">
+            <input type="hidden" name="intent" value="create_question" />
+            <Button
+              isIconOnly
+              variant="shadow"
+              className="text-white bg-primary min-w-11"
+              type="submit"
+            >
+              <span className="sr-only">단락 추가</span>
+              <Plus className="w-4.5 h-4.5 " aria-hidden />
+            </Button>
+          </Form>
           {(activeTagPublicIds || []).length > 0 && (
             <div className="flex items-center gap-4">
               <div className="w-px h-5 bg-gray-100"></div>
@@ -303,13 +307,17 @@ export default function Dashboard() {
                       {index + 1}.
                     </span>
                     <div className="flex-1 text-gray-800">
-                      <ParagrahEditor />
+                      <ParagrahEditor
+                        key={question.originalId || question.id}
+                      />
 
                       {question.content.type === "short_order" && (
                         <div className="text-right">
-                          <span className="text-sm font-medium text-gray-400 select-none">
-                            정답: {question.content.corrects.join(", ")}
-                          </span>
+                          {question.content.corrects.length > 0 && (
+                            <span className="text-sm font-medium text-gray-400 select-none">
+                              정답: {question.content.corrects.join(", ")}
+                            </span>
+                          )}
                         </div>
                       )}
                     </div>
