@@ -1,7 +1,6 @@
-import type { PartialDeep } from "~/types";
 import type { QuestionContent } from "../types";
 
-export const questions: PartialDeep<QuestionContent>[] = [
+export const questions: Partial<QuestionContent>[] = [
   // {
   //   type: "short_order",
   //   message: "칼 피어슨의 추정법은? ___ 법.",

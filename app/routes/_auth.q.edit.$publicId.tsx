@@ -12,7 +12,6 @@ import type { LoaderFunctionArgs } from "@remix-run/server-runtime";
 import { json } from "@remix-run/server-runtime";
 import { Plus, Trash2 } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
-import type { PartialDeep } from "type-fest";
 import editSingleQuestion from "~/actions/editSingleQuestion";
 import { requireAuth } from "~/auth/get-session";
 import DangerModal from "~/common/components/DangerModal";
@@ -97,8 +96,10 @@ export async function getQuestionRow({
   }
 
   const row: Question = {
+    id: questionRes.data.id,
+    originalId: questionRes.data.id, // TODO: 이 파일 삭제
     content: createQuestion(
-      questionRes.data?.content as PartialDeep<QuestionContent>
+      questionRes.data?.content as Partial<QuestionContent>
     ),
     publicId: questionRes.data.public_id,
     updatedAt: dayjs(questionRes.data.updated_at),

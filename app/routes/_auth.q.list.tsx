@@ -6,7 +6,6 @@ import dayjs from "dayjs";
 import { AnimatePresence, motion } from "framer-motion";
 import { Calendar, ChevronRightIcon, FilePlus, PlusIcon } from "lucide-react";
 import { Suspense, useState } from "react";
-import type { PartialDeep } from "type-fest";
 import { requireAuth } from "~/auth/get-session";
 import DateFilterButton from "~/common/components/DateFilterButton";
 import MobileLayout from "~/common/components/MobileLayout";
@@ -83,7 +82,7 @@ export async function getMyQuestions({
     items: questions.map((q) => {
       return {
         ...getObjBigintToNumber(q),
-        content: createQuestion(q.content as PartialDeep<QuestionContent>),
+        content: createQuestion(q.content as Partial<QuestionContent>),
       };
     }),
     total,

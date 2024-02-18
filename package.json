@@ -13,7 +13,7 @@
     "format": "prettier --write .",
     "dev": "remix dev --manual",
     "lint": "eslint --cache --cache-location ./node_modules/.cache/eslint .",
-    "type-check": "tsc --noEmit",
+    "typecheck": "tsc --noEmit",
     "gen:sb": "supabase status && cat app/supabase/typegen-prefix.txt > app/supabase/generated/supabase-types.ts && supabase gen types typescript --local >> app/supabase/generated/supabase-types.ts && prettier --write app/supabase/generated/supabase-types.ts",
     "gen:prisma": "prisma generate",
     "gen": "concurrently --names js -c bgBlue.bold 'pnpm gen:sb'",

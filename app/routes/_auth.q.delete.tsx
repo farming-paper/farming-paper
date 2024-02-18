@@ -56,7 +56,7 @@ export async function action({ request }: ActionFunctionArgs) {
   return redirect("/q/list", { status: 303 });
 
   // const deletedQuestion: Question = createQuestion(
-  //   deletedRes.data.content as unknown as PartialDeep<Question>
+  //   deletedRes.data.content as unknown as Partial<Question>
   // );
 
   // return json({

@@ -1,4 +1,3 @@
-import type { PartialDeep } from "~/types";
 import type { QuestionContent } from "../types";
 
 /**
@@ -7,7 +6,7 @@ import type { QuestionContent } from "../types";
  * 준정적, 준동적
  */
 
-export const questions: PartialDeep<QuestionContent>[] = [
+export const questions: Partial<QuestionContent>[] = [
   // {
   //   type: "short_order",
   //   message:

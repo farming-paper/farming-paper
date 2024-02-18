@@ -26,7 +26,6 @@ import type { Question, QuestionContent } from "~/question/types";
 import TagFilterChip from "~/tag/component/tag-filter-chip";
 import useAddTagFilter from "~/tag/use-add-tag-filter";
 import useDeleteTagFilter from "~/tag/use-delete-tag-filter";
-import type { PartialDeep } from "~/types";
 import { getObjBigintToNumber } from "~/util";
 
 export const meta: MetaFunction = () => {
@@ -133,7 +132,7 @@ export async function loader({ request }: LoaderFunctionArgs) {
     questions: questions.map((q) => {
       return {
         ...getObjBigintToNumber(q),
-        content: createQuestion(q.content as PartialDeep<QuestionContent>),
+        content: createQuestion(q.content as Partial<QuestionContent>),
       };
     }),
     count,

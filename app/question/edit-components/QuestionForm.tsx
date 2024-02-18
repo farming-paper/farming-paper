@@ -40,7 +40,7 @@ const questionTypeOptions = [
   //   value: "pick_order",
   // },
 ];
-
+// TODO: 이 파일 삭제
 const QuestionForm: React.FC<{
   control: Control<QuestionFormValues>;
   setValue: UseFormSetValue<QuestionFormValues>;
@@ -62,7 +62,7 @@ const QuestionForm: React.FC<{
               <Tags
                 existingTags={existingTags}
                 onChange={onChange}
-                value={value?.map((v) => createTag(v))}
+                value={value?.map((v: any) => createTag(v))}
               />
             );
           }}
@@ -115,7 +115,7 @@ const QuestionForm: React.FC<{
         <div className="flex flex-col mb-4">
           <Label htmlFor="correct">정답</Label>
           <div className="flex flex-col gap-2 mb-5">
-            {values.question.corrects?.map((q, index) => (
+            {values.question.corrects?.map((q: any, index: any) => (
               <div key={index} className="flex gap-2">
                 <Space.Compact className="w-full">
                   <Controller
