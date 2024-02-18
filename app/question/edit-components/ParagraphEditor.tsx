@@ -1,7 +1,8 @@
 import { Form, useSubmit } from "@remix-run/react";
+import { isKeyHotkey } from "is-hotkey";
 import { useCallback, useMemo, useRef, useState } from "react";
 import type { Editor, Element } from "slate";
-import { createEditor } from "slate";
+import { Range, Transforms, createEditor } from "slate";
 import { withHistory } from "slate-history";
 import type { RenderElementProps, RenderLeafProps } from "slate-react";
 import { Editable, Slate, useSelected, withReact } from "slate-react";
@@ -26,20 +27,6 @@ const withInlines = (editor: Editor) => {
 
   editor.isInline = (element: Element) =>
     ["blank"].includes(element.type) || isInline(element);
-
-  // editor.isElementReadOnly = (element) =>
-  //   element.type === "badge" || isElementReadOnly(element);
-
-  // editor.isSelectable = (element) =>
-  //   element.type !== "badge" && isSelectable(element);
-
-  // editor.insertText = (text) => {
-  //   if (text && isUrl(text)) {
-  //     wrapLink(editor, text);
-  //   } else {
-  //     insertText(text);
-  //   }
-  // };
 
   editor.insertData = (data) => {
     const _text = data.getData("text/html");
@@ -79,8 +66,8 @@ const BlankComponent = ({
     <span
       {...attributes}
       className={twMerge(
-        "px-1.5 py-0.5 rounded border",
-        selected ? "bg-gray-100" : ""
+        "rounded bg-gray-100 border-2 border-transparent font-medium text-black px-0.5 -my-[2px] transition",
+        selected ? "border-gray-300" : ""
       )}
     >
       <InlineChromiumBugfix />
@@ -150,6 +137,31 @@ export default function ParagrahEditor() {
     3000
   );
 
+  const onKeyDown: React.KeyboardEventHandler<HTMLInputElement> = (event) => {
+    const { selection } = editor;
+
+    // Default left/right behavior is unit:'character'.
+    // This fails to distinguish between two cursor positions, such as
+    // <inline>foo<cursor/></inline> vs <inline>foo</inline><cursor/>.
+    // Here we modify the behavior to unit:'offset'.
+    // This lets the user step into and out of the inline without stepping over characters.
+    // You may wish to customize this further to only use unit:'offset' in specific cases.
+    if (selection && Range.isCollapsed(selection)) {
+      const { nativeEvent } = event;
+
+      if (isKeyHotkey("left", nativeEvent)) {
+        event.preventDefault();
+        Transforms.move(editor, { unit: "offset", reverse: true });
+        return;
+      }
+      if (isKeyHotkey("right", nativeEvent)) {
+        event.preventDefault();
+        Transforms.move(editor, { unit: "offset" });
+        return;
+      }
+    }
+  };
+
   return (
     <Form method="post" ref={formRef}>
       <Slate
@@ -186,7 +198,7 @@ export default function ParagrahEditor() {
           //    }
           // }}
 
-          // onKeyDown={onKeyDown}
+          onKeyDown={onKeyDown}
         />
       </Slate>
       <input
