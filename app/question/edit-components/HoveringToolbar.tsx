@@ -110,7 +110,7 @@ export default function HoveringToolbar() {
       <button
         type="button"
         className={twMerge(
-          "p-1 transition rounded hover:bg-gray-100 ",
+          "p-1 transition rounded hover:bg-gray-100 inline-flex items-center",
           isActive && "text-primary-500"
         )}
         onPointerDown={(e) => {
@@ -122,7 +122,8 @@ export default function HoveringToolbar() {
             : wrapBlankWithSelection(editor);
         }}
       >
-        <RectangleHorizontal className="w-5 h-5" />
+        <RectangleHorizontal className="w-4 h-4 mr-1" />
+        <span>빈칸</span>
       </button>
     </div>,
     document.body,
