@@ -9,6 +9,7 @@ import { useMemo } from "react";
 import { z } from "zod";
 import dashboardAction from "~/actions/dashboard";
 import { requireAuth } from "~/auth/get-session";
+import { AddTagDropdown } from "~/common/components/AddTagDropdown";
 import DefaultLayout from "~/common/components/DefaultLayout";
 import { DeleteQuestionModalWithButton } from "~/common/components/DeleteQuestionModalWithButton";
 import SideMenuV2 from "~/common/components/SideMenuV2";
@@ -259,7 +260,7 @@ export default function Dashboard() {
               >
                 <div className="group">
                   {/* question header */}
-                  <div className="flex transition opacity-0 group-hover:opacity-100 group-has-[*:focus]:opacity-100">
+                  <div className="flex transition opacity-0 group-hover:opacity-100 group-has-[*:focus]:opacity-100 group-has-[[aria-expanded=true]]:opacity-100">
                     <div
                       className="flex items-center py-1 text-xs text-gray-400 gap-2.5 overflow-hidden select-none"
                       style={{ backgroundColor: "rgba(249, 250, 251, 0.3)" }}
@@ -273,16 +274,20 @@ export default function Dashboard() {
                           <span>{question.tags.map((t) => t.name)}</span>
                         </div>
                       )}
-                      <Button
-                        variant="light"
-                        className="h-auto min-w-0 pl-0.5 py-0.5 pr-1  text-xs font-bold rounded-sm text-inherit gap-0.5"
-                        startContent={
-                          <Plus className="w-3 h-3 text-gray-300 " />
+                      <AddTagDropdown
+                        button={
+                          <Button
+                            variant="light"
+                            className="h-auto min-w-0 pl-0.5 py-0.5 pr-1  text-xs font-bold rounded-sm text-inherit gap-0.5"
+                            startContent={
+                              <Plus className="w-3 h-3 text-gray-300 " />
+                            }
+                            disableRipple
+                          >
+                            태그 추가
+                          </Button>
                         }
-                      >
-                        태그 추가
-                      </Button>
-
+                      />
                       <DeleteQuestionModalWithButton
                         OpenModalButton={({ onPress }) => (
                           <Button

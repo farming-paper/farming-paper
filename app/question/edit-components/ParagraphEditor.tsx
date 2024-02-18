@@ -182,7 +182,7 @@ export default function ParagrahEditor() {
           className="focus:outline-none focus:ring-0"
           renderElement={ElementComponent}
           renderLeaf={TextComponent}
-          placeholder="학습한 내용을 주저리주저리 써보시게나."
+          placeholder="학습한 내용을 주저리주저리 써보세요."
           // onDOMBeforeInput={(event: InputEvent) => {
           //    console.log("event", event);
           //    switch (event.inputType) {
