@@ -4,14 +4,7 @@ import type { LoaderFunctionArgs, MetaFunction } from "@remix-run/node";
 import { json } from "@remix-run/node";
 import { useLoaderData } from "@remix-run/react";
 import dayjs from "dayjs";
-import {
-  ArrowDownToLine,
-  FileEdit,
-  Play,
-  Plus,
-  Tag,
-  Trash2,
-} from "lucide-react";
+import { Play, Plus, Tag } from "lucide-react";
 import { useMemo } from "react";
 import { z } from "zod";
 import dashboardAction from "~/actions/dashboard";
@@ -211,19 +204,27 @@ export default function Dashboard() {
         </div>
 
         {/* header toolbar */}
-        <div className="flex items-center gap-4 mb-10">
+        <div className="flex items-center gap-4 mb-10 ">
+          <Button
+            isIconOnly
+            variant="shadow"
+            className="text-white bg-primary min-w-11"
+          >
+            <span className="sr-only">단락 추가</span>
+            <Plus className="w-4.5 h-4.5 " aria-hidden />
+          </Button>
           {(activeTagPublicIds || []).length > 0 && (
-            <>
+            <div className="flex items-center gap-4">
+              <div className="w-px h-5 bg-gray-100"></div>
               <div className="flex font-bold text-gray-600 gap-1.5 items-center font-mono select-none">
-                <ArrowDownToLine className="w-4 h-4" />
-                <span>{count}</span>
+                <span>{count} Found</span>
               </div>
               <ButtonGroup variant="shadow">
                 <Button isIconOnly className="text-white bg-primary min-w-11">
                   <span className="sr-only">문제 풀기 시작</span>
                   <Play className="w-4.5 h-4.5 " aria-hidden />
                 </Button>
-                <Button
+                {/* <Button
                   className="text-gray-600 bg-gray-50 min-w-11"
                   isIconOnly
                 >
@@ -236,18 +237,10 @@ export default function Dashboard() {
                 >
                   <span className="sr-only">일괄 삭제</span>
                   <Trash2 className="w-4.5 h-4.5 " aria-hidden />
-                </Button>
+                </Button> */}
               </ButtonGroup>
-            </>
+            </div>
           )}
-          <Button
-            isIconOnly
-            variant="shadow"
-            className="text-white bg-primary min-w-11"
-          >
-            <span className="sr-only">단락 추가</span>
-            <Plus className="w-4.5 h-4.5 " aria-hidden />
-          </Button>
         </div>
 
         {/* questions */}
