@@ -185,7 +185,7 @@ export default function Dashboard() {
   return (
     <DefaultLayout sidebarTop={<SideMenuV2 />}>
       <div
-        className="box-border px-6 mx-auto mt-20"
+        className="box-border px-10 mx-auto mt-20"
         style={{ width: "calc(700px + 3rem)" }}
       >
         {/* tags */}
@@ -252,7 +252,7 @@ export default function Dashboard() {
         </div>
 
         {/* questions */}
-        <div className="space-y-6">
+        <div className="space-y-2">
           {questions.map((question, index) => {
             return (
               // question group
@@ -260,9 +260,9 @@ export default function Dashboard() {
                 key={question.originalId || question.id}
                 question={question}
               >
-                <div>
+                <div className="group">
                   {/* question header */}
-                  <div className="flex">
+                  <div className="flex transition opacity-0 group-hover:opacity-100 group-has-[*:focus]:opacity-100">
                     <div
                       className="flex items-center py-1 text-xs text-gray-400 rounded-md shadow-inner px-2.5  gap-2.5 overflow-hidden select-none mb-1"
                       style={{ backgroundColor: "rgba(249, 250, 251, 0.3)" }}
@@ -287,7 +287,7 @@ export default function Dashboard() {
                   </div>
 
                   {/* question content */}
-                  <div className="flex">
+                  <div className="flex -ml-6">
                     <span
                       className="flex-none ml-1 mr-2 font-mono text-xs text-gray-400 select-none"
                       style={{ lineHeight: "1.75rem" }}
