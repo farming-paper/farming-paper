@@ -185,7 +185,7 @@ export default function Dashboard() {
   return (
     <DefaultLayout sidebarTop={<SideMenuV2 />}>
       <div
-        className="box-border px-6 mx-auto mt-40"
+        className="box-border px-6 mx-auto mt-20"
         style={{ width: "calc(700px + 3rem)" }}
       >
         {/* tags */}
