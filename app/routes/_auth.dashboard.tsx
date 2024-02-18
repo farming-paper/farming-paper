@@ -264,7 +264,7 @@ export default function Dashboard() {
                   {/* question header */}
                   <div className="flex transition opacity-0 group-hover:opacity-100 group-has-[*:focus]:opacity-100">
                     <div
-                      className="flex items-center py-1 text-xs text-gray-400 rounded-md shadow-inner px-2.5  gap-2.5 overflow-hidden select-none mb-1"
+                      className="flex items-center py-1 text-xs text-gray-400 gap-2.5 overflow-hidden select-none"
                       style={{ backgroundColor: "rgba(249, 250, 251, 0.3)" }}
                     >
                       <span className="font-mono font-bold">
@@ -276,7 +276,7 @@ export default function Dashboard() {
                       </div>
                       <Button
                         variant="light"
-                        className="h-auto min-w-0 pl-0.5 py-0.5 pr-1 -ml-0.5 -my-0.5 -mr-1 text-xs font-bold rounded-sm text-inherit gap-0.5"
+                        className="h-auto min-w-0 pl-0.5 py-0.5 pr-1  text-xs font-bold rounded-sm text-inherit gap-0.5"
                         startContent={
                           <Plus className="w-3 h-3 text-gray-300 " />
                         }
@@ -299,10 +299,9 @@ export default function Dashboard() {
 
                       {question.content.type === "short_order" && (
                         <div className="text-right">
-                          <span className="text-sm font-bold text-gray-400 select-none">
-                            정답:{" "}
+                          <span className="text-sm font-medium text-gray-400 select-none">
+                            정답: {question.content.corrects.join(", ")}
                           </span>
-                          <span>{question.content.corrects.join(", ")}</span>
                         </div>
                       )}
                     </div>
