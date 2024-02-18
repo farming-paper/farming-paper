@@ -3,6 +3,7 @@ import { useEffect, useRef } from "react";
 import { createPortal } from "react-dom";
 import { Editor, Element, Range, Transforms } from "slate";
 import { useFocused, useSlate } from "slate-react";
+import { twMerge } from "tailwind-merge";
 import useThrottleFunc from "~/common/hooks/use-throttle-func";
 import { type BlankElement } from "../slate";
 
@@ -75,17 +76,20 @@ export default function HoveringToolbar() {
       return;
     }
 
+    const domSelection = window.getSelection();
+
     if (
       !selection ||
       Range.isCollapsed(selection) ||
       Editor.string(editor, selection) === "" ||
-      !inFocus
+      !inFocus ||
+      !domSelection ||
+      !domSelection?.anchorNode
     ) {
       el.removeAttribute("style");
       return;
     }
 
-    const domSelection = window.getSelection();
     const domRange = domSelection?.getRangeAt(0);
     const rect = domRange?.getBoundingClientRect();
 
@@ -96,14 +100,19 @@ export default function HoveringToolbar() {
     setStyleThrottled(el, rect);
   });
 
+  const isActive = isBlankActive(editor);
+
   return createPortal(
     <div
       ref={ref}
-      className="text-sm rounded absolute z-10 bg-opacity-75 text-white transition-opacity top-[-10000px] left-[-10000px] "
+      className="text-sm rounded absolute z-10 opacity-0 transition-opacity top-[-10000px] left-[-10000px] bg-white shadow-xl border"
     >
       <button
         type="button"
-        className="p-1 bg-gray-700 rounded"
+        className={twMerge(
+          "p-1 transition rounded hover:bg-gray-100 ",
+          isActive && "text-primary-500"
+        )}
         onPointerDown={(e) => {
           e.preventDefault();
         }}
