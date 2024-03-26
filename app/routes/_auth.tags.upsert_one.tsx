@@ -1,7 +1,7 @@
 import type { ActionFunctionArgs } from "@remix-run/server-runtime";
 import { json } from "@remix-run/server-runtime";
 import { nanoid } from "nanoid";
-import { getSessionWithProfile } from "~/auth/get-session";
+import { requireAuth } from "~/auth/get-session";
 import { getServerSideSupabaseClient } from "~/supabase/client";
 import { createTag } from "~/tag/create";
 import type { ITag } from "~/types";
@@ -17,17 +17,12 @@ export const createUpsertTagArgs = createArgs;
 export const useUpsertTagFetcher = useFetcher;
 
 export async function action({ request }: ActionFunctionArgs) {
-  const response = new Response();
-  const [{ name, desc }, { profile }] = await Promise.all([
-    getArgsFromRequest(request),
-    getSessionWithProfile({ request, response }),
-  ]);
+  const { profile } = await requireAuth(request);
+  const { name, desc } = await getArgsFromRequest(request);
 
   const db = getServerSideSupabaseClient();
 
-  const creating = createTag({
-    name,
-  });
+  const creating = createTag({ name });
 
   const updateTagRes = await db
     .from("tags")
@@ -44,6 +39,7 @@ export async function action({ request }: ActionFunctionArgs) {
       desc: updateTagRes.data.desc,
       name: updateTagRes.data.name || "",
     });
+
     return json({ data: updatedTag, error: null });
   }
 

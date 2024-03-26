@@ -1,6 +1,6 @@
 import type { ActionFunctionArgs } from "@remix-run/server-runtime";
 import { json, redirect } from "@remix-run/server-runtime";
-import { getSessionWithProfile } from "~/auth/get-session";
+import { requireAuth } from "~/auth/get-session";
 import { getServerSideSupabaseClient } from "~/supabase/client";
 import { typedFetcher } from "~/util";
 
@@ -16,9 +16,8 @@ export const getDeletionQuestionArgsFromRequest = getArgsFromRequest;
 export const useDeletionQuestionFetcher = useFetcher;
 
 export async function action({ request }: ActionFunctionArgs) {
+  const { profile } = await requireAuth(request);
   const { publicId } = await getDeletionQuestionArgsFromRequest(request);
-  const response = new Response();
-  const { profile } = await getSessionWithProfile({ request, response });
   const db = getServerSideSupabaseClient();
 
   const deletedRes = await db
@@ -57,7 +56,7 @@ export async function action({ request }: ActionFunctionArgs) {
   return redirect("/q/list", { status: 303 });
 
   // const deletedQuestion: Question = createQuestion(
-  //   deletedRes.data.content as unknown as PartialDeep<Question>
+  //   deletedRes.data.content as unknown as Partial<Question>
   // );
 
   // return json({

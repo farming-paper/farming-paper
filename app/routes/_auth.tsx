@@ -1,92 +1,20 @@
-import { Bars3Icon } from "@heroicons/react/24/outline";
+import { Button, Link } from "@nextui-org/react";
 import {
-  Link,
-  Outlet,
+  Link as RemixLink,
   isRouteErrorResponse,
-  useOutletContext,
   useRouteError,
 } from "@remix-run/react";
-import type { LoaderFunctionArgs } from "@remix-run/server-runtime";
-import { json, redirect } from "@remix-run/server-runtime";
-import { App } from "antd";
-import { useAtom } from "jotai";
-import { useEffect } from "react";
-import openSideMenuAtom from "~/atoms/openSideMenu";
-import { getSessionWithProfile } from "~/auth/get-session";
-
-import SideMenu from "~/common/components/SideMenu";
-import type { IOutletProps } from "~/types";
-import { withDurationLog } from "~/util";
-
-export const loader = async ({ request }: LoaderFunctionArgs) => {
-  const response = new Response();
-
-  const { profile, session, supabaseClient } = await withDurationLog(
-    "_auth_getSessionWithProfile",
-    getSessionWithProfile({
-      request,
-      response,
-    })
-  );
-
-  if (!session || !profile) {
-    await supabaseClient.auth.signOut();
-    return redirect("/login", {
-      headers: response.headers,
-    });
-  }
-
-  return json({
-    profile,
-  });
-};
-
-const AuthRouterGroup = () => {
-  const context = useOutletContext<IOutletProps>();
-  const [_, setOpenSideMenu] = useAtom(openSideMenuAtom);
-
-  const { message } = App.useApp();
-
-  useEffect(() => {
-    const params = new URLSearchParams(window.location.search);
-    const status = params.get("status");
-    if (status === "already_logged_in") {
-      message.info("이미 로그인되어 있습니다.");
-    }
-  }, [message]);
-
-  // set OpenSideMenu to false when the history changes
-  useEffect(() => {
-    const setOpensideMenuFalse = () => setOpenSideMenu(false);
-    window.addEventListener("popstate", setOpensideMenuFalse);
-
-    return () => {
-      window.removeEventListener("popstate", setOpensideMenuFalse);
-    };
-  }, [setOpenSideMenu]);
-
-  return (
-    <>
-      <SideMenu />
-      <div className="px-4 py-2.5">
-        <button
-          className="-m-2.5 p-2.5 text-gray-700"
-          onClick={() => setOpenSideMenu(true)}
-        >
-          <span className="sr-only">Open sidebar</span>
-          <Bars3Icon className="w-6 h-6" aria-hidden="true" />
-        </button>
-      </div>
-      <Outlet context={context} />
-    </>
-  );
-};
 
 export function ErrorBoundary() {
   const caught = useRouteError();
 
   if (!isRouteErrorResponse(caught)) {
-    return <div>??? {JSON.stringify(caught)}</div>;
+    return (
+      <div>
+        <p>unknown error</p>
+        <pre>{JSON.stringify(caught, null, 2)}</pre>
+      </div>
+    );
   }
 
   return (
@@ -111,28 +39,25 @@ export function ErrorBoundary() {
             </div>
             {caught.status === 404 && (
               <div className="flex mt-10 space-x-3 @sm:border-l @sm:border-transparent @sm:pl-6">
-                <Link
+                <RemixLink
                   to="/"
                   className="inline-flex items-center px-4 py-2 text-sm font-medium text-white bg-green-600 border border-transparent rounded-md shadow-sm hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2 "
                 >
                   홈으로 돌아가기
-                </Link>
-                <Link
+                </RemixLink>
+                <RemixLink
                   to="/account"
                   className="inline-flex items-center px-4 py-2 text-sm font-medium text-green-700 bg-green-100 border border-transparent rounded-md hover:bg-green-200 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2"
                 >
                   문의하기
-                </Link>
+                </RemixLink>
               </div>
             )}
             {caught.status === 401 && (
               <div className="flex mt-10 space-x-3 @sm:border-l @sm:border-transparent @sm:pl-6">
-                <Link
-                  to="/login"
-                  className="inline-flex items-center px-4 py-2 text-sm font-medium text-white bg-green-600 border border-transparent rounded-md shadow-sm hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2 "
-                >
+                <Button as={Link} href="/login" color="primary" variant="solid">
                   로그인 페이지로 이동
-                </Link>
+                </Button>
               </div>
             )}
           </div>
@@ -141,5 +66,3 @@ export function ErrorBoundary() {
     </div>
   );
 }
-
-export default AuthRouterGroup;

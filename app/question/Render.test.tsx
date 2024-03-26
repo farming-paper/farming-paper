@@ -1,6 +1,6 @@
-import Render from "./Render";
-
 import { render } from "@testing-library/react";
+import { describe, expect, test } from "vitest";
+import Render from "./Render";
 
 test("Simple Text", () => {
   const result = render(<Render>Simple Text</Render>);

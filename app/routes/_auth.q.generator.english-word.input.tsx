@@ -1,10 +1,11 @@
 import { Await, useLoaderData, useNavigate } from "@remix-run/react";
 import type { LoaderFunctionArgs } from "@remix-run/server-runtime";
 import { defer } from "@remix-run/server-runtime";
-import { App, Button, Input } from "antd";
+import { Button, Input } from "~/common/components/mockups";
+
 import { AnimatePresence, motion } from "framer-motion";
-import { Suspense, useCallback, useEffect, useMemo, useState } from "react";
-import { getSessionWithProfile } from "~/auth/get-session";
+import { Suspense, useCallback, useMemo, useState } from "react";
+import { requireAuth } from "~/auth/get-session";
 import Label from "~/common/components/Label";
 import useCmdEnter from "~/common/hooks/use-cmd-enter";
 import Render from "~/question/Render";
@@ -46,8 +47,7 @@ export async function getExisingTags(profileId: number) {
 }
 
 export async function loader({ request }: LoaderFunctionArgs) {
-  const response = new Response();
-  const { profile } = await getSessionWithProfile({ request, response });
+  const { profile } = await requireAuth(request);
 
   return defer({
     existingTags: getExisingTags(profile.id),
@@ -59,7 +59,6 @@ export default function Page() {
   const navigate = useNavigate();
   // const [formValues, setFormValues] = useState<QuestionFormValues>({});
   const loaded = useLoaderData<typeof loader>();
-  const { message } = App.useApp();
 
   const handleNext = useCallback(() => {
     navigate("/q/generator/english-word/sentence-auto-select/" + word);
@@ -81,14 +80,14 @@ export default function Page() {
 
   const createQuestionFetch = useCreateQuestionFetcher();
 
-  useEffect(() => {
-    if (createQuestionFetch.state === "idle" && createQuestionFetch.data) {
-      message.success({
-        key: "creating",
-        content: "문제가 성공적으로 생성되었습니다.",
-      });
-    }
-  }, [createQuestionFetch.data, createQuestionFetch.state, message]);
+  // useEffect(() => {
+  //   if (createQuestionFetch.state === "idle" && createQuestionFetch.data) {
+  //     message.success({
+  //       key: "creating",
+  //       content: "문제가 성공적으로 생성되었습니다.",
+  //     });
+  //   }
+  // }, [createQuestionFetch.data, createQuestionFetch.state, message]);
 
   const generated = useMemo(() => {
     if (
@@ -150,7 +149,7 @@ export default function Page() {
         <Label htmlFor="word">영어 단어</Label>
         <Input
           value={word}
-          onChange={(e) => setWord(e.target.value)}
+          onChange={(e: any) => setWord(e.target.value)}
           id="word"
           placeholder="예: demonstration"
         />

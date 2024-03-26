@@ -1,7 +1,7 @@
-import type { Question } from "./question/types";
+import type { QuestionContent } from "./question/types";
 import { deepclone } from "./util";
 
-export function createQuestionGenerator(questions: Question[]) {
+export function createQuestionGenerator(questions: QuestionContent[]) {
   let total = questions.reduce((acc, current) => {
     return acc + (current.weight || 1);
   }, 0);
@@ -20,7 +20,7 @@ export function createQuestionGenerator(questions: Question[]) {
         }
       }
       return {
-        question: deepclone(questions[questions.length - 1]) as Question,
+        question: deepclone(questions[questions.length - 1]) as QuestionContent,
         index: questions.length - 1,
       };
     },

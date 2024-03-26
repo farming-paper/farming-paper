@@ -1,5 +1,4 @@
-import type { PartialDeep } from "~/types";
-import type { Question } from "../types";
+import type { QuestionContent } from "../types";
 
 /**
  *
@@ -42,7 +41,7 @@ import type { Question } from "../types";
  *
  */
 
-export const questions: PartialDeep<Question>[] = [
+export const questions: Partial<QuestionContent>[] = [
   // {
   //   type: "short_order",
   //   message:

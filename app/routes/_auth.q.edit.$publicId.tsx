@@ -1,3 +1,4 @@
+// BEST PRACTICE
 import { Select, SelectItem } from "@nextui-org/react";
 import type { MetaFunction } from "@remix-run/node";
 import {
@@ -9,22 +10,21 @@ import {
 } from "@remix-run/react";
 import type { LoaderFunctionArgs } from "@remix-run/server-runtime";
 import { json } from "@remix-run/server-runtime";
-import { App, Button, Input, Space } from "antd";
 import { Plus, Trash2 } from "lucide-react";
 import { useEffect, useRef, useState } from "react";
-import type { PartialDeep } from "type-fest";
 import editSingleQuestion from "~/actions/editSingleQuestion";
-import { getSessionWithProfile } from "~/auth/get-session";
+import { requireAuth } from "~/auth/get-session";
 import DangerModal from "~/common/components/DangerModal";
 import Label from "~/common/components/Label";
+import { Button, Input, Space } from "~/common/components/mockups";
 import { createQuestion } from "~/question/create";
 import Tags from "~/question/edit-components/Tags";
-import type { Question, QuestionRow } from "~/question/types";
+import type { Question, QuestionContent } from "~/question/types";
 import { getServerSideSupabaseClient } from "~/supabase/client";
 import type { Database } from "~/supabase/generated/supabase-types";
 import { rpc } from "~/supabase/rpc";
 import type { ITagWithCount } from "~/types";
-import { removeNullDeep } from "~/util";
+import { dayjs, removeNullDeep } from "~/util";
 
 export const meta: MetaFunction = () => {
   return [
@@ -95,10 +95,18 @@ export async function getQuestionRow({
     });
   }
 
-  const row: QuestionRow = {
-    content: createQuestion(questionRes.data?.content as PartialDeep<Question>),
+  const row: Question = {
+    id: questionRes.data.id,
+    originalId: questionRes.data.id, // TODO: 이 파일 삭제
+    content: createQuestion(
+      questionRes.data?.content as Partial<QuestionContent>
+    ),
     publicId: questionRes.data.public_id,
-    updatedAt: questionRes.data.updated_at,
+    updatedAt: dayjs(questionRes.data.updated_at),
+    createdAt: dayjs(questionRes.data.created_at),
+    deletedAt: questionRes.data.deleted_at
+      ? dayjs(questionRes.data.deleted_at)
+      : null,
     tags: questionRes.data.tags_questions_relation.map((relation) => {
       const tag = relation.tag;
       return removeNullDeep({
@@ -138,13 +146,13 @@ export async function getAllTags({ profileId }: { profileId: number }) {
 
 export async function loader({ request, params }: LoaderFunctionArgs) {
   const publicId = params.publicId;
+  const { profile } = await requireAuth(request);
+
   if (!publicId) {
     throw new Response("Public Id Not Found", {
       status: 404,
     });
   }
-  const response = new Response();
-  const { profile } = await getSessionWithProfile({ request, response });
 
   const [row, tags] = await Promise.all([
     getQuestionRow({ profileId: profile.id, publicId }),
@@ -166,40 +174,39 @@ export default function Page() {
 
   const navigation = useNavigation();
   const submit = useSubmit();
-  const actionData = useActionData<typeof action>();
+  const _actionData = useActionData<typeof action>();
 
   const formRef = useRef<HTMLFormElement>(null);
-  const { message } = App.useApp();
 
-  useEffect(() => {
-    if (navigation.state === "submitting") {
-      message.loading({
-        key: "edit-question",
-        content: "문제를 수정하는 중입니다...",
-        duration: 20,
-      });
-      return;
-    }
+  // useEffect(() => {
+  //   if (navigation.state === "submitting") {
+  //     message.loading({
+  //       key: "edit-question",
+  //       content: "문제를 수정하는 중입니다...",
+  //       duration: 20,
+  //     });
+  //     return;
+  //   }
 
-    if (navigation.state === "idle" && actionData?.data) {
-      message.success({
-        key: "edit-question",
-        content: "성공적으로 수정되었습니다.",
-        duration: 2,
-      });
-      return;
-    }
-    if (navigation.state === "idle" && actionData?.error) {
-      message.error({
-        key: "edit-question",
-        content: "문제 수정에 실패했습니다.",
-        duration: 2,
-      });
-      // eslint-disable-next-line no-console
-      console.error("actionData.error", actionData.error);
-      return;
-    }
-  }, [actionData, navigation.state, message]);
+  //   if (navigation.state === "idle" && actionData?.data) {
+  //     message.success({
+  //       key: "edit-question",
+  //       content: "성공적으로 수정되었습니다.",
+  //       duration: 2,
+  //     });
+  //     return;
+  //   }
+  //   if (navigation.state === "idle" && actionData?.error) {
+  //     message.error({
+  //       key: "edit-question",
+  //       content: "문제 수정에 실패했습니다.",
+  //       duration: 2,
+  //     });
+  //     // eslint-disable-next-line no-console
+  //     console.error("actionData.error", actionData.error);
+  //     return;
+  //   }
+  // }, [actionData, navigation.state, message]);
 
   /** keyboard shortcut */
   useEffect(() => {
@@ -281,7 +288,7 @@ export default function Page() {
             autoSize={{ minRows: 3 }}
             required
             value={editingContent.message}
-            onChange={(e) =>
+            onChange={(e: any) =>
               setEditingContent({ ...editingContent, message: e.target.value })
             }
             placeholder="내용을 작성하세요"
@@ -299,7 +306,7 @@ export default function Page() {
                     <Input
                       style={{ width: "calc(100% - 3rem)" }}
                       value={q}
-                      onChange={(e) => {
+                      onChange={(e: any) => {
                         setEditingContent({
                           ...editingContent,
                           corrects: editingContent.corrects.map((c, i) =>

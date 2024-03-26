@@ -1,10 +1,10 @@
 import { Form } from "@remix-run/react";
-import { Button, Input, Select, Space } from "antd";
 import { Plus, Trash2 } from "lucide-react";
 import type { Control, FormState, UseFormSetValue } from "react-hook-form";
 import { Controller } from "react-hook-form";
 import ErrorLabel from "~/common/components/ErrorLabel";
 import Label from "~/common/components/Label";
+import { Button, Input, Select, Space } from "~/common/components/mockups";
 import { createTag } from "~/tag/create";
 import type { ITagWithCount } from "~/types";
 import type { QuestionFormValues } from "../question-form-resolver";
@@ -40,7 +40,7 @@ const questionTypeOptions = [
   //   value: "pick_order",
   // },
 ];
-
+// TODO: 이 파일 삭제
 const QuestionForm: React.FC<{
   control: Control<QuestionFormValues>;
   setValue: UseFormSetValue<QuestionFormValues>;
@@ -62,7 +62,7 @@ const QuestionForm: React.FC<{
               <Tags
                 existingTags={existingTags}
                 onChange={onChange}
-                value={value?.map((v) => createTag(v))}
+                value={value?.map((v: any) => createTag(v))}
               />
             );
           }}
@@ -115,7 +115,7 @@ const QuestionForm: React.FC<{
         <div className="flex flex-col mb-4">
           <Label htmlFor="correct">정답</Label>
           <div className="flex flex-col gap-2 mb-5">
-            {values.question.corrects?.map((q, index) => (
+            {values.question.corrects?.map((q: any, index: any) => (
               <div key={index} className="flex gap-2">
                 <Space.Compact className="w-full">
                   <Controller

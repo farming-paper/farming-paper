@@ -1,10 +1,12 @@
-import type { InputRef } from "antd";
+import type { Dayjs } from "dayjs";
 import type { RefObject } from "react";
+import type { Descendant } from "slate";
 import type { ITag } from "~/types";
 
 export interface IBaseQuestion {
   id: string;
   message: string;
+  descendants?: Descendant[];
   weight?: number;
   ignoreWhitespace?: boolean;
 }
@@ -49,7 +51,7 @@ export interface IPickDifferentQuestion extends IBaseQuestion {
   pool: string[][];
 }
 
-export type Question =
+export type QuestionContent =
   | IShortQuestion
   | IShortOrderQuestion
   | IShortMultiAnswerQuestion
@@ -68,18 +70,31 @@ export interface ISuccessArgs extends IBaseProcessedArgs {}
 // eslint-disable-next-line @typescript-eslint/no-empty-interface
 export interface IFailArgs extends IBaseProcessedArgs {}
 
-export type QuestionInputProps<T extends Question = Question> = {
+export type QuestionInputProps<T extends QuestionContent = QuestionContent> = {
   question: T;
   disabled?: boolean;
   inputRef?: RefObject<HTMLTextAreaElement> | RefObject<HTMLInputElement>;
-  antdInputRef?: RefObject<InputRef>;
+  antdInputRef?: RefObject<any>;
   onSuccess?: (args: ISuccessArgs) => void;
   onFail?: (args: IFailArgs) => void;
 };
 
-export type QuestionRow = {
-  content: Question;
+export type Question = {
+  id: number;
+  originalId: number | null;
+  content: QuestionContent;
+  publicId: string;
+  updatedAt: Dayjs;
+  createdAt: Dayjs;
+  deletedAt: Dayjs | null;
+  tags: ITag[];
+};
+
+export type QuestionRaw = {
+  content: string;
   publicId: string;
   updatedAt: string;
+  createdAt: string;
+  deletedAt: string | null;
   tags: ITag[];
 };

@@ -1,5 +1,5 @@
-import { List } from "antd";
 import { useCallback, useEffect, useMemo, useRef } from "react";
+import { List } from "~/common/components/mockups";
 import { deepclone, shuffle } from "~/util";
 import Render from "../Render";
 import type { IPickDifferentQuestion, QuestionInputProps } from "../types";
@@ -56,7 +56,7 @@ const PickDifferentQuestionInput: React.FC<
       <List
         bordered
         dataSource={choices}
-        renderItem={(choice) => (
+        renderItem={(choice: any) => (
           <List.Item onClick={() => onSubmit(choice)}>{choice}</List.Item>
         )}
       />

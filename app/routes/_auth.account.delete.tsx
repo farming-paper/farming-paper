@@ -1,7 +1,7 @@
 import type { ActionFunctionArgs } from "@remix-run/server-runtime";
 import { json } from "@remix-run/server-runtime";
 import dayjs from "dayjs";
-import { deleteProfileCache, getSessionWithProfile } from "~/auth/get-session";
+import { deleteProfileCache, requireAuth } from "~/auth/get-session";
 import { getServerSideSupabaseClient } from "~/supabase/client";
 import { typedFetcher } from "~/util";
 
@@ -96,8 +96,7 @@ async function removeProfile(profileId: number) {
 }
 
 export async function action({ request }: ActionFunctionArgs) {
-  const response = new Response();
-  const { profile } = await getSessionWithProfile({ response, request });
+  const { profile } = await requireAuth(request);
 
   deleteProfileCache({ email: profile.email });
 

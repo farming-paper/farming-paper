@@ -1,7 +1,7 @@
 import { nanoid } from "nanoid";
-import type { ITag, PartialDeep } from "~/types";
+import type { ITag } from "~/types";
 
-export function createTag(arg?: PartialDeep<ITag>): ITag {
+export function createTag(arg?: Partial<ITag>): ITag {
   return {
     name: "",
     publicId: nanoid(),
