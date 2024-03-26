@@ -149,6 +149,10 @@ export default function ParagrahEditor() {
     if (selection && Range.isCollapsed(selection)) {
       const { nativeEvent } = event;
 
+      if (nativeEvent.isComposing) {
+        return;
+      }
+
       if (isKeyHotkey("left", nativeEvent)) {
         event.preventDefault();
         Transforms.move(editor, { unit: "offset", reverse: true });

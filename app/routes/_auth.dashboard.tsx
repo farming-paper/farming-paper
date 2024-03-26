@@ -9,7 +9,7 @@ import { useMemo } from "react";
 import { z } from "zod";
 import dashboardAction from "~/actions/dashboard";
 import { requireAuth } from "~/auth/get-session";
-import { AddTagDropdown } from "~/common/components/AddTagDropdown";
+import { AddTagModal } from "~/common/components/AddTagModal";
 import DefaultLayout from "~/common/components/DefaultLayout";
 import { DeleteQuestionModalWithButton } from "~/common/components/DeleteQuestionModalWithButton";
 import SideMenuV2 from "~/common/components/SideMenuV2";
@@ -21,6 +21,7 @@ import type { Question, QuestionContent } from "~/question/types";
 import TagFilterChip from "~/tag/component/tag-filter-chip";
 import useAddTagFilter from "~/tag/use-add-tag-filter";
 import useDeleteTagFilter from "~/tag/use-delete-tag-filter";
+import type { ITagWithCount } from "~/types";
 import { getObjBigintToNumber } from "~/util";
 
 export const meta: MetaFunction = () => {
@@ -72,7 +73,7 @@ export async function loader({ request }: LoaderFunctionArgs) {
 
   const { page, tags } = requireParams(request);
 
-  const [questions, count, recentTags] = await Promise.all([
+  const [questions, count, recentTags, allTags] = await Promise.all([
     prisma.questions.findMany({
       where: {
         creator: profile.id,
@@ -121,6 +122,24 @@ export async function loader({ request }: LoaderFunctionArgs) {
     ` as Promise<
       (Pick<tags, "public_id" | "name"> & { last_q_date: string })[]
     >,
+
+    // 모든 태그
+    prisma.tags.findMany({
+      where: {
+        creator: profile.id,
+        deleted_at: null,
+      },
+      select: {
+        public_id: true,
+        name: true,
+        desc: true,
+        _count: {
+          select: {
+            tags_questions_relation: true,
+          },
+        },
+      },
+    }),
   ]);
 
   return json({
@@ -133,6 +152,7 @@ export async function loader({ request }: LoaderFunctionArgs) {
     count,
     recentTags,
     activeTagPublicIds: tags,
+    allTags,
   });
 }
 
@@ -175,6 +195,18 @@ export default function Dashboard() {
       ),
     [data.questions]
   );
+
+  const allTags = data.allTags.map((tag): ITagWithCount => {
+    const result: ITagWithCount = {
+      name: tag.name || "",
+      publicId: tag.public_id,
+      count: tag._count.tags_questions_relation,
+    };
+    if (tag.desc) {
+      result.desc = tag.desc;
+    }
+    return result;
+  });
 
   return (
     <DefaultLayout sidebarTop={<SideMenuV2 />}>
@@ -274,9 +306,11 @@ export default function Dashboard() {
                           <span>{question.tags.map((t) => t.name)}</span>
                         </div>
                       )}
-                      <AddTagDropdown
-                        button={
+                      <AddTagModal
+                        addableTags={allTags}
+                        TriggerButton={({ onPress }) => (
                           <Button
+                            onPress={onPress}
                             variant="light"
                             className="h-auto min-w-0 pl-0.5 py-0.5 pr-1  text-xs font-bold rounded-sm text-inherit gap-0.5"
                             startContent={
@@ -286,14 +320,16 @@ export default function Dashboard() {
                           >
                             태그 추가
                           </Button>
-                        }
+                        )}
+                        onSelect={(tag) => {
+                          console.log(tag);
+                        }}
                       />
                       <DeleteQuestionModalWithButton
-                        OpenModalButton={({ onPress }) => (
+                        TriggerButton={({ onPress }) => (
                           <Button
                             onPress={onPress}
                             variant="light"
-                            color="danger"
                             className="h-auto min-w-0 px-1 py-1 rounded-sm text-inherit"
                           >
                             <Trash2 className="w-3.5 h-3.5 " />

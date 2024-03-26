@@ -1,6 +1,7 @@
 import type { FetcherWithComponents, SubmitOptions } from "@remix-run/react";
 import { useFetcher, useSubmit } from "@remix-run/react";
 import type { SerializeFrom } from "@remix-run/server-runtime";
+import { disassembleHangul } from "@toss/hangul";
 import dayjsLib from "dayjs";
 import "dayjs/locale/ko.js"; // import locale
 import relativeTime from "dayjs/plugin/relativeTime.js"; // import plugin
@@ -293,4 +294,15 @@ export function getObjBigintToNumber<T extends Record<string, unknown>>(
   });
 
   return result;
+}
+
+export function filterByContainsHangul<T extends { name: string }>(
+  items: T[],
+  query: string
+) {
+  return items.filter((item) =>
+    disassembleHangul(item.name)
+      .replace(/ /g, "")
+      .includes(disassembleHangul(query).replace(/ /g, ""))
+  );
 }

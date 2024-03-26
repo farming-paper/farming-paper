@@ -11,9 +11,9 @@ import { Form } from "@remix-run/react";
 import { useQuestion } from "~/question/context";
 
 export const DeleteQuestionModalWithButton = ({
-  OpenModalButton,
+  TriggerButton: OpenModalButton,
 }: {
-  OpenModalButton: (props: { onPress: () => void }) => React.ReactNode;
+  TriggerButton: (props: { onPress: () => void }) => React.ReactNode;
 }) => {
   const { publicId } = useQuestion();
   const { onOpen, isOpen, onOpenChange } = useDisclosure();
