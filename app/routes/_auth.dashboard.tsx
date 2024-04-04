@@ -9,7 +9,7 @@ import { useMemo } from "react";
 import { z } from "zod";
 import dashboardAction from "~/actions/dashboard";
 import { requireAuth } from "~/auth/get-session";
-import { AddTagModal } from "~/common/components/AddTagModal";
+import { SetTagModal } from "~/common/components/AddTagModal";
 import DefaultLayout from "~/common/components/DefaultLayout";
 import { DeleteQuestionModalWithButton } from "~/common/components/DeleteQuestionModalWithButton";
 import SideMenuV2 from "~/common/components/SideMenuV2";
@@ -303,11 +303,13 @@ export default function Dashboard() {
                       {question.tags.length > 0 && (
                         <div className="flex items-center gap-0.5">
                           <Tag className="w-2.5 h-2.5 text-gray-300" />
-                          <span>{question.tags.map((t) => t.name)}</span>
+                          <span>
+                            {question.tags.map((t) => t.name).join(", ")}
+                          </span>
                         </div>
                       )}
-                      <AddTagModal
-                        addableTags={allTags}
+                      <SetTagModal
+                        tags={allTags}
                         TriggerButton={({ onPress }) => (
                           <Button
                             onPress={onPress}
@@ -321,9 +323,6 @@ export default function Dashboard() {
                             태그 추가
                           </Button>
                         )}
-                        onSelect={(tag) => {
-                          console.log(tag);
-                        }}
                       />
                       <DeleteQuestionModalWithButton
                         TriggerButton={({ onPress }) => (

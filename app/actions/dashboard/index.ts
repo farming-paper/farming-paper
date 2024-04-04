@@ -11,24 +11,6 @@ import updateQuestionContent from "./update-question-content";
 export const validator = withZod(
   z.discriminatedUnion("intent", [
     z.object({
-      intent: z.literal("add_existing_tag_to_question"),
-      question_public_id: z.string(),
-      tag_public_id: z.string(),
-    }),
-
-    z.object({
-      intent: z.literal("add_new_tag_to_question"),
-      question_public_id: z.string(),
-      name: z.string(),
-    }),
-
-    z.object({
-      intent: z.literal("delete_tag_from_question"),
-      question_public_id: z.string(),
-      tag_public_id: z.string(),
-    }),
-
-    z.object({
       intent: z.literal("remove_question"),
       public_id: z.string(),
     }),
@@ -41,6 +23,23 @@ export const validator = withZod(
       intent: z.literal("update_question_content"),
       public_id: z.string(),
       content: z.string(),
+    }),
+
+    z.object({
+      intent: z.literal("set_tag"),
+      question_public_id: z.string(),
+      tag_public_id: z.string(),
+    }),
+
+    z.object({
+      intent: z.literal("unset_tag"),
+      question_public_id: z.string(),
+      tag_public_id: z.string(),
+    }),
+
+    z.object({
+      intent: z.literal("create_tag"),
+      name: z.string(),
     }),
   ])
 );
@@ -76,6 +75,11 @@ export default async function dashboardAction({ request }: ActionFunctionArgs) {
           deleted_at: new Date(),
         },
       });
+
+      await prisma.tags_questions_relation.deleteMany({
+        where: { questions: { public_id: data.public_id } },
+      });
+
       return json({ data: "success", error: null });
     }
     case "create_question": {
@@ -93,9 +97,115 @@ export default async function dashboardAction({ request }: ActionFunctionArgs) {
       return json({ data: row.public_id, error: null });
     }
 
-    case "add_existing_tag_to_question":
-    case "add_new_tag_to_question":
-    case "delete_tag_from_question":
-      return json({ data: null, error: "Not Implemented" }, { status: 501 });
+    case "set_tag": {
+      const [question, tag] = await Promise.all([
+        prisma.questions.findFirst({
+          where: {
+            public_id: data.question_public_id,
+            creator: profile.id,
+            deleted_at: null,
+          },
+        }),
+        prisma.tags.findFirst({
+          where: {
+            public_id: data.tag_public_id,
+            creator: profile.id,
+            deleted_at: null,
+          },
+        }),
+      ]);
+
+      if (!question) {
+        return json(
+          {
+            data: null,
+            error: {
+              message: `Question not found: ${data.question_public_id}`,
+            },
+          },
+          { status: 404 }
+        );
+      }
+
+      if (!tag) {
+        return json(
+          {
+            data: null,
+            error: { message: `Tag not found: ${data.tag_public_id}` },
+          },
+          { status: 404 }
+        );
+      }
+
+      await prisma.tags_questions_relation.create({
+        data: {
+          q: question.id,
+          tag: tag.id,
+        },
+      });
+
+      return json({ data: "success", error: null });
+    }
+
+    case "unset_tag": {
+      const [question, tag] = await Promise.all([
+        prisma.questions.findFirst({
+          where: {
+            public_id: data.question_public_id,
+            creator: profile.id,
+            deleted_at: null,
+          },
+        }),
+        prisma.tags.findFirst({
+          where: {
+            public_id: data.tag_public_id,
+            creator: profile.id,
+            deleted_at: null,
+          },
+        }),
+      ]);
+
+      if (!question) {
+        return json(
+          {
+            data: null,
+            error: {
+              message: `Question not found: ${data.question_public_id}`,
+            },
+          },
+          { status: 404 }
+        );
+      }
+
+      if (!tag) {
+        return json(
+          {
+            data: null,
+            error: { message: `Tag not found: ${data.tag_public_id}` },
+          },
+          { status: 404 }
+        );
+      }
+
+      await prisma.tags_questions_relation.deleteMany({
+        where: {
+          q: question.id,
+          tag: tag.id,
+        },
+      });
+
+      return json({ data: "success", error: null });
+    }
+
+    case "create_tag": {
+      const row = await prisma.tags.create({
+        data: {
+          public_id: nanoid(),
+          creator: profile.id,
+          name: data.name,
+        },
+      });
+      return json({ data: { publicId: row.public_id }, error: null });
+    }
   }
 }

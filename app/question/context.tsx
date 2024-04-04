@@ -1,5 +1,4 @@
 import dayjs from "dayjs";
-import { produce } from "immer";
 import type { ReactNode } from "react";
 import { createContext, useContext, useEffect, useState } from "react";
 import { noopFunction } from "~/util";
@@ -38,12 +37,11 @@ export function QuestionProvider({
 
   useEffect(() => {
     setQuestionState((prev) => {
-      if (prev.publicId !== questionProp.publicId) {
-        return produce(prev, (draft) => {
-          draft.publicId = questionProp.publicId;
-        });
-      }
-      return prev;
+      // content 만 업데이트하지 않는다.
+      return {
+        ...questionProp,
+        content: prev.content,
+      };
     });
   }, [questionProp]);
 

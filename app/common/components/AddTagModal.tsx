@@ -7,24 +7,32 @@ import {
   ModalHeader,
   useDisclosure,
 } from "@nextui-org/react";
-import { Plus, Search } from "lucide-react";
-import { useState } from "react";
+import { Form } from "@remix-run/react";
+import { Check, Plus, Search } from "lucide-react";
+import { useMemo, useState } from "react";
+import { useQuestion } from "~/question/context";
 import type { ITagWithCount } from "~/types";
 import { filterByContainsHangul } from "~/util";
 
-export function AddTagModal({
+export function SetTagModal({
   TriggerButton,
-  addableTags,
-  onSelect,
+  tags,
 }: {
   TriggerButton(props: { onPress: () => void }): React.ReactNode;
-  addableTags: ITagWithCount[];
-  onSelect(item: ITagWithCount): void;
+  tags: ITagWithCount[];
 }) {
   const [search, setSearch] = useState("");
   const { isOpen, onOpen, onOpenChange } = useDisclosure();
+  const question = useQuestion();
+  const checked = useMemo(() => {
+    const checked = new Set<string>();
+    for (const tag of question.tags) {
+      checked.add(tag.publicId);
+    }
+    return checked;
+  }, [question.tags]);
 
-  const filteredTags = filterByContainsHangul(addableTags, search);
+  const filteredTags = filterByContainsHangul(tags, search);
 
   return (
     <>
@@ -32,7 +40,7 @@ export function AddTagModal({
 
       <Modal isOpen={isOpen} onOpenChange={onOpenChange} placement="top-center">
         <ModalContent>
-          {(onClose) => (
+          {(_onClose) => (
             <>
               <ModalHeader className="flex flex-col gap-1">
                 태그 추가
@@ -51,36 +59,55 @@ export function AddTagModal({
                 />
                 <div className="h-48 flex flex-col items-stretch w-full gap-0.5">
                   {filteredTags.map((tag) => (
-                    <Button
-                      key={tag.publicId}
-                      endContent={tag.count}
-                      variant="light"
-                      className="justify-start"
-                      onPress={() => {
-                        onClose();
-                        onSelect(tag);
-                      }}
-                    >
-                      {tag.name}
-                    </Button>
+                    <Form method="post" key={tag.publicId} className="w-full">
+                      {checked.has(tag.publicId) ? (
+                        <input type="hidden" name="intent" value="unset_tag" />
+                      ) : (
+                        <input type="hidden" name="intent" value="set_tag" />
+                      )}
+                      <input
+                        type="hidden"
+                        name="tag_public_id"
+                        value={tag.publicId}
+                      />
+                      <input
+                        type="hidden"
+                        name="question_public_id"
+                        value={question.publicId}
+                      />
+                      <Button
+                        endContent={
+                          <span className="text-gray-400">{tag.count}</span>
+                        }
+                        variant="light"
+                        className="justify-between w-full"
+                        type="submit"
+                      >
+                        <span className="inline-flex items-center gap-3">
+                          {checked.has(tag.publicId) ? (
+                            <Check className="w-4 h-4" />
+                          ) : (
+                            <span className="w-4 h-4" />
+                          )}
+                          <span>{tag.name}</span>
+                        </span>
+                      </Button>
+                    </Form>
                   ))}
                   {!filteredTags.find((tag) => tag.name === search) &&
                     search && (
-                      <Button
-                        startContent={<Plus className="w-4 h-4" />}
-                        variant="light"
-                        className="justify-start"
-                        onPress={() => {
-                          onClose();
-                          onSelect({
-                            name: search,
-                            publicId: search,
-                            count: 0,
-                          });
-                        }}
-                      >
-                        "{search}" 태그 추가
-                      </Button>
+                      <Form method="post" key="create_tag" className="w-full">
+                        <input type="hidden" name="intent" value="create_tag" />
+                        <input type="hidden" name="name" value={search} />
+                        <Button
+                          startContent={<Plus className="w-4 h-4" />}
+                          variant="light"
+                          className="justify-start"
+                          type="submit"
+                        >
+                          "{search}" 태그 추가
+                        </Button>
+                      </Form>
                     )}
                 </div>
               </ModalBody>
