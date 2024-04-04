@@ -1,10 +1,10 @@
-import { Button, ButtonGroup } from "@nextui-org/react";
+import { Button, ButtonGroup, Link } from "@nextui-org/react";
 import type { tags } from "@prisma/client";
 import type { LoaderFunctionArgs, MetaFunction } from "@remix-run/node";
 import { json } from "@remix-run/node";
-import { Form, useLoaderData } from "@remix-run/react";
+import { Form, useLoaderData, useSearchParams } from "@remix-run/react";
 import dayjs from "dayjs";
-import { Play, Plus, Tag, Trash2 } from "lucide-react";
+import { Plus, Tag, Trash2 } from "lucide-react";
 import { useMemo } from "react";
 import { z } from "zod";
 import dashboardAction from "~/actions/dashboard";
@@ -159,6 +159,7 @@ export async function loader({ request }: LoaderFunctionArgs) {
 
 export default function Dashboard() {
   const data = useLoaderData<typeof loader>();
+  const [params] = useSearchParams();
 
   const { count, recentTags, activeTagPublicIds } = data;
 
@@ -254,14 +255,16 @@ export default function Dashboard() {
           </Form>
           {(activeTagPublicIds || []).length > 0 && (
             <div className="flex items-center gap-4">
-              <div className="w-px h-5 bg-gray-100"></div>
-              <div className="flex font-bold text-gray-600 gap-1.5 items-center font-mono select-none">
-                <span>{count} Found</span>
-              </div>
               <ButtonGroup variant="shadow">
-                <Button isIconOnly className="text-white bg-primary min-w-11">
-                  <span className="sr-only">문제 풀기 시작</span>
-                  <Play className="w-4.5 h-4.5 " aria-hidden />
+                <Button
+                  as={Link}
+                  className="text-white bg-primary min-w-11"
+                  href={`/solve?tags=${params.get("tags")}`}
+                >
+                  <span>
+                    Solve <span className="font-bold">{count}</span> Question
+                    {count > 1 ? "s" : ""}
+                  </span>
                 </Button>
                 {/* <Button
                   className="text-gray-600 bg-gray-50 min-w-11"
