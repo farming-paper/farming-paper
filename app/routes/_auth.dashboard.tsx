@@ -129,6 +129,7 @@ export async function loader({ request }: LoaderFunctionArgs) {
         creator: profile.id,
         deleted_at: null,
       },
+      orderBy: { created_at: "asc" },
       select: {
         public_id: true,
         name: true,
