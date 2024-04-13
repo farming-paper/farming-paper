@@ -1,6 +1,6 @@
 import { Input } from "@nextui-org/react";
 import { atom, useAtom } from "jotai";
-import { createContext, useContext } from "react";
+import { createContext, useContext, useMemo } from "react";
 import type { Descendant, Text } from "slate";
 import { useQuestion } from "./context";
 import type { BlankElement, ParagraphElement } from "./slate";
@@ -60,7 +60,7 @@ export function SolveParagraph({
   element: ParagraphElement;
   children?: React.ReactNode;
 }) {
-  return <p className="leading-10">{children}</p>;
+  return <div className="leading-10">{children}</div>;
 }
 
 export function SolveBlank({
@@ -70,14 +70,34 @@ export function SolveBlank({
   children?: React.ReactNode;
 }) {
   const [value, setValue] = useSolveBlankAtom(getBlankId(blank));
+
+  const width = useMemo(() => {
+    if (typeof window === "undefined") {
+      return 0;
+    }
+    const span = window.document.createElement("span");
+    span.innerText = blank.children.map((leaf) => leaf.text).join("");
+    span.style.visibility = "hidden";
+    span.style.position = "fixed";
+    span.style.whiteSpace = "nowrap";
+    window.document.body.appendChild(span);
+    const width = span.offsetWidth;
+    span.remove();
+    return width * 2;
+  }, [blank.children]);
+
   return (
     <Input
       size="sm"
-      className="inline-flex w-40 text-base"
       value={value}
+      classNames={{
+        input: "w-auto text-base",
+        base: "w-auto inline-flex",
+        inputWrapper: "w-auto",
+      }}
+      style={{ width: `${width}px` }}
       fullWidth={false}
       onValueChange={(v) => setValue(v)}
-      placeholder="정답 입력"
       isRequired
     />
   );

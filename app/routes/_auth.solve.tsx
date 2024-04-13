@@ -92,6 +92,7 @@ export async function loader({ request }: LoaderFunctionArgs) {
     if (!softmaxInput) {
       continue;
     }
+
     softmaxInput.push({
       elapsed_min: Math.floor(
         (Date.now() - log.created_at.getTime()) / 1000 / 60
@@ -196,16 +197,16 @@ export default function Dashboard() {
 
   return (
     <DefaultLayout sidebarTop={<SideMenuV2 />}>
-      <QuestionProvider question={question}>
-        <SolveBlankProvider>
-          <div
-            className="box-border px-10 mx-auto mt-20"
-            style={{ width: "calc(700px + 3rem)" }}
-          >
+      <div
+        className="box-border px-10 mx-auto mt-20"
+        style={{ width: "calc(700px + 3rem)" }}
+      >
+        <QuestionProvider question={question}>
+          <SolveBlankProvider>
             <SolveQuestion />
-          </div>
-        </SolveBlankProvider>
-      </QuestionProvider>
+          </SolveBlankProvider>
+        </QuestionProvider>
+      </div>
     </DefaultLayout>
   );
 }

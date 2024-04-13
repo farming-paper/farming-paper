@@ -16,5 +16,11 @@
     ".cache": true,
     "api/**/*": true,
     "pnpm-lock.yaml": true
-  }
+  },
+  "tailwindCSS.classAttributes": [
+    "class",
+    "classNames?",
+    "ngClass",
+    ".+ClassName"
+  ]
 }
