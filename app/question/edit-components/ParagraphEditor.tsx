@@ -89,6 +89,7 @@ const ElementComponent = (props: RenderElementProps) => {
 
 const TextComponent = (props: RenderLeafProps) => {
   const { attributes, children, leaf } = props;
+
   return (
     <span
       // The following is a workaround for a Chromium bug where,
