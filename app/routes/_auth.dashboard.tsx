@@ -15,7 +15,7 @@ import { DeleteQuestionModalWithButton } from "~/common/components/DeleteQuestio
 import SideMenuV2 from "~/common/components/SideMenuV2";
 import prisma from "~/prisma-client.server";
 import { QuestionProvider } from "~/question/context";
-import { createQuestion } from "~/question/create";
+import { createQuestionContent } from "~/question/create";
 import ParagrahEditor from "~/question/edit-components/ParagraphEditor";
 import type { Question, QuestionContent } from "~/question/types";
 import TagFilterChip from "~/tag/component/tag-filter-chip";
@@ -147,7 +147,7 @@ export async function loader({ request }: LoaderFunctionArgs) {
     questions: questions.map((q) => {
       return {
         ...getObjBigintToNumber(q),
-        content: createQuestion(q.content as Partial<QuestionContent>),
+        content: createQuestionContent(q.content as Partial<QuestionContent>),
       };
     }),
     count,

@@ -18,7 +18,7 @@ export default async function updateQuestionContent({
     where: {
       public_id,
       creator,
-      deleted_at: null,
+      // dele ted_at: null, // 삭제가 연속으로 됐을 때 업데이트 대상을 찾지 못하므로 삭제 조건을 제외
     },
     data: {
       deleted_at: new Date(),

@@ -12,7 +12,7 @@ import MobileLayout from "~/common/components/MobileLayout";
 import TagFilterButton from "~/common/components/TagFilterButton";
 import { Pagination, Tooltip } from "~/common/components/mockups";
 import prisma from "~/prisma-client.server";
-import { createQuestion } from "~/question/create";
+import { createQuestionContent } from "~/question/create";
 import type { QuestionContent } from "~/question/types";
 import { getFilterTagsByCreatorId } from "~/supabase/getters";
 import { getObjBigintToNumber } from "~/util";
@@ -82,7 +82,7 @@ export async function getMyQuestions({
     items: questions.map((q) => {
       return {
         ...getObjBigintToNumber(q),
-        content: createQuestion(q.content as Partial<QuestionContent>),
+        content: createQuestionContent(q.content as Partial<QuestionContent>),
       };
     }),
     total,

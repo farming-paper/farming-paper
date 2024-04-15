@@ -1,7 +1,33 @@
 import type { Dayjs } from "dayjs";
 import type { RefObject } from "react";
-import type { Descendant } from "slate";
+import type { BaseEditor, Descendant } from "slate";
+import type { HistoryEditor } from "slate-history";
+import type { ReactEditor } from "slate-react";
 import type { ITag } from "~/types";
+
+export type ParagraphElement = {
+  type: "paragraph";
+  children: (CustomElement | CustomText)[];
+};
+
+// TODO: Blank Element 내부에 CustomText만 들어가는 검사 추가해야 함
+export type BlankElement = {
+  type: "blank";
+  children: CustomText[];
+};
+
+export type CustomElement = ParagraphElement | BlankElement;
+
+export type CustomText = { text: string; bold?: true };
+
+declare module "slate" {
+  // eslint-disable-next-line @typescript-eslint/naming-convention
+  interface CustomTypes {
+    Editor: BaseEditor & ReactEditor & HistoryEditor;
+    Element: CustomElement;
+    Text: CustomText;
+  }
+}
 
 export interface IBaseQuestion {
   id: string;

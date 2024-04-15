@@ -1,3 +1,4 @@
+import type { Descendant, Text } from "slate";
 import { deepclone } from "~/util";
 import type { MapKey } from "~/util-type";
 import { questions as adspQuestions } from "./data/adsp";
@@ -7,7 +8,7 @@ import { questions as enQuestions } from "./data/exercise-and-nutrition";
 import { questions as msQuestions } from "./data/mathematical-statistics";
 import { questions as plQuestions } from "./data/programming-linguistics";
 import { questions as sstQuestions } from "./data/sample-survey-theory";
-import type { QuestionContent } from "./types";
+import type { BlankElement, QuestionContent } from "./types";
 
 export function getQuestionGroups() {
   return new Map([
@@ -49,4 +50,47 @@ export function getStringAnswer(question: QuestionContent) {
     case "pick_different":
       throw new Error("Not implemented");
   }
+}
+
+export function getIdFromPath(path: number[]) {
+  return path.join("-");
+}
+
+export function getIdFromTexts(texts: Text[]) {
+  return texts.join("-");
+}
+
+export function getTextFromBlank(blank: BlankElement) {
+  return blank.children.map((leaf) => leaf.text).join("");
+}
+
+export function getBlankByPath(
+  descendants: Descendant[],
+  path: number[]
+): BlankElement | null {
+  let current: Descendant = { type: "paragraph", children: descendants };
+
+  for (const index of path) {
+    if (!("children" in current)) {
+      return null;
+    }
+
+    const next: Descendant | undefined = current.children?.[index];
+
+    if (!next) {
+      return null;
+    }
+
+    current = next;
+  }
+
+  if (!("type" in current)) {
+    return null;
+  }
+
+  if (current.type !== "blank") {
+    return null;
+  }
+
+  return current;
 }

@@ -17,7 +17,7 @@ import { requireAuth } from "~/auth/get-session";
 import DangerModal from "~/common/components/DangerModal";
 import Label from "~/common/components/Label";
 import { Button, Input, Space } from "~/common/components/mockups";
-import { createQuestion } from "~/question/create";
+import { createQuestionContent } from "~/question/create";
 import Tags from "~/question/edit-components/Tags";
 import type { Question, QuestionContent } from "~/question/types";
 import { getServerSideSupabaseClient } from "~/supabase/client";
@@ -98,7 +98,7 @@ export async function getQuestionRow({
   const row: Question = {
     id: questionRes.data.id,
     originalId: questionRes.data.id, // TODO: 이 파일 삭제
-    content: createQuestion(
+    content: createQuestionContent(
       questionRes.data?.content as Partial<QuestionContent>
     ),
     publicId: questionRes.data.public_id,

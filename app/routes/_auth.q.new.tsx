@@ -8,7 +8,7 @@ import { useForm } from "react-hook-form";
 import { requireAuth } from "~/auth/get-session";
 import { Button } from "~/common/components/mockups";
 import useCmdEnter from "~/common/hooks/use-cmd-enter";
-import { createQuestion, removeUndefined } from "~/question/create";
+import { createQuestionContent, removeUndefined } from "~/question/create";
 import QuestionForm from "~/question/edit-components/QuestionForm";
 import questionFormResolver from "~/question/question-form-resolver";
 import { rpc } from "~/supabase/rpc";
@@ -85,7 +85,7 @@ export default function QuestionNew() {
       handleSubmit(async (formData) => {
         createQuestionFetch.submit(
           createCreateQuestionArgs({
-            question: createQuestion(formData.question),
+            question: createQuestionContent(formData.question),
             tags: removeUndefined(formData.tags).map(createTag),
           }),
           {

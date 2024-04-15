@@ -5,7 +5,7 @@ import { Editor, Element, Range, Transforms } from "slate";
 import { useFocused, useSlate } from "slate-react";
 import { twMerge } from "tailwind-merge";
 import useThrottleFunc from "~/common/hooks/use-throttle-func";
-import { type BlankElement } from "../slate";
+import type { BlankElement } from "../types";
 
 const unwrapBlank = (editor: Editor) => {
   Transforms.unwrapNodes(editor, {

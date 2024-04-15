@@ -1,26 +1,8 @@
 // This example is for an Editor with `ReactEditor` and `HistoryEditor`
 import type { Token, Tokens } from "marked";
 import { lexer } from "marked";
-import type { BaseEditor, Descendant } from "slate";
-import type { HistoryEditor } from "slate-history";
-import type { ReactEditor } from "slate-react";
-
-export type ParagraphElement = { type: "paragraph"; children: CustomText[] };
-
-export type BlankElement = { type: "blank"; children: CustomText[] };
-
-export type CustomElement = ParagraphElement | BlankElement;
-
-export type CustomText = { text: string; bold?: true };
-
-declare module "slate" {
-  // eslint-disable-next-line @typescript-eslint/naming-convention
-  interface CustomTypes {
-    Editor: BaseEditor & ReactEditor & HistoryEditor;
-    Element: CustomElement;
-    Text: CustomText;
-  }
-}
+import type { Descendant } from "slate";
+import type { CustomElement, CustomText } from "./types";
 
 export function convertMarkdownToText(token: Token): CustomText {
   switch (token.type) {

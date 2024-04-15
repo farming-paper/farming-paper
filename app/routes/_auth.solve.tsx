@@ -4,14 +4,15 @@ import { useLoaderData } from "@remix-run/react";
 import dayjs from "dayjs";
 import { useMemo } from "react";
 import { z } from "zod";
-import dashboardAction from "~/actions/dashboard";
+import solveAction from "~/actions/solve";
 import { requireAuth } from "~/auth/get-session";
 import DefaultLayout from "~/common/components/DefaultLayout";
 import SideMenuV2 from "~/common/components/SideMenuV2";
 import prisma from "~/prisma-client.server";
-import SolveQuestion, { SolveBlankProvider } from "~/question/SolveQuestion";
+import SolveQuestion from "~/question/SolveQuestion";
+import SolveSubmitButton from "~/question/SolveSubmitButton";
 import { QuestionProvider } from "~/question/context";
-import { createQuestion } from "~/question/create";
+import { createQuestionContent } from "~/question/create";
 import { createSoftmaxInputV1 } from "~/question/create-solving-softmax-input";
 import { randomIndexBasedOnSoftmax } from "~/question/softmax";
 import type { Question, QuestionContent } from "~/question/types";
@@ -124,15 +125,23 @@ export async function loader({ request }: LoaderFunctionArgs) {
   return json({
     question: {
       ...getObjBigintToNumber(question),
-      content: createQuestion(question.content as Partial<QuestionContent>),
+      content: createQuestionContent(
+        question.content as Partial<QuestionContent>
+      ),
     },
     activeTagPublicIds: tags,
     latestLog: latestLog ? getObjBigintToNumber(latestLog) : null,
+    todayCount: logs.length,
+    questionPoolCount: questions.length,
   });
 }
 
 export default function Dashboard() {
-  const { question: q } = useLoaderData<typeof loader>();
+  const {
+    question: q,
+    todayCount,
+    questionPoolCount,
+  } = useLoaderData<typeof loader>();
 
   const question: Question = useMemo(
     () => ({
@@ -152,48 +161,6 @@ export default function Dashboard() {
     }),
     [q]
   );
-  // const [params] = useSearchParams();
-
-  // const { questions } = data;
-
-  // const tagFilters = useMemo(() => {
-  //   const activeTagPublicIdsSet = new Set(activeTagPublicIds);
-  //   return recentTags.map((tag) => ({
-  //     publicId: tag.public_id,
-  //     name: tag.name || "",
-  //     active: activeTagPublicIdsSet.has(tag.public_id),
-  //   }));
-  // }, [activeTagPublicIds, recentTags]);
-
-  // const addTagFilter = useAddTagFilter();
-
-  // const deleteTagFilter = useDeleteTagFilter();
-
-  // const questions: Question[] = useMemo(
-  //   () =>
-  //     data.questions.map(
-  //       (q): Question => ({
-  //         id: q.id,
-  //         originalId: q.original_id,
-  //         content: q.content,
-  //         createdAt: dayjs(q.created_at),
-  //         updatedAt: dayjs(q.updated_at),
-  //         deletedAt: q.deleted_at ? dayjs(q.deleted_at) : null,
-  //         publicId: q.public_id,
-  //         tags: q.tags_questions_relation.map((t) => {
-  //           return {
-  //             name: t.tags.name || "",
-  //             publicId: t.tags.public_id,
-  //           };
-  //         }),
-  //       })
-  //     ),
-  //   [data.questions]
-  // );
-
-  // useEffect(() => {
-  //   console.log("questions", questions);
-  // }, [questions]);
 
   return (
     <DefaultLayout sidebarTop={<SideMenuV2 />}>
@@ -201,14 +168,19 @@ export default function Dashboard() {
         className="box-border px-10 mx-auto mt-20"
         style={{ width: "calc(700px + 3rem)" }}
       >
+        <div>
+          문제는 총 {questionPoolCount}개, 당신은 {todayCount} 문제를
+          풀었습니다. (최근 1달간. 문제 수정 시 초기화)
+        </div>
         <QuestionProvider question={question}>
-          <SolveBlankProvider>
-            <SolveQuestion />
-          </SolveBlankProvider>
+          <SolveQuestion />
+          <div className="flex flex-row-reverse gap-3">
+            <SolveSubmitButton />
+          </div>
         </QuestionProvider>
       </div>
     </DefaultLayout>
   );
 }
 
-export const action = dashboardAction;
+export const action = solveAction;

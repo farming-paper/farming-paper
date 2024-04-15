@@ -3,7 +3,7 @@ import type { LoaderFunctionArgs } from "@remix-run/server-runtime";
 import { createServerClient } from "@supabase/auth-helpers-remix";
 import { nanoid } from "nanoid";
 import { getClientSideSupabaseConfig } from "~/config";
-import { createQuestion } from "~/question/create";
+import { createQuestionContent } from "~/question/create";
 import { getServerSideSupabaseClient } from "~/supabase/client";
 import type { Database, Json } from "~/supabase/generated/supabase-types";
 
@@ -118,7 +118,7 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
           return {
             creator: user.id,
             public_id: nanoid(),
-            content: createQuestion({
+            content: createQuestionContent({
               type: "short_order",
               corrects,
               message,

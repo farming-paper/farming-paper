@@ -5,7 +5,7 @@ import { nanoid } from "nanoid";
 import { z } from "zod";
 import { requireAuth } from "~/auth/get-session";
 import prisma from "~/prisma-client.server";
-import { createQuestion } from "~/question/create";
+import { createQuestionContent } from "~/question/create";
 import updateQuestionContent from "./update-question-content";
 
 export const validator = withZod(
@@ -88,7 +88,7 @@ export default async function dashboardAction({ request }: ActionFunctionArgs) {
           public_id: nanoid(),
           creator: profile.id,
           content: {
-            ...createQuestion({
+            ...createQuestionContent({
               type: "short_order",
             }),
           },

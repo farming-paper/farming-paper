@@ -1,11 +1,15 @@
 import { expect, test } from "vitest";
 import { createQuestionGenerator } from "./question-generator";
-import { createQuestion } from "./question/create";
+import { createQuestionContent } from "./question/create";
 import type { QuestionContent } from "./question/types";
 
 test("문제가 하나 있을 시 동작", () => {
   const problems: QuestionContent[] = [
-    createQuestion({ type: "short", message: "test q", correct: "test a" }),
+    createQuestionContent({
+      type: "short",
+      message: "test q",
+      correct: "test a",
+    }),
   ];
   const generator = createQuestionGenerator(problems);
   const { question: problem1 } = generator.gen();
@@ -31,7 +35,7 @@ test("가중치가 큰 것이 앞에 있을 때 잘 동작해야 함", () => {
       },
       { type: "short", message: "one", correct: "test a" },
     ] as const
-  ).map((q) => createQuestion(q));
+  ).map((q) => createQuestionContent(q));
   const generator = createQuestionGenerator(problems);
   const { question: problem1 } = generator.gen();
   const { question: problem2 } = generator.gen();
@@ -56,7 +60,7 @@ test("가중치가 큰 것이 뒤에 있을 때 잘 동작해야 함", () => {
         correct: "test a",
       },
     ] as const
-  ).map((q) => createQuestion(q));
+  ).map((q) => createQuestionContent(q));
   const generator = createQuestionGenerator(problems);
   const { question: problem1 } = generator.gen();
   const { question: problem2 } = generator.gen();
@@ -77,7 +81,7 @@ test("가중치 대로 나와야 함", () => {
       { type: "short", message: "two", weight: 2, correct: "test a" },
       { type: "short", message: "three", weight: 3, correct: "test a" },
     ] as const
-  ).map((q) => createQuestion(q));
+  ).map((q) => createQuestionContent(q));
   let one = 0;
   let two = 0;
   let three = 0;

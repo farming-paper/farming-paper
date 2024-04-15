@@ -11,7 +11,7 @@ import type {
   QuestionContent,
 } from "./types";
 
-export function createQuestion(
+export function createQuestionContent(
   args?: Partial<QuestionContent>
 ): QuestionContent {
   switch (args?.type) {
@@ -35,17 +35,8 @@ export function createQuestion(
 }
 
 export function createQuestionFromJson(json: Json): QuestionContent {
-  return createQuestion(json as unknown as Partial<QuestionContent>);
+  return createQuestionContent(json as unknown as Partial<QuestionContent>);
 }
-
-// export function createQuestionRow(row?: Partial<QuestionRow>) {
-//   return {
-//     id: nanoid(),
-//     ...row,
-
-//     data: JSON.stringify(createQuestion(row?.data)),
-//   };
-// }
 
 export function removeUndefined<T>(tags?: (T | undefined)[]): T[] {
   return tags?.filter((tag): tag is T => Boolean(tag)) || [];
@@ -60,7 +51,6 @@ export function createShortQuestion(
     ...args,
     type: "short",
     message: args?.message || "",
-    // tags: removeUndefined(args?.tags),
   };
 }
 
@@ -88,7 +78,6 @@ export function createShortMultiAnswerQuestion(
     type: "short_multi",
     message: args?.message || "",
     corrects: removeUndefined(args?.corrects),
-    // tags: removeUndefined(args?.tags),
   };
 }
 
@@ -101,7 +90,6 @@ export function createPickOrderQuestion(
     type: "pick_order",
     message: args?.message || "",
     corrects: removeUndefined(args?.corrects),
-    // tags: removeUndefined(args?.tags),
     otherChoices: removeUndefined(args?.otherChoices),
   };
 }
@@ -116,7 +104,6 @@ export function createPickQuestion(
     type: "pick",
     message: args?.message || "",
     options: removeUndefined(args?.options),
-    // tags: removeUndefined(args?.tags),
   };
 }
 
@@ -128,7 +115,6 @@ export function createPickMultiQuestion(
     ...args,
     type: "pick_multi",
     message: args?.message || "",
-    // tags: removeUndefined(args?.tags),
     options: removeUndefined(args?.options),
     corrects: removeUndefined(args?.corrects),
   };

@@ -15,7 +15,6 @@ import type { QuestionContent } from "../types";
 import HoveringToolbar from "./HoveringToolbar";
 
 /** @see https://github.com/ianstormtaylor/slate/blob/main/site/examples/inlines.tsx */
-
 const withInlines = (editor: Editor) => {
   const {
     insertData,

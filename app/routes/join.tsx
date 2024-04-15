@@ -8,7 +8,7 @@ import { createServerClient } from "@supabase/auth-helpers-remix";
 import { nanoid } from "nanoid";
 import { useEffect, useRef } from "react";
 import { getServerSideSupabaseConfig } from "~/config";
-import { createQuestion } from "~/question/create";
+import { createQuestionContent } from "~/question/create";
 import { getServerSideSupabaseClient } from "~/supabase/client";
 import type { Database, Json } from "~/supabase/generated/supabase-types";
 import { typedSubmit } from "~/util";
@@ -149,7 +149,7 @@ export async function action({ request }: ActionFunctionArgs) {
           return {
             creator: user.id,
             public_id: nanoid(),
-            content: createQuestion({
+            content: createQuestionContent({
               type: "short_order",
               corrects,
               message,
