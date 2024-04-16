@@ -1,10 +1,10 @@
 import { Input } from "@nextui-org/react";
 import { useEffect, useMemo, useState } from "react";
 import type { Descendant, Text } from "slate";
-import { useBlankAtom, useSetBlankSubmission } from "./SolveQuestionContext";
+import { useBlankAtom, useSetBlankSubmission } from "./SolveQuestionAtom";
 import { useQuestion } from "./context";
 import type { BlankElement, ParagraphElement } from "./types";
-import { getIdFromTexts } from "./utils";
+import { getCorrectFromBlank } from "./utils";
 
 export function SolveParagraph({
   children,
@@ -24,7 +24,7 @@ export function SolveBlank({
   path: number[];
   children?: React.ReactNode;
 }) {
-  const [value, setValue] = useBlankAtom(getIdFromTexts(element.children));
+  const [value, setValue] = useBlankAtom(getCorrectFromBlank(element));
   const setBlankSubmission = useSetBlankSubmission();
   const [isClient, setIsClient] = useState(false);
 

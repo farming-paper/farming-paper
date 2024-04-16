@@ -1,6 +1,6 @@
 import { Button } from "@nextui-org/react";
 import { Form } from "@remix-run/react";
-import { useBlankSubmissionMap } from "./SolveQuestionContext";
+import { useBlankSubmissionMap } from "./SolveQuestionAtom";
 import { useQuestion } from "./context";
 
 export default function SolveSubmitButton() {

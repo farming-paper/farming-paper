@@ -5,7 +5,7 @@ import { requireAuth } from "~/auth/get-session";
 import prisma from "~/prisma-client.server";
 import { createQuestionContent } from "~/question/create";
 import type { QuestionContent } from "~/question/types";
-import { getBlankByPath, getTextFromBlank } from "~/question/utils";
+import { getBlankByPath, getCorrectFromBlank } from "~/question/utils";
 
 export const validator = withZod(
   z.discriminatedUnion("intent", [
@@ -95,7 +95,7 @@ export default async function solveAction({ request }: ActionFunctionArgs) {
           );
         }
 
-        const answer = getTextFromBlank(blank);
+        const answer = getCorrectFromBlank(blank);
         if (answer !== submission) {
           return json(
             {

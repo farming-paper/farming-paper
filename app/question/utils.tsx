@@ -1,4 +1,4 @@
-import type { Descendant, Text } from "slate";
+import type { Descendant } from "slate";
 import { deepclone } from "~/util";
 import type { MapKey } from "~/util-type";
 import { questions as adspQuestions } from "./data/adsp";
@@ -56,11 +56,7 @@ export function getIdFromPath(path: number[]) {
   return path.join("-");
 }
 
-export function getIdFromTexts(texts: Text[]) {
-  return texts.join("-");
-}
-
-export function getTextFromBlank(blank: BlankElement) {
+export function getCorrectFromBlank(blank: BlankElement) {
   return blank.children.map((leaf) => leaf.text).join("");
 }
 
