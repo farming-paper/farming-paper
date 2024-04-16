@@ -1,13 +1,21 @@
-import { json, type ActionFunctionArgs } from "@remix-run/server-runtime";
+import {
+  json,
+  redirect,
+  type ActionFunctionArgs,
+} from "@remix-run/server-runtime";
 import { withZod } from "@remix-validated-form/with-zod";
 import { z } from "zod";
 import { requireAuth } from "~/auth/get-session";
 import prisma from "~/prisma-client.server";
 import { createQuestionContent } from "~/question/create";
 import type { QuestionContent } from "~/question/types";
-import { getBlankByPath, getCorrectFromBlank } from "~/question/utils";
+import {
+  getBlankByPath,
+  getCorrectFromBlank,
+  getIdFromPath,
+} from "~/question/utils";
 
-export const validator = withZod(
+export const formDataValidator = withZod(
   z.discriminatedUnion("intent", [
     z.object({
       intent: z.literal("solve"),
@@ -18,28 +26,49 @@ export const validator = withZod(
           return JSON.parse(v) as Record<string, string>;
         })
         .pipe(z.record(z.string()))
-        .transform((v) => Object.entries(v))
+        .transform((v) =>
+          Object.entries(v).map(([k, v]) => ({
+            path: k,
+            value: v,
+          }))
+        )
         .pipe(
           z.array(
-            z.tuple([
-              z
+            z.object({
+              path: z
                 .string()
                 .transform((rawKey) => rawKey.split("-"))
                 .pipe(
                   z.array(z.string().transform((numLike) => Number(numLike)))
                 ),
-              z.string(),
-            ])
+              value: z.string(),
+            })
           )
         ),
     }),
   ])
 );
 
+const requireSearchParams = (request: Request) => {
+  const url = new URL(request.url);
+  const tagsValidation = z.string().safeParse(url.searchParams.get("tags"));
+
+  if (!tagsValidation.success) {
+    // url.searchParams.delete("tags");
+    // throw new Response(null, { status: 301, headers: { Location: url.href } });
+    throw new Response(null, { status: 400 });
+  }
+
+  return {
+    tags: tagsValidation.data,
+  };
+};
+
 export default async function solveAction({ request }: ActionFunctionArgs) {
   const { profile } = await requireAuth(request);
   const formData = await request.formData();
-  const action = await validator.validate(formData);
+  const { tags: tagsFromUrl } = requireSearchParams(request);
+  const action = await formDataValidator.validate(formData);
 
   if (action.error) {
     return json(
@@ -63,6 +92,7 @@ export default async function solveAction({ request }: ActionFunctionArgs) {
         },
         select: {
           content: true,
+          id: true,
         },
       });
 
@@ -85,7 +115,10 @@ export default async function solveAction({ request }: ActionFunctionArgs) {
         );
       }
 
-      for (const [path, submission] of data.submission) {
+      const incorrects: { pathStr: string; expect: string; actual: string }[] =
+        [];
+
+      for (const { path, value: submission } of data.submission) {
         const blank = getBlankByPath(descendants, path);
 
         if (!blank) {
@@ -97,17 +130,37 @@ export default async function solveAction({ request }: ActionFunctionArgs) {
 
         const answer = getCorrectFromBlank(blank);
         if (answer !== submission) {
-          return json(
-            {
-              data: null,
-              error: { message: "Submission not matched", path, answer },
-            },
-            { status: 400 }
-          );
+          incorrects.push({
+            pathStr: getIdFromPath(path),
+            expect: answer,
+            actual: submission,
+          });
         }
       }
+
+      if (incorrects.length > 0) {
+        await prisma.solve_logs.create({
+          data: {
+            profile_id: profile.id,
+            question_id: question.id,
+            weight: 0,
+          },
+        });
+      } else {
+        await prisma.solve_logs.create({
+          data: {
+            profile_id: profile.id,
+            question_id: question.id,
+            weight: 1,
+          },
+        });
+      }
+
+      const searchParams = new URLSearchParams();
+      searchParams.set("incorrects", JSON.stringify(incorrects));
+      searchParams.set("question_id", question.id.toString());
+      searchParams.set("tags", tagsFromUrl);
+      return redirect(`/result?${searchParams.toString()}`);
     }
   }
-
-  return json({ data: "success" });
 }

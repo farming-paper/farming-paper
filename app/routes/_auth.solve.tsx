@@ -25,14 +25,12 @@ export const meta: MetaFunction = () => {
 const requireParams = (request: Request) => {
   const url = new URL(request.url);
 
-  const tagsValidation = z
-    .union([z.null(), z.string()])
-    // .optional()
-    .safeParse(url.searchParams.get("tags"));
+  const tagsValidation = z.string().safeParse(url.searchParams.get("tags"));
 
   if (!tagsValidation.success) {
-    url.searchParams.delete("tags");
-    throw new Response(null, { status: 301, headers: { Location: url.href } });
+    // url.searchParams.delete("tags");
+    // throw new Response(null, { status: 301, headers: { Location: url.href } });
+    throw new Response(null, { status: 400 });
   }
 
   return {
@@ -49,9 +47,7 @@ export async function loader({ request }: LoaderFunctionArgs) {
     where: {
       creator: profile.id,
       deleted_at: null,
-      tags_questions_relation: tags
-        ? { some: { tags: { public_id: { in: tags } } } }
-        : undefined,
+      tags_questions_relation: { some: { tags: { public_id: { in: tags } } } },
     },
     orderBy: [{ created_at: "desc" }, { original_id: "asc" }],
     select: {

@@ -306,3 +306,7 @@ export function filterByContainsHangul<T extends { name: string }>(
       .includes(disassembleHangul(query).replace(/ /g, ""))
   );
 }
+
+export function getObjectFromSearchParams(search: URLSearchParams) {
+  return Object.fromEntries(search);
+}
