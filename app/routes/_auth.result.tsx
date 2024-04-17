@@ -9,6 +9,8 @@ import { requireAuth } from "~/auth/get-session";
 import DefaultLayout from "~/common/components/DefaultLayout";
 import SideMenuV2 from "~/common/components/SideMenuV2";
 import prisma from "~/prisma-client.server";
+import ResultQuestion from "~/question/ResultQuestion";
+import { QuestionProvider } from "~/question/context";
 import { createQuestionContent } from "~/question/create";
 import type { Question, QuestionContent } from "~/question/types";
 import { getObjBigintToNumber } from "~/util";
@@ -86,6 +88,7 @@ export default function Dashboard() {
   const data = useLoaderData<typeof loader>();
 
   const q = data.question;
+  const { success, incorrects } = data;
 
   const question: Question = useMemo(
     () => ({
@@ -108,18 +111,30 @@ export default function Dashboard() {
 
   return (
     <DefaultLayout sidebarTop={<SideMenuV2 />}>
-      <div
-        className="box-border px-10 mx-auto mt-20"
-        style={{ width: "calc(700px + 3rem)" }}
-      >
-        <pre>{JSON.stringify(data, null, 2)}</pre>
-        {/* <QuestionProvider question={question}>
-          <SolveQuestion />
+      <QuestionProvider question={question}>
+        <div
+          className="box-border px-10 mx-auto mt-20"
+          style={{ width: "calc(700px + 3rem)" }}
+        >
+          <h1 className="text-3xl font-bold">Solve result</h1>
+          <p>
+            {success ? (
+              <span className="text-green-500">Correct</span>
+            ) : (
+              <span className="text-red-500">Incorrect</span>
+            )}
+          </p>
+
+          <ResultQuestion incorrects={incorrects} />
+
+          {/* <QuestionProvider question={question}>
+          <ResultQuestion />
           <div className="flex flex-row-reverse gap-3">
             <SolveSubmitButton />
           </div>
         </QuestionProvider> */}
-      </div>
+        </div>
+      </QuestionProvider>
     </DefaultLayout>
   );
 }

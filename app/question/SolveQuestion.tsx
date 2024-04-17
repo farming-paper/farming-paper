@@ -48,7 +48,7 @@ export function SolveBlank({
   }, [element.children]);
 
   useEffect(() => {
-    if (value) {
+    if (typeof value === "string") {
       setBlankSubmission(path, value);
     }
   }, [path, setBlankSubmission, value]);
