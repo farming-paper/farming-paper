@@ -91,9 +91,7 @@ export async function loader({ request }: LoaderFunctionArgs) {
     }
 
     softmaxInput.push({
-      elapsed_min: Math.floor(
-        (Date.now() - log.created_at.getTime()) / 1000 / 60
-      ),
+      elapsed_min: (Date.now() - log.created_at.getTime()) / 1000 / 60,
       value: log.weight,
     });
   }

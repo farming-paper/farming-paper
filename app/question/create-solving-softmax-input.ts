@@ -13,9 +13,9 @@ export const createSoftmaxInputV1 = (
     sum += Math.pow(elapsed_min, -0.2 + 0.1 * value);
   }
 
-  if (sum >= 1) {
-    return 0;
-  }
+  // if (sum >= 1) {
+  //   return 0;
+  // }
 
   return 1 - sum;
 };
