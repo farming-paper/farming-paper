@@ -28,50 +28,27 @@ export const meta: MetaFunction = () => {
   return [{ title: "대시보드 | Farming Paper" }];
 };
 
-const requireParams = (request: Request) => {
-  const url = new URL(request.url);
-
-  const queryValidation = z
-    .union([z.null(), z.string()])
+const searchParamsSchema = z.object({
+  page: z.coerce.number().gte(1),
+  tags: z
+    .string()
     .optional()
-    .safeParse(url.searchParams.get("query"));
-
-  if (!queryValidation.success) {
-    url.searchParams.delete("query");
-    throw new Response(null, { status: 301, headers: { Location: url.href } });
-  }
-
-  const pageValidation = z
-    .number()
-    .gte(1)
-    .safeParse(Number(url.searchParams.get("page")));
-
-  if (!pageValidation.success) {
-    url.searchParams.set("page", "1");
-    throw new Response(null, { status: 301, headers: { Location: url.href } });
-  }
-
-  const tagsValidation = z
-    .union([z.null(), z.string()])
-    .optional()
-    .safeParse(url.searchParams.get("tags"));
-
-  if (!tagsValidation.success) {
-    url.searchParams.delete("tags");
-    throw new Response(null, { status: 301, headers: { Location: url.href } });
-  }
-
-  return {
-    query: queryValidation.data,
-    page: pageValidation.data,
-    tags: tagsValidation.data?.split(","),
-  };
-};
+    .transform((v) => v?.split(",")),
+});
 
 export async function loader({ request }: LoaderFunctionArgs) {
   const { profile } = await requireAuth(request);
 
-  const { page, tags } = requireParams(request);
+  const obj = Object.fromEntries(new URL(request.url).searchParams);
+  const validation = searchParamsSchema.safeParse(obj);
+  if (!validation.success) {
+    throw new Response(JSON.stringify(validation.error), {
+      status: 400,
+      headers: { "Content-Type": "application/json" },
+    });
+  }
+
+  const { page, tags } = validation.data;
 
   const [questions, count, recentTags, allTags] = await Promise.all([
     prisma.questions.findMany({
