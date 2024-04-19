@@ -104,7 +104,13 @@ const TextComponent = (props: RenderLeafProps) => {
   );
 };
 
-export default function ParagrahEditor() {
+export default function ParagrahEditor({
+  autoSave = false,
+  onContentChange,
+}: {
+  autoSave?: boolean;
+  onContentChange?: (content: QuestionContent) => void;
+}) {
   const question = useQuestion();
   const editor = useMemo(
     () => withInlines(withHistory(withReact(createEditor()))),
@@ -173,7 +179,11 @@ export default function ParagrahEditor() {
         initialValue={value}
         onValueChange={(value) => {
           setValue(value);
-          throttledSubmit();
+          if (autoSave) {
+            throttledSubmit();
+          }
+
+          onContentChange?.(questionContent);
         }}
       >
         <ClientOnly>{() => <HoveringToolbar />}</ClientOnly>

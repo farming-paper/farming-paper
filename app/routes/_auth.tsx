@@ -20,7 +20,7 @@ export function ErrorBoundary() {
   return (
     <div className="min-h-full px-6 py-16 bg-white @sm:py-24 @md:grid @md:place-items-center @lg:px-8">
       <div className="mx-auto max-w-max">
-        <main className="@sm:flex">
+        <main>
           <p className="text-4xl font-bold tracking-tight text-green-600 @sm:text-5xl">
             {caught.status}
           </p>
@@ -61,6 +61,9 @@ export function ErrorBoundary() {
               </div>
             )}
           </div>
+          <pre className="text-sm text-gray-400">
+            {JSON.stringify(caught.data, null, 2)}
+          </pre>
         </main>
       </div>
     </div>

@@ -61,3 +61,9 @@ export function useQuestion() {
 
   return question;
 }
+
+export function useSetQuestion() {
+  const { setQuestion } = useContext(context);
+
+  return setQuestion;
+}

@@ -29,7 +29,7 @@ export const meta: MetaFunction = () => {
 };
 
 const searchParamsSchema = z.object({
-  page: z.coerce.number().gte(1),
+  page: z.coerce.number().gte(1).default(1),
   tags: z
     .string()
     .optional()
@@ -42,7 +42,7 @@ export async function loader({ request }: LoaderFunctionArgs) {
   const obj = Object.fromEntries(new URL(request.url).searchParams);
   const validation = searchParamsSchema.safeParse(obj);
   if (!validation.success) {
-    throw new Response(JSON.stringify(validation.error), {
+    throw new Response(JSON.stringify({ error: validation.error }), {
       status: 400,
       headers: { "Content-Type": "application/json" },
     });
@@ -130,7 +130,17 @@ export async function loader({ request }: LoaderFunctionArgs) {
     count,
     recentTags,
     activeTagPublicIds: tags,
-    allTags,
+    allTags: allTags.map((tag): ITagWithCount => {
+      const result: ITagWithCount = {
+        name: tag.name || "",
+        publicId: tag.public_id,
+        count: tag._count.tags_questions_relation,
+      };
+      if (tag.desc) {
+        result.desc = tag.desc;
+      }
+      return result;
+    }),
   });
 }
 
@@ -174,18 +184,6 @@ export default function Dashboard() {
       ),
     [data.questions]
   );
-
-  const allTags = data.allTags.map((tag): ITagWithCount => {
-    const result: ITagWithCount = {
-      name: tag.name || "",
-      publicId: tag.public_id,
-      count: tag._count.tags_questions_relation,
-    };
-    if (tag.desc) {
-      result.desc = tag.desc;
-    }
-    return result;
-  });
 
   return (
     <DefaultLayout sidebarTop={<SideMenuV2 />}>
@@ -290,7 +288,7 @@ export default function Dashboard() {
                         </div>
                       )}
                       <SetTagModal
-                        tags={allTags}
+                        tags={data.allTags}
                         TriggerButton={({ onPress }) => (
                           <Button
                             onPress={onPress}
@@ -330,6 +328,7 @@ export default function Dashboard() {
                     <div className="flex-1 text-gray-800">
                       <ParagrahEditor
                         key={question.originalId || question.id}
+                        autoSave
                       />
 
                       {question.content.type === "short_order" && (
