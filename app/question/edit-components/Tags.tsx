@@ -1,5 +1,4 @@
 import { disassembleHangul } from "@toss/hangul";
-import { App, theme } from "antd";
 
 import { PlusIcon } from "lucide-react";
 import React, {
@@ -82,7 +81,6 @@ const Tags: React.FC<{
     upsertingTagsReducer,
     []
   );
-  const { message } = App.useApp();
   const [upsertedTag, setUpsertedTag] = useState<ITag | null>(null);
   const [isBrowser, setIsBrowser] = useState(false);
   const upsertTagFetcher = useUpsertTagFetcher();
@@ -91,30 +89,30 @@ const Tags: React.FC<{
     setIsBrowser(true);
   }, []);
 
-  useEffect(() => {
-    if (upsertTagFetcher.state !== "idle" || !upsertTagFetcher.data) {
-      return;
-    }
+  // useEffect(() => {
+  //   if (upsertTagFetcher.state !== "idle" || !upsertTagFetcher.data) {
+  //     return;
+  //   }
 
-    const newTagRes = upsertTagFetcher.data;
-    if (newTagRes.error) {
-      message.error({
-        key: "addingTag",
-        content: `"${newTagRes.error.name}" 태그를 추가하는 중에 오류가 발생했습니다.`,
-      });
-      // eslint-disable-next-line no-console
-      console.error("upsertTagFetcher.data.error", upsertTagFetcher.data.error);
-      return;
-    }
+  //   const newTagRes = upsertTagFetcher.data;
+  //   if (newTagRes.error) {
+  //     message.error({
+  //       key: "addingTag",
+  //       content: `"${newTagRes.error.name}" 태그를 추가하는 중에 오류가 발생했습니다.`,
+  //     });
+  //     // eslint-disable-next-line no-console
+  //     console.error("upsertTagFetcher.data.error", upsertTagFetcher.data.error);
+  //     return;
+  //   }
 
-    setUpsertedTag(newTagRes.data);
+  //   setUpsertedTag(newTagRes.data);
 
-    message.success({
-      key: "addingTag",
-      duration: 2,
-      content: `"${newTagRes.data.name}" 태그가 추가되었습니다.`,
-    });
-  }, [message, upsertTagFetcher.data, upsertTagFetcher.state]);
+  //   message.success({
+  //     key: "addingTag",
+  //     duration: 2,
+  //     content: `"${newTagRes.data.name}" 태그가 추가되었습니다.`,
+  //   });
+  // }, [message, upsertTagFetcher.data, upsertTagFetcher.state]);
 
   useEffect(() => {
     if (upsertedTag) {
@@ -124,7 +122,18 @@ const Tags: React.FC<{
     }
   }, [onChange, upsertedTag, value]);
 
-  const { token } = theme.useToken();
+  // const { token } = theme.useToken();
+  // TODO: use theme
+  const token = {
+    colorTextPlaceholder: "",
+    colorText: "",
+    colorPrimary: "",
+    colorPrimaryBgHover: "",
+    colorPrimaryActive: "",
+    colorBorder: "",
+    controlOutlineWidth: 0,
+    controlOutline: "",
+  };
 
   const options = useMemo(() => {
     return existingTags.map((tag) => {

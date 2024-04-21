@@ -1,5 +1,5 @@
-import { Button, Input } from "antd";
 import { useCallback, useState } from "react";
+import { Button, Input } from "~/common/components/mockups";
 import { isArrayEqual } from "~/util";
 import Render from "../Render";
 import type { IShortOrderQuestion, QuestionInputProps } from "../types";
@@ -38,9 +38,9 @@ const ShortOrderQuestionInput: React.FC<
         type="text"
         className="mb-2"
         placeholder="정답을 입력하세요"
-        onChange={(e) => setValue(e.target.value)}
+        onChange={(e: any) => setValue(e.target.value)}
         value={value}
-        onKeyDown={(e) => {
+        onKeyDown={(e: any) => {
           if (e.key === "Enter" && !e.nativeEvent.isComposing) {
             onSubmit();
           }

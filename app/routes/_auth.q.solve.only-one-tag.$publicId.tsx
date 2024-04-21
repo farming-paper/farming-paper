@@ -1,18 +1,17 @@
 import { useLoaderData, useNavigate } from "@remix-run/react";
 import type { LoaderFunctionArgs } from "@remix-run/server-runtime";
 import { json } from "@remix-run/server-runtime";
-import type { InputRef } from "antd";
-import { Button, Modal } from "antd";
 import { AnimatePresence, motion } from "framer-motion";
 import type { RefObject } from "react";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { twMerge } from "tailwind-merge";
-import { getSessionWithProfile } from "~/auth/get-session";
+import { requireAuth } from "~/auth/get-session";
+import { Button, Modal } from "~/common/components/mockups";
 import { createQuestionGenerator } from "~/question-generator";
+import Render, { links as questionRenderLinks } from "~/question/Render";
 import { createQuestionFromJson } from "~/question/create";
 import QuestionInput from "~/question/input-components/QuestionInput";
-import Render, { links as questionRenderLinks } from "~/question/Render";
-import type { ISuccessArgs, Question } from "~/question/types";
+import type { ISuccessArgs, QuestionContent } from "~/question/types";
 import { getStringAnswer } from "~/question/utils";
 import { getServerSideSupabaseClient } from "~/supabase/client";
 import { isUserTypingText, useConst } from "~/util";
@@ -33,8 +32,7 @@ const motionProps = {
 };
 
 export async function loader({ request, params }: LoaderFunctionArgs) {
-  const response = new Response();
-  const { profile } = await getSessionWithProfile({ request, response });
+  const { profile } = await requireAuth(request);
 
   const db = getServerSideSupabaseClient();
   const tagPublicId = params.publicId;
@@ -52,7 +50,7 @@ export async function loader({ request, params }: LoaderFunctionArgs) {
     throw new Response(questionsRes.error.message, { status: 500 });
   }
 
-  const questions: Question[] = questionsRes.data.map((q) => {
+  const questions: QuestionContent[] = questionsRes.data.map((q) => {
     // TODO: fix duplicated question ids. they are in db records and content itself.
     return { ...createQuestionFromJson(q.content), id: q.public_id };
   });
@@ -68,19 +66,19 @@ type QuestionSolveDisplay =
   | {
       type: "question";
       index: number;
-      question: Question;
+      question: QuestionContent;
     }
   | {
       type: "result";
       actual: string;
       given: string;
       isSuccess: boolean;
-      question: Question;
+      question: QuestionContent;
       index: number;
     }
   | {
       type: "passing";
-      question: Question;
+      question: QuestionContent;
       index: number;
       actual: string;
     };
@@ -122,7 +120,7 @@ export default function Page() {
   const questionInputRef = useRef(null) as
     | RefObject<HTMLInputElement>
     | RefObject<HTMLTextAreaElement>;
-  const antdInputRef = useRef<InputRef>(null);
+  const antdInputRef = useRef<any>(null);
 
   const passQuestion = useCallback(() => {
     setDisplay({
@@ -358,7 +356,7 @@ export default function Page() {
 
                   <Button
                     href={`/q/edit/${display.question.id}`}
-                    onClick={(e) => {
+                    onClick={(e: any) => {
                       e.preventDefault();
                       navigate(`/q/edit/${display.question.id}`);
                     }}
@@ -459,7 +457,7 @@ export default function Page() {
 
                 <Button
                   href={`/q/edit/${display.question.id}`}
-                  onClick={(e) => {
+                  onClick={(e: any) => {
                     e.preventDefault();
                     navigate(`/q/edit/${display.question.id}`);
                   }}
@@ -518,7 +516,7 @@ export default function Page() {
 
                 <Button
                   href={`/q/edit/${display.question.id}`}
-                  onClick={(e) => {
+                  onClick={(e: any) => {
                     e.preventDefault();
                     navigate(`/q/edit/${display.question.id}`);
                   }}

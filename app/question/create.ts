@@ -1,6 +1,5 @@
 import { nanoid } from "nanoid";
 import type { Json } from "~/supabase/generated/supabase-types";
-import type { PartialDeep } from "~/types";
 import type {
   IPickDifferentQuestion,
   IPickMultiQuestion,
@@ -9,10 +8,12 @@ import type {
   IShortMultiAnswerQuestion,
   IShortOrderQuestion,
   IShortQuestion,
-  Question,
+  QuestionContent,
 } from "./types";
 
-export function createQuestion(args?: PartialDeep<Question>): Question {
+export function createQuestionContent(
+  args?: Partial<QuestionContent>
+): QuestionContent {
   switch (args?.type) {
     case "pick_different":
       return createPickDifferentQuestion(args);
@@ -33,25 +34,16 @@ export function createQuestion(args?: PartialDeep<Question>): Question {
   }
 }
 
-export function createQuestionFromJson(json: Json): Question {
-  return createQuestion(json as unknown as PartialDeep<Question>);
+export function createQuestionFromJson(json: Json): QuestionContent {
+  return createQuestionContent(json as unknown as Partial<QuestionContent>);
 }
-
-// export function createQuestionRow(row?: PartialDeep<QuestionRow>) {
-//   return {
-//     id: nanoid(),
-//     ...row,
-
-//     data: JSON.stringify(createQuestion(row?.data)),
-//   };
-// }
 
 export function removeUndefined<T>(tags?: (T | undefined)[]): T[] {
   return tags?.filter((tag): tag is T => Boolean(tag)) || [];
 }
 
 export function createShortQuestion(
-  args?: PartialDeep<IShortQuestion>
+  args?: Partial<IShortQuestion>
 ): IShortQuestion {
   return {
     id: nanoid(),
@@ -59,12 +51,11 @@ export function createShortQuestion(
     ...args,
     type: "short",
     message: args?.message || "",
-    // tags: removeUndefined(args?.tags),
   };
 }
 
 export function createShortOrderQuestion(
-  args?: PartialDeep<IShortOrderQuestion>
+  args?: Partial<IShortOrderQuestion>
 ): IShortOrderQuestion {
   return {
     id: nanoid(),
@@ -72,12 +63,14 @@ export function createShortOrderQuestion(
     type: "short_order",
     message: args?.message || "",
     corrects: removeUndefined(args?.corrects),
-    // tags: removeUndefined(args?.tags),
+    descendants: args?.descendants || [
+      { type: "paragraph", children: [{ text: "" }] },
+    ],
   };
 }
 
 export function createShortMultiAnswerQuestion(
-  args?: PartialDeep<IShortMultiAnswerQuestion>
+  args?: Partial<IShortMultiAnswerQuestion>
 ): IShortMultiAnswerQuestion {
   return {
     id: nanoid(),
@@ -85,12 +78,11 @@ export function createShortMultiAnswerQuestion(
     type: "short_multi",
     message: args?.message || "",
     corrects: removeUndefined(args?.corrects),
-    // tags: removeUndefined(args?.tags),
   };
 }
 
 export function createPickOrderQuestion(
-  args?: PartialDeep<IPickOrderQuestion>
+  args?: Partial<IPickOrderQuestion>
 ): IPickOrderQuestion {
   return {
     id: nanoid(),
@@ -98,13 +90,12 @@ export function createPickOrderQuestion(
     type: "pick_order",
     message: args?.message || "",
     corrects: removeUndefined(args?.corrects),
-    // tags: removeUndefined(args?.tags),
     otherChoices: removeUndefined(args?.otherChoices),
   };
 }
 
 export function createPickQuestion(
-  args?: PartialDeep<IPickQuestion>
+  args?: Partial<IPickQuestion>
 ): IPickQuestion {
   return {
     id: nanoid(),
@@ -113,26 +104,24 @@ export function createPickQuestion(
     type: "pick",
     message: args?.message || "",
     options: removeUndefined(args?.options),
-    // tags: removeUndefined(args?.tags),
   };
 }
 
 export function createPickMultiQuestion(
-  args?: PartialDeep<IPickMultiQuestion>
+  args?: Partial<IPickMultiQuestion>
 ): IPickMultiQuestion {
   return {
     id: nanoid(),
     ...args,
     type: "pick_multi",
     message: args?.message || "",
-    // tags: removeUndefined(args?.tags),
     options: removeUndefined(args?.options),
     corrects: removeUndefined(args?.corrects),
   };
 }
 
 export function createPickDifferentQuestion(
-  args?: PartialDeep<IPickDifferentQuestion>
+  args?: Partial<IPickDifferentQuestion>
 ): IPickDifferentQuestion {
   return {
     id: nanoid(),

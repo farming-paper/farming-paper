@@ -10,7 +10,9 @@ import {
   ScrollRestoration,
   useFetcher,
   useLoaderData,
+  useNavigate,
 } from "@remix-run/react";
+import { Slide, ToastContainer } from "react-toastify";
 
 import { NextUIProvider } from "@nextui-org/react";
 import {
@@ -18,27 +20,22 @@ import {
   createServerClient,
 } from "@supabase/auth-helpers-remix";
 import { Analytics } from "@vercel/analytics/react";
-import { App, ConfigProvider } from "antd";
-import antdResetStyles from "antd/dist/reset.css";
-import type { ThemeConfig } from "antd/es/config-provider/context";
 import { useEffect, useState } from "react";
-import GlobalLoading from "./common/components/GlobalLoading";
+import reatToastifyMinCss from "react-toastify/dist/ReactToastify.min.css";
 import { getClientSideSupabaseConfig } from "./config";
-import antdStyles from "./styles/antd.css";
 import tailwindStyles from "./styles/app.css";
-import tailwindResetStyles from "./styles/tailwind.reset.css";
+import tailwindCss from "./styles/pretendard.css";
 import type { Database } from "./supabase/generated/supabase-types";
 import { withDurationLog } from "./util";
 
 export function links() {
   return [
-    { rel: "stylesheet", href: tailwindResetStyles },
-    { rel: "stylesheet", href: antdResetStyles },
     { rel: "stylesheet", href: tailwindStyles },
-    { rel: "stylesheet", href: antdStyles },
+    { rel: "stylesheet", href: reatToastifyMinCss },
+    { rel: "stylesheet", href: tailwindCss },
     {
       rel: "stylesheet",
-      href: "https://cdn.jsdelivr.net/gh/orioncactus/pretendard@v1.3.6/dist/web/static/pretendard.css",
+      href: "//fonts.googleapis.com/css?family=Ubuntu+Mono",
     },
     ...(cssBundleHref ? [{ rel: "stylesheet", href: cssBundleHref }] : []),
   ];
@@ -72,17 +69,9 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
   );
 };
 
-const theme: ThemeConfig = {
-  token: {
-    colorPrimary: "#16a34a",
-    colorLink: "#16a34a",
-    fontSize: 16,
-    controlHeight: 40,
-  },
-};
-
 export default function Root() {
   const { env, session } = useLoaderData<typeof loader>();
+  const navigate = useNavigate();
 
   const [supabase] = useState(() =>
     createBrowserClient<Database>(env.url, env.anonKey)
@@ -115,24 +104,25 @@ export default function Root() {
   }, [serverAccessToken, supabase, authChangedFetcher]);
 
   return (
-    <html lang="ko" className="font-sans bg-gray-50">
+    <html lang="ko" className="font-sans">
       <head>
         <Meta />
         <Links />
       </head>
-      <body className="relative max-w-md min-h-[100vh] mx-auto bg-white pb-16 @container">
-        <GlobalLoading />
-        <ConfigProvider theme={theme}>
-          <NextUIProvider>
-            <App>
-              <Outlet context={{ supabase, session }} />
-            </App>
-          </NextUIProvider>
-        </ConfigProvider>
+      <body className="@container text-foreground bg-background light">
+        <NextUIProvider navigate={navigate}>
+          <Outlet context={{ supabase, session }} />
+        </NextUIProvider>
         <ScrollRestoration />
         <Scripts />
         <LiveReload />
         <Analytics />
+        <ToastContainer
+          autoClose={2000}
+          hideProgressBar
+          position="top-center"
+          transition={Slide}
+        />
       </body>
     </html>
   );

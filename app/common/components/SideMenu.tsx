@@ -160,7 +160,7 @@ export default function SideMenu() {
                     </li>
                     <li className="mt-auto">
                       <a
-                        href="#"
+                        href="#noid"
                         className="flex p-2 -mx-2 text-sm font-semibold leading-6 rounded-md text-primary-200 group gap-x-3 hover:bg-primary-800 hover:text-white"
                       >
                         <Cog6ToothIcon

@@ -2,13 +2,13 @@ import type { MetaFunction } from "@remix-run/react";
 import { useLoaderData, useNavigate } from "@remix-run/react";
 import type { LoaderFunctionArgs } from "@remix-run/server-runtime";
 import { json } from "@remix-run/server-runtime";
-import { App, Button } from "antd";
 import { ChevronRight } from "lucide-react";
-import { useEffect, useMemo } from "react";
+import { useMemo } from "react";
 import { useForm } from "react-hook-form";
-import { getSessionWithProfile } from "~/auth/get-session";
+import { requireAuth } from "~/auth/get-session";
+import { Button } from "~/common/components/mockups";
 import useCmdEnter from "~/common/hooks/use-cmd-enter";
-import { createQuestion, removeUndefined } from "~/question/create";
+import { createQuestionContent, removeUndefined } from "~/question/create";
 import QuestionForm from "~/question/edit-components/QuestionForm";
 import questionFormResolver from "~/question/question-form-resolver";
 import { rpc } from "~/supabase/rpc";
@@ -29,8 +29,7 @@ export const meta: MetaFunction = () => {
 };
 
 export async function loader({ request }: LoaderFunctionArgs) {
-  const response = new Response();
-  const { profile } = await getSessionWithProfile({ request, response });
+  const { profile } = await requireAuth(request);
 
   const tagsRes = await rpc("get_tags_by_creator_with_count", {
     p_creator: profile.id,
@@ -59,20 +58,25 @@ export async function loader({ request }: LoaderFunctionArgs) {
 export default function QuestionNew() {
   const { tags } = useLoaderData<typeof loader>();
   const navigate = useNavigate();
-  const { message } = App.useApp();
 
-  const { handleSubmit, formState, control, watch, setValue, setFocus } =
-    useForm({
-      resolver: questionFormResolver,
-      defaultValues: {
-        question: {
-          type: "short_order",
-          message: "",
-          corrects: [""],
-        },
-        tags: [],
+  const {
+    handleSubmit,
+    formState,
+    control,
+    watch,
+    setValue,
+    setFocus: _setFocus,
+  } = useForm({
+    resolver: questionFormResolver,
+    defaultValues: {
+      question: {
+        type: "short_order",
+        message: "",
+        corrects: [""],
       },
-    });
+      tags: [],
+    },
+  });
 
   const createQuestionFetch = useCreateQuestionFetcher();
 
@@ -81,7 +85,7 @@ export default function QuestionNew() {
       handleSubmit(async (formData) => {
         createQuestionFetch.submit(
           createCreateQuestionArgs({
-            question: createQuestion(formData.question),
+            question: createQuestionContent(formData.question),
             tags: removeUndefined(formData.tags).map(createTag),
           }),
           {
@@ -95,28 +99,28 @@ export default function QuestionNew() {
 
   const values = watch();
 
-  useEffect(() => {
-    if (createQuestionFetch.data && createQuestionFetch.state === "idle") {
-      message.success({
-        key: "creating",
-        content: "문제가 성공적으로 생성되었습니다.",
-      });
-    }
-  }, [createQuestionFetch.data, createQuestionFetch.state, message]);
+  // useEffect(() => {
+  //   if (createQuestionFetch.data && createQuestionFetch.state === "idle") {
+  //     message.success({
+  //       key: "creating",
+  //       content: "문제가 성공적으로 생성되었습니다.",
+  //     });
+  //   }
+  // }, [createQuestionFetch.data, createQuestionFetch.state, message]);
 
-  useEffect(() => {
-    if (createQuestionFetch.state === "submitting") {
-      message.loading({
-        key: "creating",
-        content: "문제를 생성하는 중입니다...",
-      });
-      setTimeout(() => {
-        setValue("question.message", "");
-        setValue("question.corrects", [""]);
-        setFocus("question.message");
-      });
-    }
-  }, [createQuestionFetch.state, message, setFocus, setValue]);
+  // useEffect(() => {
+  //   if (createQuestionFetch.state === "submitting") {
+  //     message.loading({
+  //       key: "creating",
+  //       content: "문제를 생성하는 중입니다...",
+  //     });
+  //     setTimeout(() => {
+  //       setValue("question.message", "");
+  //       setValue("question.corrects", [""]);
+  //       setFocus("question.message");
+  //     });
+  //   }
+  // }, [createQuestionFetch.state, message, setFocus, setValue]);
 
   useCmdEnter(onSubmit);
 

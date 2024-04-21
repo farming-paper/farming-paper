@@ -1,5 +1,5 @@
-import { Button, Input } from "antd";
 import { useCallback, useState } from "react";
+import { Button, Input } from "~/common/components/mockups";
 import Render from "../Render";
 import type { IShortQuestion, QuestionInputProps } from "../types";
 
@@ -40,9 +40,9 @@ const ShortQuestionInput: React.FC<QuestionInputProps<IShortQuestion>> = ({
           type="text"
           className="flex-1"
           placeholder="정답을 입력하세요"
-          onChange={(e) => setValue(e.target.value)}
+          onChange={(e: any) => setValue(e.target.value)}
           value={value}
-          onKeyDown={(e) => {
+          onKeyDown={(e: any) => {
             // eslint-disable-next-line no-console
             console.log(e);
             if (e.key === "Enter" && !e.nativeEvent.isComposing) {

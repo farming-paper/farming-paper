@@ -19,7 +19,6 @@ if (process.env.NODE_ENV === "production") {
     });
   }
   prisma = global.__prisma__;
-  prisma.$connect();
 }
 
 export default prisma;

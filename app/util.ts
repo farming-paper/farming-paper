@@ -1,6 +1,7 @@
 import type { FetcherWithComponents, SubmitOptions } from "@remix-run/react";
 import { useFetcher, useSubmit } from "@remix-run/react";
 import type { SerializeFrom } from "@remix-run/server-runtime";
+import { disassembleHangul } from "@toss/hangul";
 import dayjsLib from "dayjs";
 import "dayjs/locale/ko.js"; // import locale
 import relativeTime from "dayjs/plugin/relativeTime.js"; // import plugin
@@ -273,15 +274,17 @@ export function bigintToNumber(n: bigint) {
 }
 
 export type BigIntToNumber<T extends Record<string, unknown>> = {
-  [key in keyof T]: T[key] extends bigint ? number : T[key];
+  [key in keyof T]: T[key] extends bigint
+    ? number
+    : T[key] extends bigint | null
+    ? number | null
+    : T[key];
 };
 
 export function getObjBigintToNumber<T extends Record<string, unknown>>(
   obj: T
 ): BigIntToNumber<T> {
-  const result = { ...obj } as {
-    [key in keyof T]: T[key] extends bigint ? number : T[key];
-  };
+  const result = { ...obj } as BigIntToNumber<T>;
 
   Object.keys(obj).forEach((key) => {
     const value = obj[key];
@@ -291,4 +294,19 @@ export function getObjBigintToNumber<T extends Record<string, unknown>>(
   });
 
   return result;
+}
+
+export function filterByContainsHangul<T extends { name: string }>(
+  items: T[],
+  query: string
+) {
+  return items.filter((item) =>
+    disassembleHangul(item.name)
+      .replace(/ /g, "")
+      .includes(disassembleHangul(query).replace(/ /g, ""))
+  );
+}
+
+export function getObjectFromSearchParams(search: URLSearchParams) {
+  return Object.fromEntries(search);
 }
