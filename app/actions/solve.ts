@@ -138,28 +138,38 @@ export default async function solveAction({ request }: ActionFunctionArgs) {
         }
       }
 
+      let logId: bigint;
       if (incorrects.length > 0) {
-        await prisma.solve_logs.create({
+        const res = await prisma.solve_logs.create({
           data: {
             profile_id: profile.id,
             question_id: question.id,
             weight: 0,
           },
+          select: {
+            id: true,
+          },
         });
+        logId = res.id;
       } else {
-        await prisma.solve_logs.create({
+        const res = await prisma.solve_logs.create({
           data: {
             profile_id: profile.id,
             question_id: question.id,
             weight: 1,
           },
+          select: {
+            id: true,
+          },
         });
+        logId = res.id;
       }
 
       const searchParams = new URLSearchParams();
       searchParams.set("incorrects", JSON.stringify(incorrects));
       searchParams.set("question_id", question.id.toString());
       searchParams.set("tags", tagsFromUrl);
+      searchParams.set("log_id", logId.toString());
       return redirect(`/result?${searchParams.toString()}`);
     }
   }

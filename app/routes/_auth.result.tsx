@@ -1,10 +1,15 @@
-import type { LoaderFunctionArgs, MetaFunction } from "@remix-run/node";
-import { json } from "@remix-run/node";
-import { useLoaderData } from "@remix-run/react";
+import { Button, Link } from "@nextui-org/react";
+import type {
+  ActionFunctionArgs,
+  LoaderFunctionArgs,
+  MetaFunction,
+} from "@remix-run/node";
+import { json, redirect } from "@remix-run/node";
+import { Form, useLoaderData, useSearchParams } from "@remix-run/react";
+import { withZod } from "@remix-validated-form/with-zod";
 import dayjs from "dayjs";
 import { useMemo } from "react";
 import { z } from "zod";
-import solveAction from "~/actions/solve";
 import { requireAuth } from "~/auth/get-session";
 import DefaultLayout from "~/common/components/DefaultLayout";
 import SideMenuV2 from "~/common/components/SideMenuV2";
@@ -32,8 +37,9 @@ const searchParamsSchema = z.object({
         })
       )
     ),
-  tags: z.string().transform((v) => v.split(",")),
+  tags: z.string(),
   question_id: z.coerce.bigint(),
+  log_id: z.coerce.bigint(),
 });
 
 export async function loader({ request }: LoaderFunctionArgs) {
@@ -46,13 +52,14 @@ export async function loader({ request }: LoaderFunctionArgs) {
     throw new Response(null, { status: 400 });
   }
 
-  const { incorrects, question_id, tags } = validation.data;
+  const { incorrects, question_id } = validation.data;
 
   const success = incorrects.length === 0;
 
   const question = await prisma.questions.findUnique({
     where: {
       id: question_id,
+      creator: profile.id,
     },
     select: {
       id: true,
@@ -81,14 +88,15 @@ export async function loader({ request }: LoaderFunctionArgs) {
     },
     incorrects,
     success,
+    tags: validation.data.tags,
   });
 }
 
-export default function Dashboard() {
+export default function Result() {
   const data = useLoaderData<typeof loader>();
-
+  const [params] = useSearchParams();
   const q = data.question;
-  const { success, incorrects } = data;
+  const { success, incorrects, tags } = data;
 
   const question: Question = useMemo(
     () => ({
@@ -116,8 +124,7 @@ export default function Dashboard() {
           className="box-border px-10 mx-auto mt-20"
           style={{ width: "calc(700px + 3rem)" }}
         >
-          <h1 className="text-3xl font-bold">Solve result</h1>
-          <p>
+          <p className="mb-2 text-lg font-bold">
             {success ? (
               <span className="text-green-500">Correct</span>
             ) : (
@@ -127,16 +134,93 @@ export default function Dashboard() {
 
           <ResultQuestion incorrects={incorrects} />
 
-          {/* <QuestionProvider question={question}>
-          <ResultQuestion />
-          <div className="flex flex-row-reverse gap-3">
-            <SolveSubmitButton />
+          <div className="flex flex-row-reverse items-center justify-between mt-3">
+            <div className="flex items-center">
+              <Button as={Link} href={`/solve?tags=${tags}`} color="primary">
+                Next
+              </Button>
+            </div>
+            <div className="flex items-center gap-2">
+              {success ? (
+                <Button variant="flat">Regard as Incorrect</Button>
+              ) : (
+                <Button variant="flat">Regard as Correct</Button>
+              )}
+
+              <Form className="flex" method="post">
+                <input type="hidden" name="intent" value="ignore" />
+                <Button variant="flat" type="submit">
+                  Ignore
+                </Button>
+              </Form>
+
+              <Button
+                href={`/q/edit/${question.publicId}?tags=${params.get(
+                  "tags"
+                )}&back=solve`}
+                as={Link}
+                color="default"
+                variant="flat"
+              >
+                Edit
+              </Button>
+            </div>
           </div>
-        </QuestionProvider> */}
         </div>
       </QuestionProvider>
     </DefaultLayout>
   );
 }
 
-export const action = solveAction;
+export const actionValidator = withZod(
+  z.discriminatedUnion("intent", [z.object({ intent: z.literal("ignore") })])
+);
+
+export async function action({ request }: ActionFunctionArgs) {
+  const { profile } = await requireAuth(request);
+  const searchParamsValidation = searchParamsSchema.safeParse(
+    Object.fromEntries(new URL(request.url).searchParams)
+  );
+
+  const formData = await request.formData();
+
+  if (!searchParamsValidation.success) {
+    return json(
+      {
+        data: null,
+        error: searchParamsValidation.error,
+      },
+      { status: 400 }
+    );
+  }
+
+  const formDataValidation = await actionValidator.validate(formData);
+  if (formDataValidation.error) {
+    return json(
+      {
+        data: null,
+        error: formDataValidation.error,
+      },
+      { status: 400 }
+    );
+  }
+
+  const data = formDataValidation.data;
+
+  switch (data.intent) {
+    case "ignore": {
+      await prisma.solve_logs.update({
+        where: {
+          id: searchParamsValidation.data.log_id,
+          profile_id: profile.id,
+        },
+        data: {
+          ignored_since: new Date(),
+          updated_at: new Date(),
+        },
+      });
+
+      return redirect(`/solve?tags=${searchParamsValidation.data.tags}`);
+    }
+  }
+}

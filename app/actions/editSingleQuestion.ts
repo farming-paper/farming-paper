@@ -91,6 +91,7 @@ export default async function editSingleQuestionAction({
         },
         data: {
           content: JSON.parse(data.content),
+          updated_at: new Date(),
         },
       });
 
@@ -109,6 +110,7 @@ export default async function editSingleQuestionAction({
         },
         data: {
           deleted_at: new Date(),
+          updated_at: new Date(),
         },
       });
 

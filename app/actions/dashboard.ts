@@ -73,6 +73,7 @@ export default async function dashboardAction({ request }: ActionFunctionArgs) {
         },
         data: {
           deleted_at: new Date(),
+          updated_at: new Date(),
         },
         select: {
           created_at: true,
@@ -135,6 +136,7 @@ export default async function dashboardAction({ request }: ActionFunctionArgs) {
         },
         data: {
           deleted_at: new Date(),
+          updated_at: new Date(),
         },
       });
 

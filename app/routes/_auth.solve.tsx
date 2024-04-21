@@ -68,9 +68,10 @@ export async function loader({ request }: LoaderFunctionArgs) {
   const logs = await prisma.solve_logs.findMany({
     where: {
       question_id: { in: questions.map((q) => q.id) },
-      question: { creator: profile.id },
+      profile_id: profile.id,
       // drop more than 1 month
       created_at: { gte: new Date(Date.now() - 1000 * 60 * 60 * 24 * 30) },
+      ignored_since: null,
     },
     orderBy: [{ created_at: "desc" }],
     select: {
@@ -177,9 +178,11 @@ export default function Dashboard() {
             </div>
             <div className="flex justify-center gap-2">
               <Button
-                href={`/q/edit/${question.publicId}`}
+                href={`/pass?tags=${params.get("tags")}&question_public_id=${
+                  question.publicId
+                }`}
                 as={Link}
-                variant="faded"
+                variant="flat"
               >
                 Pass
               </Button>
@@ -189,8 +192,7 @@ export default function Dashboard() {
                 )}&back=solve`}
                 as={Link}
                 color="default"
-                // showAnchorIcon
-                variant="faded"
+                variant="flat"
               >
                 Edit
               </Button>

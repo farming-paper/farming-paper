@@ -1,6 +1,7 @@
 import { atom, useAtom } from "jotai";
-import { useEffect } from "react";
+import { createContext, useContext, useEffect } from "react";
 import type { Descendant, Text } from "slate";
+import { twMerge } from "tailwind-merge";
 import { useQuestion } from "./context";
 import type { BlankElement, ParagraphElement } from "./types";
 import { getCorrectFromBlank, getIdFromPath } from "./utils";
@@ -15,6 +16,14 @@ export function ResultParagraph({
   return <p>{children}</p>;
 }
 
+const styleContext = createContext<{
+  correctClassname?: string;
+}>({});
+
+function useStyleContext() {
+  return useContext(styleContext);
+}
+
 export function ResultBlank({
   element,
   path,
@@ -26,6 +35,7 @@ export function ResultBlank({
   const incorrects = useIncorrectSubmissionMap();
   const incorrectSubmission = incorrects.get(getIdFromPath(path));
   const correctSubmission = getCorrectFromBlank(element);
+  const { correctClassname } = useStyleContext();
 
   return typeof incorrectSubmission === "string" ? (
     <>
@@ -33,7 +43,9 @@ export function ResultBlank({
       <span className="font-bold text-red-500">{correctSubmission}</span>
     </>
   ) : (
-    <span className="font-bold text-primary-500">{correctSubmission}</span>
+    <span className={twMerge("font-bold text-primary-500", correctClassname)}>
+      {correctSubmission}
+    </span>
   );
 }
 
@@ -88,12 +100,14 @@ export function useIncorrectSubmissionMap() {
 
 export default function ResultQuestion({
   incorrects,
+  correctClassname,
 }: {
   incorrects: {
     pathStr: string;
     expect: string;
     actual: string;
   }[];
+  correctClassname?: string;
 }) {
   const question = useQuestion();
   const [, setIncorrects] = useAtom(incorrectsAtom);
@@ -106,7 +120,11 @@ export default function ResultQuestion({
     setIncorrects(map);
   }, [incorrects, setIncorrects]);
 
-  return question.content.descendants?.map((descendant, index) => (
-    <ResultDescendant key={index} descendant={descendant} path={[index]} />
-  ));
+  return (
+    <styleContext.Provider value={{ correctClassname }}>
+      {question.content.descendants?.map((descendant, index) => (
+        <ResultDescendant key={index} descendant={descendant} path={[index]} />
+      ))}
+    </styleContext.Provider>
+  );
 }
