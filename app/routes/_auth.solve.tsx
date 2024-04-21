@@ -3,7 +3,8 @@ import type { LoaderFunctionArgs, MetaFunction } from "@remix-run/node";
 import { json } from "@remix-run/node";
 import { useLoaderData, useSearchParams } from "@remix-run/react";
 import dayjs from "dayjs";
-import { useMemo } from "react";
+import { useEffect, useMemo } from "react";
+import { toast } from "react-toastify";
 import { z } from "zod";
 import solveAction from "~/actions/solve";
 import { requireAuth } from "~/auth/get-session";
@@ -140,6 +141,16 @@ export default function Dashboard() {
   } = useLoaderData<typeof loader>();
 
   const [params] = useSearchParams();
+
+  useEffect(() => {
+    const params = new URLSearchParams(window.location.search);
+    const message = params.get("message");
+    if (message === "update_success") {
+      toast.success("문제가 성공적으로 수정되었습니다.", {
+        toastId: message,
+      });
+    }
+  }, []);
 
   const question: Question = useMemo(
     () => ({
