@@ -8,11 +8,12 @@ import {
   useDisclosure,
 } from "@nextui-org/react";
 import { Form } from "@remix-run/react";
-import { Check, Plus, Search } from "lucide-react";
+import { Plus, Search } from "lucide-react";
 import { useMemo, useState } from "react";
 import { useQuestion } from "~/question/context";
 import type { ITagWithCount } from "~/types";
 import { filterByContainsHangul } from "~/util";
+import TagToggleButton from "./TagToggleButton";
 
 export function SetTagModal({
   TriggerButton,
@@ -38,7 +39,7 @@ export function SetTagModal({
     <>
       <TriggerButton onPress={onOpen} />
 
-      <Modal isOpen={isOpen} onOpenChange={onOpenChange} placement="top-center">
+      <Modal isOpen={isOpen} onOpenChange={onOpenChange} placement="top">
         <ModalContent>
           {(_onClose) => (
             <>
@@ -57,42 +58,14 @@ export function SetTagModal({
                     <Search className="text-black/50 mb-0.5 dark:text-white/90 text-gray-400 pointer-events-none flex-shrink-0 w-4 h-4" />
                   }
                 />
-                <div className="h-48 flex flex-col items-stretch w-full gap-0.5">
+                <div className="flex flex-col items-stretch w-full gap-0.5">
                   {filteredTags.map((tag) => (
-                    <Form method="post" key={tag.publicId} className="w-full">
-                      {checked.has(tag.publicId) ? (
-                        <input type="hidden" name="intent" value="unset_tag" />
-                      ) : (
-                        <input type="hidden" name="intent" value="set_tag" />
-                      )}
-                      <input
-                        type="hidden"
-                        name="tag_public_id"
-                        value={tag.publicId}
-                      />
-                      <input
-                        type="hidden"
-                        name="question_public_id"
-                        value={question.publicId}
-                      />
-                      <Button
-                        endContent={
-                          <span className="text-gray-400">{tag.count}</span>
-                        }
-                        variant="light"
-                        className="justify-between w-full"
-                        type="submit"
-                      >
-                        <span className="inline-flex items-center gap-3">
-                          {checked.has(tag.publicId) ? (
-                            <Check className="w-4 h-4" />
-                          ) : (
-                            <span className="w-4 h-4" />
-                          )}
-                          <span>{tag.name}</span>
-                        </span>
-                      </Button>
-                    </Form>
+                    <TagToggleButton
+                      key={tag.publicId}
+                      checked={checked}
+                      questionPublicId={question.publicId}
+                      tag={tag}
+                    />
                   ))}
                   {!filteredTags.find((tag) => tag.name === search) &&
                     search && (

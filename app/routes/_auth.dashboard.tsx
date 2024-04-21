@@ -9,9 +9,9 @@ import { useMemo } from "react";
 import { z } from "zod";
 import dashboardAction from "~/actions/dashboard";
 import { requireAuth } from "~/auth/get-session";
-import { SetTagModal } from "~/common/components/AddTagModal";
 import DefaultLayout from "~/common/components/DefaultLayout";
 import { DeleteQuestionModalWithButton } from "~/common/components/DeleteQuestionModalWithButton";
+import { SetTagModal } from "~/common/components/SetTagModal";
 import SideMenuV2 from "~/common/components/SideMenuV2";
 import prisma from "~/prisma-client.server";
 import { QuestionProvider } from "~/question/context";
@@ -106,7 +106,7 @@ export async function loader({ request }: LoaderFunctionArgs) {
         creator: profile.id,
         deleted_at: null,
       },
-      orderBy: { created_at: "asc" },
+      orderBy: [{ created_at: "asc" }, { public_id: "asc" }],
       select: {
         public_id: true,
         name: true,
