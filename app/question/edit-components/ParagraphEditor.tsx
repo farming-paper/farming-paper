@@ -1,6 +1,6 @@
 import { Form, useSubmit } from "@remix-run/react";
 import { isKeyHotkey } from "is-hotkey";
-import { useCallback, useMemo, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import type { Editor, Element } from "slate";
 import { Range, Transforms, createEditor } from "slate";
 import { withHistory } from "slate-history";
@@ -47,7 +47,6 @@ const withInlines = (editor: Editor) => {
   return editor;
 };
 
-// Put this at the start and end of an inline component to work around this Chromium bug:
 // https://bugs.chromium.org/p/chromium/issues/detail?id=1249405
 const InlineChromiumBugfix = () => (
   <span contentEditable={false} className="text-0">
@@ -91,10 +90,6 @@ const TextComponent = (props: RenderLeafProps) => {
 
   return (
     <span
-      // The following is a workaround for a Chromium bug where,
-      // if you have an inline at the end of a block,
-      // clicking the end of a block puts the cursor inside the inline
-      // instead of inside the final {text: ''} node
       // https://github.com/ianstormtaylor/slate/issues/4704#issuecomment-1006696364
       className={twMerge(leaf.text === "" && "pl-[0.1px]")}
       {...attributes}
@@ -118,6 +113,7 @@ export default function ParagrahEditor({
   );
 
   const formRef = useRef<HTMLFormElement>(null);
+  const onContentChangeRef = useRef(onContentChange);
   const submit = useSubmit();
 
   const converted = useMemo(
@@ -129,7 +125,7 @@ export default function ParagrahEditor({
     question.content.descendants ? question.content.descendants : converted
   );
 
-  const questionContent = useMemo((): QuestionContent => {
+  const questionContent = useMemo<QuestionContent>(() => {
     return {
       ...question.content,
       descendants: value,
@@ -142,6 +138,16 @@ export default function ParagrahEditor({
     }, [submit]),
     3000
   );
+
+  useEffect(() => {
+    onContentChangeRef.current = onContentChange;
+  }, [onContentChange]);
+
+  useEffect(() => {
+    if (onContentChangeRef.current) {
+      onContentChangeRef.current(questionContent);
+    }
+  }, [questionContent]);
 
   const onKeyDown: React.KeyboardEventHandler<HTMLInputElement> = (event) => {
     const { selection } = editor;
@@ -182,8 +188,6 @@ export default function ParagrahEditor({
           if (autoSave) {
             throttledSubmit();
           }
-
-          onContentChange?.(questionContent);
         }}
       >
         <ClientOnly>{() => <HoveringToolbar />}</ClientOnly>
@@ -211,7 +215,6 @@ export default function ParagrahEditor({
           //        return toggleMark(editor, "underlined");
           //    }
           // }}
-
           onKeyDown={onKeyDown}
         />
       </Slate>
@@ -222,8 +225,6 @@ export default function ParagrahEditor({
       />
       <input type="hidden" name="intent" value="update_question_content" />
       <input type="hidden" name="public_id" value={question.publicId} />
-
-      {/* <span>{question.publicId}</span> */}
     </Form>
   );
 }

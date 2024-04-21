@@ -7,7 +7,7 @@ import dayjs from "dayjs";
 import { Plus, Tag, Trash2 } from "lucide-react";
 import { useMemo } from "react";
 import { z } from "zod";
-import dashboardAction from "~/actions/dashboard";
+import dashboardAction from "~/actions/dashboard";
 import { requireAuth } from "~/auth/get-session";
 import { SetTagModal } from "~/common/components/AddTagModal";
 import DefaultLayout from "~/common/components/DefaultLayout";

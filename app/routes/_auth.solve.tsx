@@ -1,6 +1,7 @@
+import { Button, Link } from "@nextui-org/react";
 import type { LoaderFunctionArgs, MetaFunction } from "@remix-run/node";
 import { json } from "@remix-run/node";
-import { useLoaderData } from "@remix-run/react";
+import { useLoaderData, useSearchParams } from "@remix-run/react";
 import dayjs from "dayjs";
 import { useMemo } from "react";
 import { z } from "zod";
@@ -137,6 +138,8 @@ export default function Dashboard() {
     questionPoolCount,
   } = useLoaderData<typeof loader>();
 
+  const [params] = useSearchParams();
+
   const question: Question = useMemo(
     () => ({
       id: q.id,
@@ -168,8 +171,30 @@ export default function Dashboard() {
         </div>
         <QuestionProvider question={question}>
           <SolveQuestion />
-          <div className="flex flex-row-reverse gap-3">
-            <SolveSubmitButton />
+          <div className="flex flex-row-reverse justify-between mt-3">
+            <div>
+              <SolveSubmitButton />
+            </div>
+            <div className="flex justify-center gap-2">
+              <Button
+                href={`/q/edit/${question.publicId}`}
+                as={Link}
+                variant="faded"
+              >
+                Pass
+              </Button>
+              <Button
+                href={`/q/edit/${question.publicId}?tags=${params.get(
+                  "tags"
+                )}&back=solve`}
+                as={Link}
+                color="default"
+                // showAnchorIcon
+                variant="faded"
+              >
+                Edit
+              </Button>
+            </div>
           </div>
         </QuestionProvider>
       </div>

@@ -6,7 +6,7 @@ import { z } from "zod";
 import { requireAuth } from "~/auth/get-session";
 import prisma from "~/prisma-client.server";
 import { createQuestionContent } from "~/question/create";
-import updateQuestionContent from "./update-question-content";
+import { getObjBigintToNumber } from "~/util";
 
 export const validator = withZod(
   z.discriminatedUnion("intent", [
@@ -62,8 +62,70 @@ export default async function dashboardAction({ request }: ActionFunctionArgs) {
   const data = action.data;
 
   switch (data.intent) {
-    case "update_question_content":
-      return updateQuestionContent({ ...data, creator: profile.id });
+    case "update_question_content": {
+      const parsedContent = JSON.parse(data.content);
+
+      const deleted = await prisma.questions.update({
+        where: {
+          public_id: data.public_id,
+          creator: profile.id,
+          // deleted_at: null, // 삭제가 연속으로 됐을 때 업데이트 대상을 찾지 못하므로 삭제 조건을 넣지 않음
+        },
+        data: {
+          deleted_at: new Date(),
+        },
+        select: {
+          created_at: true,
+          creator: true,
+          id: true,
+          original_id: true,
+          tags_questions_relation: {
+            select: {
+              q: true,
+              tag: true,
+            },
+          },
+        },
+      });
+
+      const created = await prisma.questions.create({
+        data: {
+          content: parsedContent,
+          creator: deleted.creator,
+          created_at: deleted.created_at,
+          public_id: nanoid(),
+          original_id: deleted.original_id ? deleted.original_id : deleted.id,
+          tags_questions_relation: {
+            create: deleted.tags_questions_relation.map((tqr) => ({
+              tag: tqr.tag,
+            })),
+          },
+        },
+        select: {
+          content: true,
+          created_at: true,
+          creator: true,
+          id: true,
+          original_id: true,
+          tags_questions_relation: {
+            select: {
+              tags: {
+                select: {
+                  name: true,
+                  public_id: true,
+                },
+              },
+            },
+          },
+        },
+      });
+
+      return getObjBigintToNumber({
+        ...created,
+        tags: created.tags_questions_relation.map((tqr) => tqr.tags),
+      });
+    }
+
     case "remove_question": {
       await prisma.questions.update({
         where: {

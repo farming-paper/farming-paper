@@ -24,18 +24,20 @@ export default function SideMenuV2() {
             <NavLink to={item.to}>
               {({ isActive }) => {
                 return (
-                  <span
-                    className={twMerge(
-                      "h-10 flex w-full items-center justify-center",
-                      isActive && "text-white bg-primary-500"
-                    )}
-                  >
-                    <item.icon className="w-4 h-4" aria-hidden="true" />
-                  </span>
+                  <>
+                    <span
+                      className={twMerge(
+                        "h-10 flex w-full items-center justify-center",
+                        isActive && "text-white bg-primary-500"
+                      )}
+                    >
+                      <item.icon className="w-4 h-4" aria-hidden="true" />
+                    </span>
+                    <span className="sr-only">{item.name}</span>
+                  </>
                 );
               }}
             </NavLink>
-            <span className="sr-only">{item.name}</span>
           </li>
         ))}
       </ul>

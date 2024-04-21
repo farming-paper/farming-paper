@@ -17,7 +17,7 @@ export default function SolveSubmitButton() {
         value={JSON.stringify(submission)}
       />
       <Button color="primary" type="submit">
-        SUBMIT
+        Submit
       </Button>
     </Form>
   );

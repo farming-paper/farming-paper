@@ -1,30 +1,27 @@
 // BEST PRACTICE
-import { Select, SelectItem } from "@nextui-org/react";
+import { Button } from "@nextui-org/react";
 import type { MetaFunction } from "@remix-run/node";
-import {
-  Form,
-  useActionData,
-  useLoaderData,
-  useNavigation,
-  useSubmit,
-} from "@remix-run/react";
+import { Form, useLoaderData } from "@remix-run/react";
 import type { LoaderFunctionArgs } from "@remix-run/server-runtime";
 import { json } from "@remix-run/server-runtime";
-import { Plus, Trash2 } from "lucide-react";
-import { useEffect, useRef, useState } from "react";
-import editSingleQuestion from "~/actions/editSingleQuestion";
+import dayjs from "dayjs";
+import { deepEqual } from "fast-equals";
+import { Plus, Tag, Trash2 } from "lucide-react";
+import { useMemo, useState } from "react";
+import { z } from "zod";
+import editSingleQuestionAction from "~/actions/editSingleQuestion";
 import { requireAuth } from "~/auth/get-session";
-import DangerModal from "~/common/components/DangerModal";
-import Label from "~/common/components/Label";
-import { Button, Input, Space } from "~/common/components/mockups";
+import { SetTagModal } from "~/common/components/AddTagModal";
+import DefaultLayout from "~/common/components/DefaultLayout";
+import { DeleteQuestionModalWithButton } from "~/common/components/DeleteQuestionModalWithButton";
+import SideMenuV2 from "~/common/components/SideMenuV2";
+import prisma from "~/prisma-client.server";
+import { QuestionProvider } from "~/question/context";
 import { createQuestionContent } from "~/question/create";
-import Tags from "~/question/edit-components/Tags";
+import ParagrahEditor from "~/question/edit-components/ParagraphEditor";
 import type { Question, QuestionContent } from "~/question/types";
-import { getServerSideSupabaseClient } from "~/supabase/client";
-import type { Database } from "~/supabase/generated/supabase-types";
-import { rpc } from "~/supabase/rpc";
 import type { ITagWithCount } from "~/types";
-import { dayjs, removeNullDeep } from "~/util";
+import { getObjBigintToNumber } from "~/util";
 
 export const meta: MetaFunction = () => {
   return [
@@ -34,348 +31,213 @@ export const meta: MetaFunction = () => {
   ];
 };
 
-const questionTypeOptions = [
-  // {
-  //   label: "단답형",
-  //   value: "short",
-  // },
-  // {
-  //   label: "단답형 (답 여러 개)",
-  //   value: "short_multi",
-  // },
-  {
-    label: "단답형 (답 여러 개 + 순서)",
-    value: "short_order",
-  },
-  // {
-  //   label: "다른 것 하나 고르기",
-  //   value: "pick_different",
-  // },
-  // {
-  //   label: "객관식",
-  //   value: "pick",
-  // },
-  // {
-  //   label: "객관식 (답 여러 개)",
-  //   value: "pick_multi",
-  // },
-  // {
-  //   label: "객관식 (답 여러 개 + 순서)",
-  //   value: "pick_order",
-  // },
-];
-
-export async function getQuestionRow({
-  profileId,
-  publicId,
-}: {
-  profileId: number;
-  publicId: string;
-}) {
-  const db = getServerSideSupabaseClient();
-  const questionRes = await db
-    .from("questions")
-    .select("*, tags_questions_relation (tag (*))")
-    .eq("creator", profileId)
-    .is("deleted_at", null)
-    .eq("public_id", publicId)
-    .returns<
-      /** need manual typing. @see https://github.com/supabase/postgrest-js/issues/408 */
-      (Database["public"]["Tables"]["questions"]["Row"] & {
-        tags_questions_relation: {
-          tag: Database["public"]["Tables"]["tags"]["Row"];
-        }[];
-      })[]
-    >()
-    .single();
-
-  if (!questionRes.data) {
-    throw new Response("Not Found", {
-      status: 404,
-    });
-  }
-
-  const row: Question = {
-    id: questionRes.data.id,
-    originalId: questionRes.data.id, // TODO: 이 파일 삭제
-    content: createQuestionContent(
-      questionRes.data?.content as Partial<QuestionContent>
-    ),
-    publicId: questionRes.data.public_id,
-    updatedAt: dayjs(questionRes.data.updated_at),
-    createdAt: dayjs(questionRes.data.created_at),
-    deletedAt: questionRes.data.deleted_at
-      ? dayjs(questionRes.data.deleted_at)
-      : null,
-    tags: questionRes.data.tags_questions_relation.map((relation) => {
-      const tag = relation.tag;
-      return removeNullDeep({
-        id: tag.id,
-        name: tag.name || "",
-        publicId: tag.public_id,
-        desc: tag.desc,
-      });
-    }),
-  };
-
-  return row;
-}
-
-export async function getAllTags({ profileId }: { profileId: number }) {
-  const tagsRes = await rpc("get_tags_by_creator_with_count", {
-    p_creator: profileId,
-  });
-
-  if (!tagsRes.data) {
-    throw new Response("Unknown Error", {
-      status: 500,
-    });
-  }
-
-  const tags: ITagWithCount[] = tagsRes.data.map((t) => {
-    return removeNullDeep({
-      name: t.name || "",
-      publicId: t.public_id,
-      desc: t.desc,
-      count: t.count,
-    });
-  });
-
-  return tags;
-}
+const searchParamsSchema = z.object({
+  back: z.literal("solve"),
+  tags: z
+    .string()
+    .optional()
+    .transform((v) => v?.split(",")),
+});
 
 export async function loader({ request, params }: LoaderFunctionArgs) {
-  const publicId = params.publicId;
   const { profile } = await requireAuth(request);
 
-  if (!publicId) {
+  const { publicId: questionPublicId } = params;
+  if (!questionPublicId) {
     throw new Response("Public Id Not Found", {
       status: 404,
     });
   }
 
-  const [row, tags] = await Promise.all([
-    getQuestionRow({ profileId: profile.id, publicId }),
-    getAllTags({ profileId: profile.id }),
+  const validation = searchParamsSchema.safeParse(
+    Object.fromEntries(new URL(request.url).searchParams)
+  );
+
+  if (!validation.success) {
+    throw new Response(JSON.stringify({ error: validation.error }), {
+      status: 400,
+      headers: { "Content-Type": "application/json" },
+    });
+  }
+
+  const [question, allTags] = await Promise.all([
+    prisma.questions.findUniqueOrThrow({
+      where: {
+        public_id: questionPublicId,
+        creator: profile.id,
+        deleted_at: null,
+      },
+      select: {
+        id: true,
+        original_id: true,
+        content: true,
+        created_at: true,
+        updated_at: true,
+        deleted_at: true,
+        public_id: true,
+        tags_questions_relation: {
+          select: { tags: { select: { name: true, public_id: true } } },
+        },
+      },
+    }),
+
+    // 모든 태그
+    prisma.tags.findMany({
+      where: {
+        creator: profile.id,
+        deleted_at: null,
+      },
+      orderBy: { created_at: "asc" },
+      select: {
+        public_id: true,
+        name: true,
+        desc: true,
+        _count: {
+          select: {
+            tags_questions_relation: true,
+          },
+        },
+      },
+    }),
   ]);
 
   return json({
-    row,
-    tags,
+    question: {
+      ...getObjBigintToNumber(question),
+      content: createQuestionContent(
+        question.content as Partial<QuestionContent>
+      ),
+    },
+
+    activeTagPublicIds: question.tags_questions_relation.map(
+      (t) => t.tags.public_id
+    ),
+
+    allTags: allTags.map((tag): ITagWithCount => {
+      const result: ITagWithCount = {
+        name: tag.name || "",
+        publicId: tag.public_id,
+        count: tag._count.tags_questions_relation,
+      };
+      if (tag.desc) {
+        result.desc = tag.desc;
+      }
+      return result;
+    }),
   });
 }
 
-export const action = editSingleQuestion;
-
 export default function Page() {
   const loaded = useLoaderData<typeof loader>();
-  const [editingContent, setEditingContent] = useState(loaded.row.content);
-  const [tags, setTags] = useState(loaded.row.tags);
 
-  const navigation = useNavigation();
-  const submit = useSubmit();
-  const _actionData = useActionData<typeof action>();
+  const [editingContent, setEditingContent] = useState<QuestionContent>(
+    loaded.question.content
+  );
 
-  const formRef = useRef<HTMLFormElement>(null);
+  const question: Question = {
+    id: loaded.question.id,
+    originalId: loaded.question.original_id,
+    content: loaded.question.content,
+    createdAt: dayjs(loaded.question.created_at),
+    updatedAt: dayjs(loaded.question.updated_at),
+    deletedAt: loaded.question.deleted_at
+      ? dayjs(loaded.question.deleted_at)
+      : null,
+    publicId: loaded.question.public_id,
+    tags: loaded.question.tags_questions_relation.map((t) => {
+      return {
+        name: t.tags.name || "",
+        publicId: t.tags.public_id,
+      };
+    }),
+  };
 
-  // useEffect(() => {
-  //   if (navigation.state === "submitting") {
-  //     message.loading({
-  //       key: "edit-question",
-  //       content: "문제를 수정하는 중입니다...",
-  //       duration: 20,
-  //     });
-  //     return;
-  //   }
-
-  //   if (navigation.state === "idle" && actionData?.data) {
-  //     message.success({
-  //       key: "edit-question",
-  //       content: "성공적으로 수정되었습니다.",
-  //       duration: 2,
-  //     });
-  //     return;
-  //   }
-  //   if (navigation.state === "idle" && actionData?.error) {
-  //     message.error({
-  //       key: "edit-question",
-  //       content: "문제 수정에 실패했습니다.",
-  //       duration: 2,
-  //     });
-  //     // eslint-disable-next-line no-console
-  //     console.error("actionData.error", actionData.error);
-  //     return;
-  //   }
-  // }, [actionData, navigation.state, message]);
-
-  /** keyboard shortcut */
-  useEffect(() => {
-    const submitShortcut = (e: KeyboardEvent) => {
-      if (e.key === "Enter" && (e.metaKey || e.ctrlKey) && formRef.current) {
-        submit(formRef.current);
-      }
-    };
-    document.addEventListener("keydown", submitShortcut);
-    return () => {
-      document.removeEventListener("keydown", submitShortcut);
-    };
-  }, [navigation, submit]);
-
-  const [deleteModalOpen, setDeleteModalOpen] = useState(false);
-
-  // TODO: 삭제 기능 복원
-  // const deleteFetcher = useDeletionQuestionFetcher();
+  const isDirty = useMemo(() => {
+    return !deepEqual(editingContent, question.content);
+  }, [editingContent, question.content]);
 
   return (
-    <div className="p-4">
-      <header className="flex items-center justify-between">
-        <h1 className="my-2 text-xl font-medium">문제 편집</h1>
-        <div className="flex items-center">
-          <Button size="small" danger onClick={() => setDeleteModalOpen(true)}>
-            삭제
-          </Button>
-        </div>
-      </header>
-      <Form method="post" ref={formRef}>
-        <input type="hidden" name="public_id" value={loaded.row.publicId} />
-        <input type="hidden" name="intent" value="edit_question" />
-        <input
-          type="hidden"
-          name="content"
-          value={JSON.stringify(editingContent)}
-        />
-        {tags.map((tag) => {
-          return (
-            <input
-              key={tag.publicId}
-              type="hidden"
-              name="tag_public_id"
-              value={tag.publicId}
-            />
-          );
-        })}
-
-        <div className="flex flex-col mb-4">
-          <Label htmlFor="tags">태그</Label>
-          <Tags
-            existingTags={loaded.tags}
-            onChange={(changed) => {
-              setTags(changed);
-            }}
-            value={tags}
-          />
-        </div>
-
-        <div className="flex flex-col mb-4">
-          {/* TODO: implement */}
-          <Select
-            label="문제 유형을 선택하세요"
-            className="max-w-xs"
-            selectionMode="single"
-            selectedKeys={[loaded.row.content.type]}
-          >
-            {questionTypeOptions.map((questionType) => (
-              <SelectItem key={questionType.value} value={questionType.value}>
-                {questionType.label}
-              </SelectItem>
-            ))}
-          </Select>
-        </div>
-
-        <div className="flex flex-col mb-4">
-          <Label htmlFor="question_message">내용</Label>
-          <Input.TextArea
-            autoSize={{ minRows: 3 }}
-            required
-            value={editingContent.message}
-            onChange={(e: any) =>
-              setEditingContent({ ...editingContent, message: e.target.value })
-            }
-            placeholder="내용을 작성하세요"
-          />
-        </div>
-
-        {/* ShortOrder corrects */}
-        {editingContent.type === "short_order" && (
-          <div className="flex flex-col mb-4">
-            <Label htmlFor="correct">정답</Label>
-            <div className="flex flex-col gap-2 mb-5">
-              {editingContent.corrects?.map((q, index) => (
-                <div key={index} className="flex gap-2">
-                  <Space.Compact className="w-full">
-                    <Input
-                      style={{ width: "calc(100% - 3rem)" }}
-                      value={q}
-                      onChange={(e: any) => {
-                        setEditingContent({
-                          ...editingContent,
-                          corrects: editingContent.corrects.map((c, i) =>
-                            i === index ? e.target.value : c
-                          ),
-                        });
-                      }}
-                    />
-                    <Button
-                      className="w-12 p-0 text-xl text-gray-400"
-                      onClick={() => {
-                        setEditingContent({
-                          ...editingContent,
-                          corrects: editingContent.corrects.filter(
-                            (_, i) => i !== index
-                          ),
-                        });
-                      }}
-                    >
-                      <Trash2 className="h-[1em] mx-auto" />
-                    </Button>
-                  </Space.Compact>
+    <DefaultLayout sidebarTop={<SideMenuV2 />}>
+      <div
+        className="box-border px-10 mx-auto mt-20"
+        style={{ width: "calc(700px + 3rem)" }}
+      >
+        <h1 className="mb-10 text-2xl font-bold">문제 편집</h1>
+        <QuestionProvider question={question}>
+          <div className="flex items-center justify-between">
+            <div
+              className="flex items-center py-1 text-xs text-gray-400 gap-2.5 overflow-hidden select-none"
+              style={{ backgroundColor: "rgba(249, 250, 251, 0.3)" }}
+            >
+              <span className="font-mono font-bold">
+                {question.createdAt.format("YYYY.MM.DD.")}
+              </span>
+              {question.tags.length > 0 && (
+                <div className="flex items-center gap-0.5">
+                  <Tag className="w-2.5 h-2.5 text-gray-300" />
+                  <span>{question.tags.map((t) => t.name).join(", ")}</span>
                 </div>
-              ))}
+              )}
+              <SetTagModal
+                tags={loaded.allTags}
+                TriggerButton={({ onPress }) => (
+                  <Button
+                    onPress={onPress}
+                    variant="light"
+                    className="h-auto min-w-0 pl-0.5 py-0.5 pr-1  text-xs font-bold rounded-sm text-inherit gap-0.5"
+                    startContent={<Plus className="w-3 h-3 text-gray-300 " />}
+                    disableRipple
+                  >
+                    태그 추가
+                  </Button>
+                )}
+              />
+              <DeleteQuestionModalWithButton
+                TriggerButton={({ onPress }) => (
+                  <Button
+                    onPress={onPress}
+                    variant="light"
+                    className="h-auto min-w-0 px-1 py-1 rounded-sm text-inherit"
+                  >
+                    <Trash2 className="w-3.5 h-3.5 " />
+                  </Button>
+                )}
+              />
             </div>
-            <div className="flex">
-              <Button
-                size="small"
-                type="dashed"
-                className="inline-flex items-center gap-1"
-                onClick={() => {
-                  setEditingContent({
-                    ...editingContent,
-                    corrects: [...editingContent.corrects, ""],
-                  });
-                }}
-              >
-                <Plus className="w-4 h-4" /> 정답 추가
-              </Button>
+            <div>
+              {isDirty && (
+                <div className="text-xs text-gray-400">
+                  수정사항이 있습니다.
+                </div>
+              )}
             </div>
           </div>
-        )}
 
-        <div className="flex justify-end">
-          <Button
-            htmlType="submit"
-            type="primary"
-            loading={navigation.state !== "idle"}
-          >
-            수정
-          </Button>
-        </div>
-      </Form>
-      <Form>
-        <input type="hidden" name="public_id" value={loaded.row.publicId} />
-        <input type="hidden" name="intent" value="delete_question" />
-        <DangerModal
-          message="정말 문제를 삭제하시겠습니까? 한번 삭제하면 다시 복구할 수 없습니다."
-          title="문제 삭제"
-          open={deleteModalOpen}
-          setOpen={setDeleteModalOpen}
-          form={{
-            hiddenValues: {
-              public_id: loaded.row.publicId,
-              intent: "delete_question",
-            },
-          }}
-        />
-      </Form>
-    </div>
+          <ParagrahEditor
+            key={question.originalId || question.id}
+            onContentChange={setEditingContent}
+          />
+          <div className="flex flex-row-reverse mt-10">
+            <Form method="post" className="flex">
+              <input
+                type="hidden"
+                name="intent"
+                value="update_question_content"
+              />
+              <input
+                type="hidden"
+                name="content"
+                value={JSON.stringify(editingContent)}
+              />
+              <Button color="primary" type="submit">
+                Update
+              </Button>
+            </Form>
+          </div>
+        </QuestionProvider>
+      </div>
+    </DefaultLayout>
   );
 }
+
+export const action = editSingleQuestionAction;
