@@ -162,7 +162,7 @@ export default function Page() {
         className="box-border px-10 mx-auto mt-20"
         style={{ width: "calc(700px + 3rem)" }}
       >
-        <h1 className="mb-10 text-2xl font-bold">문제 편집</h1>
+        <h1 className="mb-10 text-xl font-bold">Edit Question</h1>
         <QuestionProvider question={question}>
           <div className="flex items-center justify-between">
             <div

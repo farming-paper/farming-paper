@@ -124,13 +124,13 @@ export default function Result() {
           className="box-border px-10 mx-auto mt-20"
           style={{ width: "calc(700px + 3rem)" }}
         >
-          <p className="mb-2 text-lg font-bold">
+          <h1 className="mb-10 text-xl font-bold">
             {success ? (
               <span className="text-green-500">Correct</span>
             ) : (
               <span className="text-red-500">Incorrect</span>
             )}
-          </p>
+          </h1>
 
           <ResultQuestion incorrects={incorrects} />
 
@@ -142,9 +142,27 @@ export default function Result() {
             </div>
             <div className="flex items-center gap-2">
               {success ? (
-                <Button variant="flat">Regard as Incorrect</Button>
+                <Form className="flex" method="post">
+                  <input
+                    type="hidden"
+                    name="intent"
+                    value="regard_as_incorrect"
+                  />
+                  <Button variant="flat" type="submit">
+                    Regard as Incorrect
+                  </Button>
+                </Form>
               ) : (
-                <Button variant="flat">Regard as Correct</Button>
+                <Form className="flex" method="post">
+                  <input
+                    type="hidden"
+                    name="intent"
+                    value="regard_as_correct"
+                  />
+                  <Button variant="flat" type="submit">
+                    Regard as Correct
+                  </Button>
+                </Form>
               )}
 
               <Form className="flex" method="post">
@@ -173,7 +191,11 @@ export default function Result() {
 }
 
 export const actionValidator = withZod(
-  z.discriminatedUnion("intent", [z.object({ intent: z.literal("ignore") })])
+  z.discriminatedUnion("intent", [
+    z.object({ intent: z.literal("ignore") }),
+    z.object({ intent: z.literal("regard_as_correct") }),
+    z.object({ intent: z.literal("regard_as_incorrect") }),
+  ])
 );
 
 export async function action({ request }: ActionFunctionArgs) {
@@ -216,6 +238,36 @@ export async function action({ request }: ActionFunctionArgs) {
         },
         data: {
           ignored_since: new Date(),
+          updated_at: new Date(),
+        },
+      });
+
+      return redirect(`/solve?tags=${searchParamsValidation.data.tags}`);
+    }
+
+    case "regard_as_correct": {
+      await prisma.solve_logs.update({
+        where: {
+          id: searchParamsValidation.data.log_id,
+          profile_id: profile.id,
+        },
+        data: {
+          weight: 1,
+          updated_at: new Date(),
+        },
+      });
+
+      return redirect(`/solve?tags=${searchParamsValidation.data.tags}`);
+    }
+
+    case "regard_as_incorrect": {
+      await prisma.solve_logs.update({
+        where: {
+          id: searchParamsValidation.data.log_id,
+          profile_id: profile.id,
+        },
+        data: {
+          weight: 0,
           updated_at: new Date(),
         },
       });
