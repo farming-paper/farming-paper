@@ -1,4 +1,4 @@
-import { Button, ButtonGroup, Link } from "@nextui-org/react";
+import { Button, ButtonGroup, Link, Pagination } from "@nextui-org/react";
 import type { tags } from "@prisma/client";
 import type { LoaderFunctionArgs, MetaFunction } from "@remix-run/node";
 import { json } from "@remix-run/node";
@@ -147,7 +147,7 @@ export async function loader({ request }: LoaderFunctionArgs) {
 
 export default function Dashboard() {
   const data = useLoaderData<typeof loader>();
-  const [params] = useSearchParams();
+  const [params, setParams] = useSearchParams();
 
   const { count, recentTags, activeTagPublicIds } = data;
 
@@ -186,10 +186,13 @@ export default function Dashboard() {
     [data.questions]
   );
 
+  const page = parseInt(params.get("page") || "1");
+  const startIndex = count - (page - 1) * 10;
+
   return (
     <DefaultLayout sidebarTop={<SideMenuV2 />}>
       <div
-        className="box-border px-10 mx-auto mt-20"
+        className="box-border px-10 mx-auto mt-20 mb-20"
         style={{ width: "calc(700px + 3rem)" }}
       >
         {/* tags */}
@@ -262,7 +265,7 @@ export default function Dashboard() {
         </div>
 
         {/* questions */}
-        <div className="space-y-2">
+        <div className="mb-10 space-y-2">
           {questions.map((question, index) => {
             return (
               // question group
@@ -324,7 +327,7 @@ export default function Dashboard() {
                       className="flex-none ml-1 mr-2 font-mono text-xs text-gray-400 select-none"
                       style={{ lineHeight: "1.75rem" }}
                     >
-                      {index + 1}.
+                      {startIndex - index}.
                     </span>
                     <div className="flex-1 text-gray-800">
                       <ParagrahEditor
@@ -348,6 +351,15 @@ export default function Dashboard() {
             );
           })}
         </div>
+
+        {/* pagination */}
+        <Pagination
+          total={Math.ceil(count / 10)}
+          page={page}
+          onChange={(page) => {
+            setParams({ page: page.toString() });
+          }}
+        />
       </div>
     </DefaultLayout>
   );
