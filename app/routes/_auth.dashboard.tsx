@@ -24,8 +24,11 @@ import useDeleteTagFilter from "~/tag/use-delete-tag-filter";
 import type { ITagWithCount } from "~/types";
 import { getObjBigintToNumber } from "~/util";
 
-export const meta: MetaFunction = () => {
-  return [{ title: "대시보드 | Farming Paper" }];
+export const meta: MetaFunction = ({ matches }) => {
+  const parentMeta = matches
+    .flatMap((match) => match.meta ?? [])
+    .filter((meta) => !("title" in meta));
+  return [...parentMeta, { title: "대시보드 | Farming Paper" }];
 };
 
 const searchParamsSchema = z.object({
