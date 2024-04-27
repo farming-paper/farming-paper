@@ -193,7 +193,7 @@ export default function Dashboard() {
         style={{ width: "calc(700px + 3rem)" }}
       >
         {/* tags */}
-        <div className="flex gap-2.5 mb-4">
+        <div className="flex flex-wrap gap-2.5 mb-4">
           {tagFilters.map((tag) => {
             if (tag.name) {
               return (
