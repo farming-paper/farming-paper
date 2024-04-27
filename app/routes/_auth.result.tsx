@@ -13,6 +13,7 @@ import { z } from "zod";
 import { requireAuth } from "~/auth/get-session";
 import DefaultLayout from "~/common/components/DefaultLayout";
 import SideMenuV2 from "~/common/components/SideMenuV2";
+import { defaultMeta } from "~/meta";
 import prisma from "~/prisma-client.server";
 import ResultQuestion from "~/question/ResultQuestion";
 import { QuestionProvider } from "~/question/context";
@@ -21,7 +22,7 @@ import type { Question, QuestionContent } from "~/question/types";
 import { getObjBigintToNumber } from "~/util";
 
 export const meta: MetaFunction = () => {
-  return [{ title: "대시보드 | Farming Paper" }];
+  return [...defaultMeta, { title: "Result | Farming Paper" }];
 };
 
 const searchParamsSchema = z.object({

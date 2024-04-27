@@ -1,5 +1,5 @@
 import { NavLink } from "@remix-run/react";
-import { FileText, Tags } from "lucide-react";
+import { FileText } from "lucide-react";
 import { twMerge } from "tailwind-merge";
 
 const links = [
@@ -8,11 +8,11 @@ const links = [
     icon: FileText,
     name: "대시보드",
   },
-  {
-    to: "/tag/list",
-    icon: Tags,
-    name: "태그 관리",
-  },
+  // {
+  //   to: "/tag/list",
+  //   icon: Tags,
+  //   name: "태그 관리",
+  // },
 ];
 
 export default function SideMenuV2() {

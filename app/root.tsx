@@ -1,5 +1,5 @@
 import { cssBundleHref } from "@remix-run/css-bundle";
-import type { LoaderFunctionArgs, MetaFunction } from "@remix-run/node";
+import type { LoaderFunctionArgs } from "@remix-run/node";
 import { json } from "@remix-run/node";
 import {
   Links,
@@ -40,14 +40,6 @@ export function links() {
     ...(cssBundleHref ? [{ rel: "stylesheet", href: cssBundleHref }] : []),
   ];
 }
-
-export const meta: MetaFunction = () => [
-  {
-    title: "Farming Paper",
-  },
-  { charSet: "utf-8" },
-  { name: "viewport", content: "width=device-width,initial-scale=1" },
-];
 
 export const loader = async ({ request }: LoaderFunctionArgs) => {
   const response = new Response();

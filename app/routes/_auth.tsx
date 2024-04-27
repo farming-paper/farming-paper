@@ -1,9 +1,17 @@
 import { Button, Link } from "@nextui-org/react";
+import type { MetaFunction } from "@remix-run/node";
 import {
   Link as RemixLink,
   isRouteErrorResponse,
   useRouteError,
 } from "@remix-run/react";
+
+export const meta: MetaFunction = ({ matches }) => {
+  const parentMeta = matches
+    .flatMap((match) => match.meta ?? [])
+    .filter((meta) => !("title" in meta));
+  return [...parentMeta, { title: "AUTH" }];
+};
 
 export function ErrorBoundary() {
   const caught = useRouteError();

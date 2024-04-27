@@ -13,6 +13,7 @@ import DefaultLayout from "~/common/components/DefaultLayout";
 import { DeleteQuestionModalWithButton } from "~/common/components/DeleteQuestionModalWithButton";
 import { SetTagModal } from "~/common/components/SetTagModal";
 import SideMenuV2 from "~/common/components/SideMenuV2";
+import { defaultMeta } from "~/meta";
 import prisma from "~/prisma-client.server";
 import { QuestionProvider } from "~/question/context";
 import { createQuestionContent } from "~/question/create";
@@ -24,11 +25,8 @@ import useDeleteTagFilter from "~/tag/use-delete-tag-filter";
 import type { ITagWithCount } from "~/types";
 import { getObjBigintToNumber } from "~/util";
 
-export const meta: MetaFunction = ({ matches }) => {
-  const parentMeta = matches
-    .flatMap((match) => match.meta ?? [])
-    .filter((meta) => !("title" in meta));
-  return [...parentMeta, { title: "대시보드 | Farming Paper" }];
+export const meta: MetaFunction = () => {
+  return [...defaultMeta, { title: "대시보드 | Farming Paper" }];
 };
 
 const searchParamsSchema = z.object({

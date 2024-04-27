@@ -15,6 +15,7 @@ import DefaultLayout from "~/common/components/DefaultLayout";
 import { DeleteQuestionModalWithButton } from "~/common/components/DeleteQuestionModalWithButton";
 import { SetTagModal } from "~/common/components/SetTagModal";
 import SideMenuV2 from "~/common/components/SideMenuV2";
+import { defaultMeta } from "~/meta";
 import prisma from "~/prisma-client.server";
 import { QuestionProvider } from "~/question/context";
 import { createQuestionContent } from "~/question/create";
@@ -24,11 +25,7 @@ import type { ITagWithCount } from "~/types";
 import { getObjBigintToNumber } from "~/util";
 
 export const meta: MetaFunction = () => {
-  return [
-    {
-      title: "문제 편집 | Farming Paper",
-    },
-  ];
+  return [...defaultMeta, { title: "문제 편집 | Farming Paper" }];
 };
 
 const searchParamsSchema = z.object({

@@ -10,6 +10,7 @@ import solveAction from "~/actions/solve";
 import { requireAuth } from "~/auth/get-session";
 import DefaultLayout from "~/common/components/DefaultLayout";
 import SideMenuV2 from "~/common/components/SideMenuV2";
+import { defaultMeta } from "~/meta";
 import prisma from "~/prisma-client.server";
 import SolveQuestion from "~/question/SolveQuestion";
 import SolveSubmitButton from "~/question/SolveSubmitButton";
@@ -21,7 +22,7 @@ import type { Question, QuestionContent } from "~/question/types";
 import { getObjBigintToNumber } from "~/util";
 
 export const meta: MetaFunction = () => {
-  return [{ title: "대시보드 | Farming Paper" }];
+  return [...defaultMeta, { title: "Solve | Farming Paper" }];
 };
 
 const requireParams = (request: Request) => {
