@@ -32,7 +32,6 @@
     "@floating-ui/react": "^0.26.12",
     "@headlessui/react": "^1.7.19",
     "@heroicons/react": "^2.1.3",
-    "@nextui-org/pagination": "^2.0.30",
     "@nextui-org/react": "^2.3.6",
     "@prisma/client": "^5.13.0",
     "@rehookify/datepicker": "^6.6.1",
