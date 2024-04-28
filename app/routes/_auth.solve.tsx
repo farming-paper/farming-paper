@@ -3,6 +3,7 @@ import type { LoaderFunctionArgs, MetaFunction } from "@remix-run/node";
 import { json } from "@remix-run/node";
 import { useLoaderData, useSearchParams } from "@remix-run/react";
 import dayjs from "dayjs";
+import { Provider } from "jotai";
 import { useEffect, useMemo } from "react";
 import { toast } from "react-toastify";
 import { z } from "zod";
@@ -183,33 +184,35 @@ export default function Dashboard() {
           풀었습니다. (최근 1달간. 문제 수정 시 초기화)
         </div>
         <QuestionProvider question={question}>
-          <SolveQuestion />
-          <div className="flex flex-row-reverse justify-between mt-3">
-            <div>
-              <SolveSubmitButton />
+          <Provider>
+            <SolveQuestion />
+            <div className="flex flex-row-reverse justify-between mt-3">
+              <div>
+                <SolveSubmitButton />
+              </div>
+              <div className="flex justify-center gap-2">
+                <Button
+                  href={`/pass?tags=${params.get("tags")}&question_public_id=${
+                    question.publicId
+                  }`}
+                  as={Link}
+                  variant="flat"
+                >
+                  Pass
+                </Button>
+                <Button
+                  href={`/q/edit/${question.publicId}?tags=${params.get(
+                    "tags"
+                  )}&back=solve`}
+                  as={Link}
+                  color="default"
+                  variant="flat"
+                >
+                  Edit
+                </Button>
+              </div>
             </div>
-            <div className="flex justify-center gap-2">
-              <Button
-                href={`/pass?tags=${params.get("tags")}&question_public_id=${
-                  question.publicId
-                }`}
-                as={Link}
-                variant="flat"
-              >
-                Pass
-              </Button>
-              <Button
-                href={`/q/edit/${question.publicId}?tags=${params.get(
-                  "tags"
-                )}&back=solve`}
-                as={Link}
-                color="default"
-                variant="flat"
-              >
-                Edit
-              </Button>
-            </div>
-          </div>
+          </Provider>
         </QuestionProvider>
       </div>
     </DefaultLayout>

@@ -38,6 +38,7 @@ export const useGetBlankAtom = () => {
 
 export const useBlankSubmissionMap = () => {
   const [blankSubmissionMap] = useAtom(blankSubmissionMapAtom);
+
   return blankSubmissionMap;
 };
 
@@ -57,45 +58,7 @@ export const useSetBlankSubmission = () => {
   return setBlankSubmission;
 };
 
-// const solveBlankContext = createContext<{
-//   getBlankAtom: (id: string) => SolveBlankAtomType;
-// } | null>(null);
-
-// export function SolveBlankProvider({
-//   children,
-// }: {
-//   children: React.ReactNode;
-// }) {
-//   const [blankMap, setBlankMap] = useAtom(blankMapAtom);
-
-//   const getBlankAtom = (id: string) => {
-//     const blank = blankMap[id];
-//     if (blank) {
-//       return blank;
-//     }
-
-//     const newBlank = atom("");
-//     setBlankMap((prev) => ({ ...prev, [id]: newBlank }));
-//     return newBlank;
-//   };
-
-//   return (
-//     <solveBlankContext.Provider
-//       value={{
-//         getBlankAtom,
-//       }}
-//     >
-//       {children}
-//     </solveBlankContext.Provider>
-//   );
-// }
-
 export function useBlankAtom(correct: string) {
   const getBlankAtom = useGetBlankAtom();
   return useAtom(getBlankAtom(correct));
-}
-
-export function useBlanksAtom() {
-  const [blankMap] = useAtom(blankMapAtom);
-  return blankMap;
 }
