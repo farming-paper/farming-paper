@@ -117,7 +117,7 @@ export default function ParagrahEditor({
   const submit = useSubmit();
 
   const converted = useMemo(
-    () => convertMarkdownToDescendants(question.content.message),
+    () => convertMarkdownToDescendants(question.content.message || ""),
     [question.content.message]
   );
 

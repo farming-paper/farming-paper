@@ -31,7 +31,7 @@ declare module "slate" {
 
 export interface IBaseQuestion {
   id: string;
-  message: string;
+  message?: string;
   descendants?: Descendant[];
   weight?: number;
   ignoreWhitespace?: boolean;
@@ -45,7 +45,7 @@ export interface IShortQuestion extends IBaseQuestion {
 // 답이 여러개이고, 순서가 중요함. ", " 등으로 구분함.
 export interface IShortOrderQuestion extends IBaseQuestion {
   type: "short_order";
-  corrects: string[];
+  // corrects: string[];
 }
 
 export interface IShortMultiAnswerQuestion extends IBaseQuestion {

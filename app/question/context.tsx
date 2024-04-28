@@ -14,7 +14,6 @@ const context = createContext<{
     originalId: -1,
     content: {
       type: "short_order",
-      corrects: [],
       id: "",
       message: "",
     },

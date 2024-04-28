@@ -62,7 +62,6 @@ export function createShortOrderQuestion(
     ...args,
     type: "short_order",
     message: args?.message || "",
-    corrects: removeUndefined(args?.corrects),
     descendants: args?.descendants || [
       { type: "paragraph", children: [{ text: "" }] },
     ],

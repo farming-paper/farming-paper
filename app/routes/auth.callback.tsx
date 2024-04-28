@@ -4,6 +4,7 @@ import { createServerClient } from "@supabase/auth-helpers-remix";
 import { nanoid } from "nanoid";
 import { getClientSideSupabaseConfig } from "~/config";
 import { createQuestionContent } from "~/question/create";
+import { QuestionContent } from "~/question/types";
 import { getServerSideSupabaseClient } from "~/supabase/client";
 import type { Database, Json } from "~/supabase/generated/supabase-types";
 
@@ -75,38 +76,130 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
   }
 
   const user = userRes.data;
-  const qs = [
+  const qs: Partial<QuestionContent>[] = [
     {
-      message: "제주도에서 가장 높은 산의 이름은?",
-      corrects: ["한라산"],
+      type: "short_order",
+      descendants: [
+        {
+          type: "paragraph",
+          children: [
+            { text: "제주도에서 가장 높은 산은 " },
+            { type: "blank", children: [{ text: "한라산" }] },
+            { text: "입니다." },
+          ],
+        },
+      ],
     },
     {
-      message:
-        "___ 은 대한민국의 수도입니다. 그리고 ___ 은 한국의 최대 해양도시로, 해운대가 이곳에 있습니다. (답변의 구분은 쉼표(,)로 합니다. 추후 업데이트 예정)",
-      corrects: ["서울", "부산"],
+      type: "short_order",
+      descendants: [
+        {
+          type: "paragraph",
+          children: [
+            { text: "" },
+            { type: "blank", children: [{ text: "서울" }] },
+            { text: "은 대한민국의 수도입니다. 그리고 " },
+            { type: "blank", children: [{ text: "부산" }] },
+            { text: "은 한국의 최대 해양도시로, 해운대가 이곳에 있습니다." },
+          ],
+        },
+      ],
     },
     {
-      message:
-        "___ : 대한민국의 7인조 보이그룹으로, 'Dynamite'로 빌보드 핫 100 1위를 했었다.",
-      corrects: ["방탄소년단"],
+      type: "short_order",
+      descendants: [
+        {
+          type: "paragraph",
+          children: [
+            { text: "영화 '기생충'으로 전 세계 영화상을 휩쓴 " },
+            { type: "blank", children: [{ text: "봉준호" }] },
+            {
+              text: "는 예술성과 오락성 그리고 대중성과 독창성을 모두 인정받은 영화감독 중 한 명으로 꼽힌다. 또한 ",
+            },
+            { type: "blank", children: [{ text: "봉준호" }] },
+            { text: "는 겸손하고 따뜻한 인품을 가진 영화감독으로 유명하다." },
+          ],
+        },
+      ],
     },
     {
-      message: "You’d ___ get cleaned up. (너 좀 씻는 게 좋겠다.)",
-      corrects: ["better"],
+      type: "short_order",
+      descendants: [
+        {
+          type: "paragraph",
+          children: [
+            { text: "You’d " },
+            { type: "blank", children: [{ text: "better" }] },
+            { text: " get cleaned up." },
+          ],
+        },
+        { type: "paragraph", children: [{ text: "너 좀 씻는 게 좋겠다." }] },
+      ],
     },
     {
-      message:
-        "___ you for your ___ invitation. (**친절**하게 초대해 주셔서 **감사**합니다.) (답변의 구분은 쉼표(,)로 합니다. 추후 업데이트 예정)",
-      corrects: ["Thank", "kind"],
+      type: "short_order",
+      descendants: [
+        {
+          type: "paragraph",
+          children: [
+            { text: "" },
+            { type: "blank", children: [{ text: "Thank" }] },
+            { text: " you for your " },
+            { type: "blank", children: [{ text: "kind" }] },
+            { text: " invitation." },
+          ],
+        },
+        {
+          type: "paragraph",
+          children: [{ text: "친절하게 초대해 주셔서 감사합니다." }],
+        },
+      ],
     },
     {
-      message: `다음 정의에 맞는 단어를 쓰세요.
-
-1. NOUN a procedure intended to establish the quality, performance, or reliability of something, especially before it is taken into widespread use
-2. NOUN a short written or spoken examination of a person's proficiency or knowledge
-3. VERB take measures to check the quality, performance, or reliability of (something), especially before putting it into widespread use or practice
-4. VERB give (someone) a short written or oral examination of their proficiency or knowledge`,
-      corrects: ["test"],
+      type: "short_order",
+      descendants: [
+        {
+          type: "paragraph",
+          children: [
+            { text: "다음 정의에 맞는 단어는 무엇일까요? \u003e " },
+            { type: "blank", children: [{ text: "test" }] },
+            { text: "" },
+          ],
+        },
+        { type: "paragraph", children: [{ text: "" }] },
+        {
+          type: "paragraph",
+          children: [
+            {
+              text: "1. NOUN a procedure intended to establish the quality, performance, or reliability of something, especially before it is taken into widespread use",
+            },
+          ],
+        },
+        {
+          type: "paragraph",
+          children: [
+            {
+              text: "2. NOUN a short written or spoken examination of a person's proficiency or knowledge",
+            },
+          ],
+        },
+        {
+          type: "paragraph",
+          children: [
+            {
+              text: "3. VERB take measures to check the quality, performance, or reliability of (something), especially before putting it into widespread use or practice",
+            },
+          ],
+        },
+        {
+          type: "paragraph",
+          children: [
+            {
+              text: "4. VERB give (someone) a short written or oral examination of their proficiency or knowledge",
+            },
+          ],
+        },
+      ],
     },
   ];
 
@@ -114,15 +207,11 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
     db
       .from("questions")
       .insert(
-        qs.map(({ message, corrects }) => {
+        qs.map((questionContent) => {
           return {
             creator: user.id,
             public_id: nanoid(),
-            content: createQuestionContent({
-              type: "short_order",
-              corrects,
-              message,
-            }) as unknown as Json,
+            content: createQuestionContent(questionContent) as unknown as Json,
           };
         })
       )

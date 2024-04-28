@@ -334,16 +334,6 @@ export default function Dashboard() {
                         key={question.originalId || question.id}
                         autoSave
                       />
-
-                      {question.content.type === "short_order" && (
-                        <div className="text-right">
-                          {question.content.corrects.length > 0 && (
-                            <span className="text-sm font-medium text-gray-400 select-none">
-                              정답: {question.content.corrects.join(", ")}
-                            </span>
-                          )}
-                        </div>
-                      )}
                     </div>
                   </div>
                 </div>
