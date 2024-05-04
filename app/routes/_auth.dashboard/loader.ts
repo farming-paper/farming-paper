@@ -86,7 +86,9 @@ export async function loader({ request }: LoaderFunctionArgs) {
         desc: true,
         _count: {
           select: {
-            tags_questions_relation: true,
+            tags_questions_relation: {
+              where: { questions: { deleted_at: null } },
+            },
           },
         },
       },

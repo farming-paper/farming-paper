@@ -97,6 +97,7 @@ export async function action({ request }: ActionFunctionArgs) {
           original_id: true,
           tags_questions_relation: {
             select: {
+              id: true,
               q: true,
               tag: true,
             },
@@ -112,8 +113,9 @@ export async function action({ request }: ActionFunctionArgs) {
           public_id: nanoid(),
           original_id: deleted.original_id ? deleted.original_id : deleted.id,
           tags_questions_relation: {
-            create: deleted.tags_questions_relation.map((tqr) => ({
-              tag: tqr.tag,
+            // 기존에 있었던 태그를 옮겨줌
+            connect: deleted.tags_questions_relation.map((tqr) => ({
+              id: tqr.id,
             })),
           },
         },
