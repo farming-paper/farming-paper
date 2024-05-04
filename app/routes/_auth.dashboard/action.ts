@@ -7,8 +7,9 @@ import { requireAuth } from "~/auth/get-session";
 import prisma from "~/prisma-client.server";
 import { createQuestionContent } from "~/question/create";
 import { getObjBigintToNumber } from "~/util";
+import { searchParamsSchema } from "./searchParamsSchema";
 
-export const validator = withZod(
+const validator = withZod(
   z.discriminatedUnion("intent", [
     z.object({
       intent: z.literal("remove_question"),
@@ -44,10 +45,13 @@ export const validator = withZod(
   ])
 );
 
-export default async function dashboardAction({ request }: ActionFunctionArgs) {
+export async function action({ request }: ActionFunctionArgs) {
   const { profile } = await requireAuth(request);
   const formData = await request.formData();
   const action = await validator.validate(formData);
+  const searchParamsValidation = searchParamsSchema.safeParse(
+    Object.fromEntries(new URL(request.url).searchParams)
+  );
 
   if (action.error) {
     return json(
@@ -59,7 +63,18 @@ export default async function dashboardAction({ request }: ActionFunctionArgs) {
     );
   }
 
+  if (!searchParamsValidation.success) {
+    return json(
+      {
+        data: null,
+        error: searchParamsValidation.error,
+      },
+      { status: 400 }
+    );
+  }
+
   const data = action.data;
+  const searchParams = searchParamsValidation.data;
 
   switch (data.intent) {
     case "update_question_content": {
@@ -158,6 +173,21 @@ export default async function dashboardAction({ request }: ActionFunctionArgs) {
           },
         },
       });
+
+      // 만약 선택한 태그가 있었다면 그것도 같이 추가
+      if (searchParams.tags) {
+        await Promise.all(
+          searchParams.tags.map((tag) =>
+            prisma.tags_questions_relation.create({
+              data: {
+                questions: { connect: { id: row.id } },
+                tags: { connect: { public_id: tag } },
+              },
+            })
+          )
+        );
+      }
+
       return json({ data: row.public_id, error: null });
     }
 
