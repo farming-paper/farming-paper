@@ -169,7 +169,7 @@ export default function Dashboard() {
               toolbar={
                 <div className="flex transition opacity-0 group-hover:opacity-100 group-has-[*:focus]:opacity-100 group-has-[[aria-expanded=true]]:opacity-100">
                   <div
-                    className="flex items-center py-1 text-xs text-gray-400 gap-2.5 overflow-hidden select-none"
+                    className="flex items-center py-1 text-xs text-gray-400 gap-2.5 select-none"
                     style={{
                       backgroundColor: "rgba(249, 250, 251, 0.3)",
                     }}

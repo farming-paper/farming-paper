@@ -1,60 +1,13 @@
 import { RectangleHorizontal } from "lucide-react";
 import { useEffect, useRef } from "react";
 import { createPortal } from "react-dom";
-import { Editor, Element, Range, Transforms } from "slate";
+import { Editor, Range } from "slate";
 import { useFocused, useSlate } from "slate-react";
 import { twMerge } from "tailwind-merge";
 import useThrottleFunc from "~/common/hooks/use-throttle-func";
-import type { BlankElement } from "../types";
-
-const unwrapBlank = (editor: Editor) => {
-  Transforms.unwrapNodes(editor, {
-    match: (n) =>
-      !Editor.isEditor(n) && Element.isElement(n) && n.type === "blank",
-  });
-};
-
-const wrapBlankWithSelection = (editor: Editor) => {
-  const { selection } = editor;
-  const isCollapsed = selection && Range.isCollapsed(selection);
-  if (isCollapsed || !selection) {
-    return;
-  }
-
-  // 영역에서 왼쪽과 오른쪽의 공백을 제거합니다.
-  const str = Editor.string(editor, selection);
-  const leftSpace = str.match(/^\s+/)?.[0].length ?? 0;
-  const rightSpace = str.match(/\s+$/)?.[0].length ?? 0;
-
-  if (leftSpace === str.length) {
-    return;
-  }
-
-  Transforms.setSelection(editor, {
-    anchor: {
-      path: selection.anchor.path,
-      offset: selection.anchor.offset + leftSpace,
-    },
-    focus: {
-      path: selection.focus.path,
-      offset: selection.focus.offset - rightSpace,
-    },
-  });
-
-  const blankElement: BlankElement = {
-    type: "blank",
-    children: [],
-  };
-  Transforms.wrapNodes(editor, blankElement, { split: true });
-};
-
-const isBlankActive = (editor: Editor) => {
-  const [blank] = Editor.nodes(editor, {
-    match: (n) =>
-      !Editor.isEditor(n) && Element.isElement(n) && n.type === "blank",
-  });
-  return !!blank;
-};
+import { isBlankActive } from "./isBlankActive";
+import { unwrapBlank } from "./unwrapBlank";
+import { wrapBlankWithSelection } from "./wrapBlankWithSelection";
 
 const setStyle = (el: HTMLElement, rect: DOMRect) => {
   el.style.opacity = "1";

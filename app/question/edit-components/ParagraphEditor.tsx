@@ -13,6 +13,9 @@ import { useQuestion } from "../context";
 import { convertMarkdownToDescendants } from "../slate";
 import type { QuestionContent } from "../types";
 import HoveringToolbar from "./HoveringToolbar";
+import { isBlankActive } from "./isBlankActive";
+import { unwrapBlank } from "./unwrapBlank";
+import { wrapBlankWithSelection } from "./wrapBlankWithSelection";
 
 /** @see https://github.com/ianstormtaylor/slate/blob/main/site/examples/inlines.tsx */
 const withInlines = (editor: Editor) => {
@@ -187,6 +190,18 @@ export default function ParagrahEditor({
         Transforms.move(editor, { unit: "offset" });
         return;
       }
+    }
+
+    // if (isKeyHotkey("mod+enter", event.nativeEvent)) {
+    //   event.preventDefault();
+    //   submit(formRef.current);
+    // }
+
+    if (isKeyHotkey("mod+b", event.nativeEvent)) {
+      event.preventDefault();
+      isBlankActive(editor)
+        ? unwrapBlank(editor)
+        : wrapBlankWithSelection(editor);
     }
   };
 
