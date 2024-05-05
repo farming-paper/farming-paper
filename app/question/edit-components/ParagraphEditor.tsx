@@ -81,7 +81,11 @@ const ElementComponent = (props: RenderElementProps) => {
     case "blank":
       return <BlankComponent {...props} element={element} />;
     case "paragraph":
-      return <p {...attributes}>{children}</p>;
+      return (
+        <p {...attributes} className={twMerge("mb-2 last:mb-0")}>
+          {children}
+        </p>
+      );
   }
 };
 

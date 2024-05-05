@@ -13,7 +13,7 @@ export function SolveParagraph({
   path: number[];
   children?: React.ReactNode;
 }) {
-  return <div className="leading-10">{children}</div>;
+  return <div className="mb-2">{children}</div>;
 }
 
 export function SolveBlank({
@@ -58,8 +58,8 @@ export function SolveBlank({
       size="sm"
       value={value}
       classNames={{
-        input: "w-auto text-base",
-        base: "w-auto inline-flex",
+        input: "w-auto text-base ",
+        base: "w-auto inline-flex my-0.5",
         inputWrapper: "w-auto",
       }}
       style={{ width: `${width}px` }}

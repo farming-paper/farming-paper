@@ -13,7 +13,7 @@ export function ResultParagraph({
   path: number[];
   children?: React.ReactNode;
 }) {
-  return <p>{children}</p>;
+  return <p className="mb-2">{children}</p>;
 }
 
 const styleContext = createContext<{
