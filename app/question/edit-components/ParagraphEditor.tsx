@@ -82,7 +82,7 @@ const ElementComponent = (props: RenderElementProps) => {
       return <BlankComponent {...props} element={element} />;
     case "paragraph":
       return (
-        <p {...attributes} className={twMerge("mb-2 last:mb-0")}>
+        <p {...attributes} className={twMerge("mb-2")}>
           {children}
         </p>
       );
@@ -106,9 +106,17 @@ const TextComponent = (props: RenderLeafProps) => {
 export default function ParagrahEditor({
   autoSave = false,
   onContentChange,
+  number,
+  toolbar,
+  className,
+  position,
 }: {
   autoSave?: boolean;
   onContentChange?: (content: QuestionContent) => void;
+  toolbar?: React.ReactNode;
+  number?: React.ReactNode;
+  className?: string;
+  position?: "first" | "last";
 }) {
   const question = useQuestion();
   const editor = useMemo(
@@ -183,52 +191,70 @@ export default function ParagrahEditor({
   };
 
   return (
-    <Form method="post" ref={formRef}>
-      <Slate
-        editor={editor}
-        initialValue={value}
-        onValueChange={(value) => {
-          setValue(value);
-          if (autoSave) {
-            throttledSubmit();
+    <div
+      className={twMerge("relative", className)}
+      style={
+        {
+          "--additional-top-padding": position === "first" ? "120px" : "0px",
+          "--additional-bottom-padding": position === "last" ? "120px" : "0px",
+        } as React.CSSProperties
+      }
+    >
+      {toolbar && (
+        <div
+          className={
+            "absolute top-[calc(0px+var(--additional-top-padding))] left-[max(calc((100%-700px)/2),0.5rem)] z-10"
           }
-        }}
-      >
-        <ClientOnly>{() => <HoveringToolbar />}</ClientOnly>
-        {/* <Toolbar>
-        <AddLinkButton />
-        <RemoveLinkButton />
-        <ToggleEditableButtonButton />
-      </Toolbar> */}
-        <Editable
-          className="focus:outline-none focus:ring-0"
-          renderElement={ElementComponent}
-          renderLeaf={TextComponent}
-          placeholder="학습한 내용을 주저리주저리 써보세요."
-          // onDOMBeforeInput={(event: InputEvent) => {
-          //    console.log("event", event);
-          //    switch (event.inputType) {
-          //      case "formatBold":
-          //        event.preventDefault();
-          //        return toggleMark(editor, "bold");
-          //      case "formatItalic":
-          //        event.preventDefault();
-          //        return toggleMark(editor, "italic");
-          //      case "formatUnderline":
-          //        event.preventDefault();
-          //        return toggleMark(editor, "underlined");
-          //    }
-          // }}
-          onKeyDown={onKeyDown}
+        >
+          {toolbar}
+        </div>
+      )}
+      {number && (
+        <div className="absolute top-0 left-[max(calc((100%-700px)/2),0.5rem)] z-10">
+          {number}
+        </div>
+      )}
+      <Form method="post" ref={formRef}>
+        <Slate
+          editor={editor}
+          initialValue={value}
+          onValueChange={(value) => {
+            setValue(value);
+            if (autoSave) {
+              throttledSubmit();
+            }
+          }}
+        >
+          <ClientOnly>{() => <HoveringToolbar />}</ClientOnly>
+          <Editable
+            className={twMerge(
+              "mx-auto focus:outline-none focus:ring-0 px-[max(calc((100%-700px)/2),0.5rem)] min-w-[700px] pt-[calc(28px+var(--additional-top-padding))] pb-px leading-normal",
+              position === "last" && "pb-[var(--additional-bottom-padding)]"
+            )}
+            renderElement={ElementComponent}
+            renderLeaf={TextComponent}
+            placeholder="학습한 내용을 주저리주저리 써보세요."
+            onKeyDown={onKeyDown}
+            renderPlaceholder={(props) => (
+              <span
+                {...props.attributes}
+                style={{}}
+                className="absolute italic text-gray-300 pointer-events-none select-none"
+                contentEditable={false}
+              >
+                {props.children}
+              </span>
+            )}
+          />
+        </Slate>
+        <input
+          type="hidden"
+          name="content"
+          value={JSON.stringify(questionContent)}
         />
-      </Slate>
-      <input
-        type="hidden"
-        name="content"
-        value={JSON.stringify(questionContent)}
-      />
-      <input type="hidden" name="intent" value="update_question_content" />
-      <input type="hidden" name="public_id" value={question.publicId} />
-    </Form>
+        <input type="hidden" name="intent" value="update_question_content" />
+        <input type="hidden" name="public_id" value={question.publicId} />
+      </Form>
+    </div>
   );
 }

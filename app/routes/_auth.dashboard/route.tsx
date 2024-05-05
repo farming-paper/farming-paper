@@ -4,6 +4,7 @@ import { Form, useLoaderData, useSearchParams } from "@remix-run/react";
 import dayjs from "dayjs";
 import { Plus, Tag, Trash2 } from "lucide-react";
 import { useMemo } from "react";
+import { twMerge } from "tailwind-merge";
 import DefaultLayout from "~/common/components/DefaultLayout";
 import { DeleteQuestionModalWithButton } from "~/common/components/DeleteQuestionModalWithButton";
 import { SetTagModal } from "~/common/components/SetTagModal";
@@ -68,17 +69,15 @@ export default function Dashboard() {
   const startIndex = count - (page - 1) * 10;
 
   return (
-    <DefaultLayout sidebarTop={<SideMenuV2 />}>
-      <div
-        className="box-border px-10 mx-auto mt-20 mb-20"
-        style={{ width: "calc(700px + 3rem)" }}
-      >
+    <DefaultLayout sidebarTop={<SideMenuV2 />} className="relative">
+      <div className="absolute left-0 right-0 z-10 flex flex-col items-center justify-center pointer-events-none mt-14">
         {/* tags */}
         <div className="flex flex-wrap gap-2.5 mb-4">
           {tagFilters.map((tag) => {
             if (tag.name) {
               return (
                 <TagFilterChip
+                  className="pointer-events-auto"
                   key={tag.publicId}
                   name={tag.name}
                   active={tag.active}
@@ -97,138 +96,119 @@ export default function Dashboard() {
         </div>
 
         {/* header toolbar */}
-        <div className="flex items-center gap-4 mb-10 ">
-          <Form method="post">
-            <input type="hidden" name="intent" value="create_question" />
-            <Button
-              isIconOnly
-              variant="shadow"
-              className="text-white bg-primary min-w-11"
-              type="submit"
-            >
-              <span className="sr-only">단락 추가</span>
-              <Plus className="w-4.5 h-4.5 " aria-hidden />
-            </Button>
-          </Form>
-          {(activeTagPublicIds || []).length > 0 && (
-            <div className="flex items-center gap-4">
-              <ButtonGroup variant="shadow">
-                <Button
-                  as={Link}
-                  className="text-white bg-primary min-w-11"
-                  href={`/solve?tags=${params.get("tags")}`}
-                >
-                  <span>
-                    Solve <span className="font-bold">{count}</span> Question
-                    {count > 1 ? "s" : ""}
-                  </span>
-                </Button>
-                {/* <Button
-                  className="text-gray-600 bg-gray-50 min-w-11"
-                  isIconOnly
-                >
-                  <span className="sr-only">일괄 수정</span>
-                  <FileEdit className="w-4.5 h-4.5" aria-hidden />
-                </Button>
-                <Button
-                  className="text-gray-600 bg-gray-50 min-w-11"
-                  isIconOnly
-                >
-                  <span className="sr-only">일괄 삭제</span>
-                  <Trash2 className="w-4.5 h-4.5 " aria-hidden />
-                </Button> */}
-              </ButtonGroup>
-            </div>
-          )}
-        </div>
-
-        {/* questions */}
-        <div className="mb-10 space-y-2">
-          {questions.map((question, index) => {
-            return (
-              // question group
-              <QuestionProvider
-                key={question.originalId || question.id}
-                question={question}
+        <Form method="post">
+          <input type="hidden" name="intent" value="create_question" />
+          <Button
+            isIconOnly
+            variant="shadow"
+            className="text-white pointer-events-auto bg-primary min-w-11"
+            type="submit"
+          >
+            <span className="sr-only">단락 추가</span>
+            <Plus className="w-4.5 h-4.5 " aria-hidden />
+          </Button>
+        </Form>
+        {(activeTagPublicIds || []).length > 0 && (
+          <div className="flex items-center gap-4">
+            <ButtonGroup variant="shadow">
+              <Button
+                as={Link}
+                className="text-white bg-primary min-w-11"
+                href={`/solve?tags=${params.get("tags")}`}
               >
-                <div className="group">
-                  {/* question header */}
-                  <div className="flex transition opacity-0 group-hover:opacity-100 group-has-[*:focus]:opacity-100 group-has-[[aria-expanded=true]]:opacity-100">
-                    <div
-                      className="flex items-center py-1 text-xs text-gray-400 gap-2.5 overflow-hidden select-none"
-                      style={{ backgroundColor: "rgba(249, 250, 251, 0.3)" }}
-                    >
-                      <span className="font-mono font-bold">
-                        {question.createdAt.format("YYYY.MM.DD.")}
-                      </span>
-                      {question.tags.length > 0 && (
-                        <div className="flex items-center gap-0.5">
-                          <Tag className="w-2.5 h-2.5 text-gray-300" />
-                          <span>
-                            {question.tags.map((t) => t.name).join(", ")}
-                          </span>
-                        </div>
-                      )}
-                      <SetTagModal
-                        tags={data.allTags}
-                        TriggerButton={({ onPress }) => (
-                          <Button
-                            onPress={onPress}
-                            variant="light"
-                            className="h-auto min-w-0 pl-0.5 py-0.5 pr-1  text-xs font-bold rounded-sm text-inherit gap-0.5"
-                            startContent={
-                              <Plus className="w-3 h-3 text-gray-300 " />
-                            }
-                            disableRipple
-                          >
-                            태그 추가
-                          </Button>
-                        )}
-                      />
-                      <DeleteQuestionModalWithButton
-                        TriggerButton={({ onPress }) => (
-                          <Button
-                            onPress={onPress}
-                            variant="light"
-                            className="h-auto min-w-0 px-1 py-1 rounded-sm text-inherit"
-                          >
-                            <Trash2 className="w-3.5 h-3.5 " />
-                          </Button>
-                        )}
-                      />
-                    </div>
-                  </div>
+                <span>
+                  Solve <span className="font-bold">{count}</span> Question
+                  {count > 1 ? "s" : ""}
+                </span>
+              </Button>
+            </ButtonGroup>
+          </div>
+        )}
+      </div>
 
-                  {/* question content */}
-                  <div className="flex -ml-6">
-                    <span
-                      className="flex-none ml-1 mr-2 font-mono text-xs text-gray-400 select-none"
-                      style={{ lineHeight: "1.75rem" }}
-                    >
-                      {startIndex - index}.
+      {/* questions */}
+      {questions.map((question, index) => {
+        return (
+          // question group
+          <QuestionProvider
+            key={question.originalId || question.id}
+            question={question}
+          >
+            <ParagrahEditor
+              key={question.originalId || question.id}
+              autoSave
+              toolbar={
+                <div className="flex transition opacity-0 group-hover:opacity-100 group-has-[*:focus]:opacity-100 group-has-[[aria-expanded=true]]:opacity-100">
+                  <div
+                    className="flex items-center py-1 text-xs text-gray-400 gap-2.5 overflow-hidden select-none"
+                    style={{
+                      backgroundColor: "rgba(249, 250, 251, 0.3)",
+                    }}
+                  >
+                    <span className="font-mono">[{startIndex - index}]</span>
+                    <span className="font-mono">
+                      {question.createdAt.format("YYYY.MM.DD.")}
                     </span>
-                    <div className="flex-1 text-gray-800">
-                      <ParagrahEditor
-                        key={question.originalId || question.id}
-                        autoSave
-                      />
-                    </div>
+                    {question.tags.length > 0 && (
+                      <div className="flex items-center gap-0.5">
+                        <Tag className="w-2.5 h-2.5 text-gray-300" />
+                        <span>
+                          {question.tags.map((t) => t.name).join(", ")}
+                        </span>
+                      </div>
+                    )}
+                    <SetTagModal
+                      tags={data.allTags}
+                      TriggerButton={({ onPress }) => (
+                        <Button
+                          onPress={onPress}
+                          variant="light"
+                          className="h-auto min-w-0 pl-0.5 py-0.5 pr-1  text-xs font-bold rounded-sm text-inherit gap-0.5"
+                          startContent={
+                            <Plus className="w-3 h-3 text-gray-300 " />
+                          }
+                          disableRipple
+                        >
+                          태그 추가
+                        </Button>
+                      )}
+                    />
+                    <DeleteQuestionModalWithButton
+                      TriggerButton={({ onPress }) => (
+                        <Button
+                          onPress={onPress}
+                          variant="light"
+                          className="h-auto min-w-0 px-1 py-1 rounded-sm text-inherit"
+                        >
+                          <Trash2 className="w-3.5 h-3.5 " />
+                        </Button>
+                      )}
+                    />
                   </div>
                 </div>
-              </QuestionProvider>
-            );
-          })}
-        </div>
+              }
+              className={twMerge("flex-1 text-gray-800 group")}
+              position={
+                index === 0
+                  ? "first"
+                  : index === questions.length - 1
+                  ? "last"
+                  : undefined
+              }
+            />
+          </QuestionProvider>
+        );
+      })}
 
-        {/* pagination */}
-        <Pagination
-          total={Math.ceil(count / 10)}
-          page={page}
-          onChange={(page) => {
-            setParams({ page: page.toString() });
-          }}
-        />
-      </div>
+      {/* pagination */}
+      <Pagination
+        className="absolute bottom-0 z-10 flex justify-center pb-10 mx-auto my-0 -translate-x-1/2 left-1/2"
+        total={Math.ceil(count / 10)}
+        page={page}
+        onChange={(page) => {
+          setParams({ page: page.toString() });
+        }}
+      />
     </DefaultLayout>
   );
 }

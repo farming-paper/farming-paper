@@ -1,6 +1,5 @@
 /* eslint-disable @typescript-eslint/no-var-requires */
 import { nextui } from "@nextui-org/react";
-import containerQueries from "@tailwindcss/container-queries";
 import colors from "tailwindcss/colors";
 import defaultTheme from "tailwindcss/defaultTheme";
 
@@ -23,5 +22,5 @@ export default {
     },
   },
   darkMode: "class",
-  plugins: [nextui(), containerQueries],
+  plugins: [nextui()],
 };

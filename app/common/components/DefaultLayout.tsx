@@ -1,4 +1,5 @@
 import type { ReactNode } from "react";
+import { twMerge } from "tailwind-merge";
 
 export default function DefaultLayout({
   children,
@@ -6,12 +7,14 @@ export default function DefaultLayout({
   header,
   sidebarBottom,
   sidebarTop,
+  className,
 }: {
   children: ReactNode;
   sidebarTop?: ReactNode;
   sidebarBottom?: ReactNode;
   header?: ReactNode;
   footer?: ReactNode;
+  className?: string;
 }) {
   return (
     <div className="flex">
@@ -20,7 +23,7 @@ export default function DefaultLayout({
         <div>{sidebarBottom}</div>
       </div>
 
-      <div className="flex-1 min-h-screen">
+      <div className={twMerge("flex-1 min-h-screen", className)}>
         {header}
         {children}
         {footer}

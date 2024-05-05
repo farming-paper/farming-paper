@@ -101,7 +101,7 @@ export default function Root() {
         <Meta />
         <Links />
       </head>
-      <body className="@container text-foreground bg-background light">
+      <body className="text-foreground bg-background light">
         <NextUIProvider navigate={navigate}>
           <Outlet context={{ supabase, session }} />
         </NextUIProvider>
