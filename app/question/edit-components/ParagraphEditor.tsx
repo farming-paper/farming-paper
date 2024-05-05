@@ -64,7 +64,7 @@ const BlankComponent = ({
     <span
       {...attributes}
       className={twMerge(
-        "rounded bg-gray-100 border-2 border-transparent font-medium text-black px-0.5 -my-[2px] transition",
+        "rounded bg-gray-100 border-2 border-transparent font-medium text-black -mx-[2px] -my-[2px] transition",
         selected ? "border-gray-300" : ""
       )}
     >
