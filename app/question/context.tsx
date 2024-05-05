@@ -1,6 +1,6 @@
 import dayjs from "dayjs";
 import type { ReactNode } from "react";
-import { createContext, useContext, useEffect, useState } from "react";
+import { createContext, useContext, useEffect, useRef, useState } from "react";
 import { noopFunction } from "~/util";
 import type { Question } from "./types";
 
@@ -28,18 +28,21 @@ const context = createContext<{
 export function QuestionProvider({
   question: questionProp,
   children,
+  updateContent = false,
 }: {
   question: Question;
   children: ReactNode;
+  updateContent?: boolean;
 }) {
   const [question, setQuestionState] = useState(questionProp);
+  const updateContentRef = useRef(updateContent);
 
   useEffect(() => {
     setQuestionState((prev) => {
       // content 만 업데이트하지 않는다.
       return {
         ...questionProp,
-        content: prev.content,
+        content: updateContentRef.current ? questionProp.content : prev.content,
       };
     });
   }, [questionProp]);

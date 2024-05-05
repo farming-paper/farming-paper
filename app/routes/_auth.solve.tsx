@@ -1,7 +1,11 @@
 import { Button, Link } from "@nextui-org/react";
 import type { LoaderFunctionArgs, MetaFunction } from "@remix-run/node";
 import { json } from "@remix-run/node";
-import { useLoaderData, useSearchParams } from "@remix-run/react";
+import {
+  useLoaderData,
+  useRevalidator,
+  useSearchParams,
+} from "@remix-run/react";
 import dayjs from "dayjs";
 import { Provider } from "jotai";
 import { useEffect, useMemo } from "react";
@@ -173,6 +177,8 @@ export default function Dashboard() {
     [q]
   );
 
+  const revalidator = useRevalidator();
+
   return (
     <DefaultLayout sidebarTop={<SideMenuV2 />}>
       <div
@@ -183,7 +189,7 @@ export default function Dashboard() {
           문제는 총 {questionPoolCount}개, 당신은 {todayCount} 문제를
           풀었습니다. (최근 1달간. 문제 수정 시 초기화)
         </div>
-        <QuestionProvider question={question}>
+        <QuestionProvider question={question} updateContent>
           <Provider>
             <SolveQuestion />
             <div className="flex flex-row-reverse justify-between mt-3">
@@ -209,6 +215,15 @@ export default function Dashboard() {
                   variant="flat"
                 >
                   Edit
+                </Button>
+                <Button
+                  onPress={() => {
+                    revalidator.revalidate();
+                  }}
+                  color="default"
+                  variant="flat"
+                >
+                  Reroll
                 </Button>
               </div>
             </div>
