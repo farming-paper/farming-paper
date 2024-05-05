@@ -23,7 +23,7 @@
     "remix.env.d.ts",
     "**/*.ts",
     "**/*.tsx",
-    ".eslintrc.js",
+    ".eslintrc.cjs",
     "tailwind.config.js",
     "server.js",
     "tests/setup.js"

@@ -1,4 +1,7 @@
-module.exports = {
+// @ts-check
+
+/** @type {import("eslint").Linter.Config} */
+const config = {
   extends: ["@remix-run/eslint-config", "@remix-run/eslint-config/node"],
   parser: "@typescript-eslint/parser",
   parserOptions: {
@@ -61,4 +64,15 @@ module.exports = {
       },
     ],
   },
+  ignorePatterns: [
+    "remix.config.js",
+    "node_modules",
+    "build",
+    "api",
+    "node_modules",
+    "build",
+    "public/build",
+  ],
 };
+
+module.exports = config;

@@ -3,7 +3,7 @@ import type { MetaFunction } from "@remix-run/node";
 import { Form, useLoaderData, useSearchParams } from "@remix-run/react";
 import dayjs from "dayjs";
 import { Plus, Tag, Trash2 } from "lucide-react";
-import { useMemo } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { twMerge } from "tailwind-merge";
 import DefaultLayout from "~/common/components/DefaultLayout";
 import { DeleteQuestionModalWithButton } from "~/common/components/DeleteQuestionModalWithButton";
@@ -16,7 +16,8 @@ import type { Question } from "~/question/types";
 import TagFilterChip from "~/tag/component/tag-filter-chip";
 import useAddTagFilter from "~/tag/use-add-tag-filter";
 import useDeleteTagFilter from "~/tag/use-delete-tag-filter";
-import { loader } from "./loader";
+import { useHeaderHeight } from "./headerHeight";
+import type { loader } from "./loader";
 export { action } from "./action";
 export { loader } from "./loader";
 
@@ -68,62 +69,90 @@ export default function Dashboard() {
   const page = parseInt(params.get("page") || "1");
   const startIndex = count - (page - 1) * 10;
 
+  const [headerRef, setHeaderRef] = useState<HTMLDivElement | null>(null);
+
+  const [headerHeight, setHeaderHeight] = useHeaderHeight();
+
+  useEffect(() => {
+    if (!headerRef) {
+      return;
+    }
+
+    const resizeObserver = new ResizeObserver(() => {
+      if (headerRef) {
+        setHeaderHeight(headerRef.clientHeight);
+      }
+    });
+
+    resizeObserver.observe(headerRef);
+    return () => {
+      resizeObserver.disconnect();
+    };
+  }, [headerRef, setHeaderHeight]);
+
   return (
     <DefaultLayout sidebarTop={<SideMenuV2 />} className="relative">
-      <div className="absolute left-0 right-0 z-10 flex flex-col items-center justify-center pointer-events-none mt-14">
+      <div
+        className="absolute left-0 right-0 z-10 flex flex-col items-center justify-center pointer-events-none mt-14"
+        ref={setHeaderRef}
+      >
         {/* tags */}
-        <div className="flex flex-wrap gap-2.5 mb-4">
-          {tagFilters.map((tag) => {
-            if (tag.name) {
-              return (
-                <TagFilterChip
-                  className="pointer-events-auto"
-                  key={tag.publicId}
-                  name={tag.name}
-                  active={tag.active}
-                  onClick={() => {
-                    if (tag.active) {
-                      deleteTagFilter(tag.publicId);
-                    } else {
-                      addTagFilter(tag.publicId);
-                    }
-                  }}
-                />
-              );
-            }
-            return null;
-          })}
+        <div className="flex px-[max(calc((100%-700px)/2),0.5rem)] min-w-[700px] w-full">
+          <div className="inline-flex flex-wrap gap-2.5 mb-4">
+            {tagFilters.map((tag) => {
+              if (tag.name) {
+                return (
+                  <TagFilterChip
+                    className="pointer-events-auto"
+                    key={tag.publicId}
+                    name={tag.name}
+                    active={tag.active}
+                    onClick={() => {
+                      if (tag.active) {
+                        deleteTagFilter(tag.publicId);
+                      } else {
+                        addTagFilter(tag.publicId);
+                      }
+                    }}
+                  />
+                );
+              }
+              return null;
+            })}
+          </div>
         </div>
 
-        {/* header toolbar */}
-        <Form method="post">
-          <input type="hidden" name="intent" value="create_question" />
-          <Button
-            isIconOnly
-            variant="shadow"
-            className="text-white pointer-events-auto bg-primary min-w-11"
-            type="submit"
-          >
-            <span className="sr-only">단락 추가</span>
-            <Plus className="w-4.5 h-4.5 " aria-hidden />
-          </Button>
-        </Form>
-        {(activeTagPublicIds || []).length > 0 && (
-          <div className="flex items-center gap-4">
-            <ButtonGroup variant="shadow">
-              <Button
-                as={Link}
-                className="text-white bg-primary min-w-11"
-                href={`/solve?tags=${params.get("tags")}`}
-              >
-                <span>
-                  Solve <span className="font-bold">{count}</span> Question
-                  {count > 1 ? "s" : ""}
-                </span>
-              </Button>
-            </ButtonGroup>
-          </div>
-        )}
+        <div className="flex gap-4 px-[max(calc((100%-700px)/2),0.5rem)] min-w-[700px] w-full">
+          {/* header toolbar */}
+          <Form method="post">
+            <input type="hidden" name="intent" value="create_question" />
+            <Button
+              isIconOnly
+              variant="shadow"
+              className="text-white pointer-events-auto bg-primary min-w-11"
+              type="submit"
+            >
+              <span className="sr-only">단락 추가</span>
+              <Plus className="w-4.5 h-4.5 " aria-hidden />
+            </Button>
+          </Form>
+          {(activeTagPublicIds || []).length > 0 && (
+            <div className="flex items-center gap-4">
+              <ButtonGroup variant="shadow">
+                <Button
+                  as={Link}
+                  className="text-white pointer-events-auto bg-primary min-w-11"
+                  href={`/solve?tags=${params.get("tags")}`}
+                >
+                  <span>
+                    Solve <span className="font-bold">{count}</span> Question
+                    {count > 1 ? "s" : ""}
+                  </span>
+                </Button>
+              </ButtonGroup>
+            </div>
+          )}
+        </div>
       </div>
 
       {/* questions */}
@@ -188,12 +217,14 @@ export default function Dashboard() {
                 </div>
               }
               className={twMerge("flex-1 text-gray-800 group")}
-              position={
-                index === 0
-                  ? "first"
-                  : index === questions.length - 1
-                  ? "last"
-                  : undefined
+              style={
+                {
+                  ...(index === 0
+                    ? { "--pe-top-padding": `calc(${headerHeight}px + 120px)` }
+                    : index === questions.length - 1
+                    ? { "--pe-bottom-padding": "120px" }
+                    : {}),
+                } as React.CSSProperties
               }
             />
           </QuestionProvider>

@@ -4,7 +4,7 @@ import { createServerClient } from "@supabase/auth-helpers-remix";
 import { nanoid } from "nanoid";
 import { getClientSideSupabaseConfig } from "~/config";
 import { createQuestionContent } from "~/question/create";
-import { QuestionContent } from "~/question/types";
+import type { QuestionContent } from "~/question/types";
 import { getServerSideSupabaseClient } from "~/supabase/client";
 import type { Database, Json } from "~/supabase/generated/supabase-types";
 

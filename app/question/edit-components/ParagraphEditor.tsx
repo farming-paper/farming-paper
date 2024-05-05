@@ -109,14 +109,14 @@ export default function ParagrahEditor({
   number,
   toolbar,
   className,
-  position,
+  style,
 }: {
   autoSave?: boolean;
   onContentChange?: (content: QuestionContent) => void;
   toolbar?: React.ReactNode;
   number?: React.ReactNode;
   className?: string;
-  position?: "first" | "last";
+  style?: React.CSSProperties;
 }) {
   const question = useQuestion();
   const editor = useMemo(
@@ -195,15 +195,16 @@ export default function ParagrahEditor({
       className={twMerge("relative", className)}
       style={
         {
-          "--additional-top-padding": position === "first" ? "120px" : "0px",
-          "--additional-bottom-padding": position === "last" ? "120px" : "0px",
+          "--pe-top-padding": "0px",
+          "--pe-bottom-padding": "1px",
+          ...style,
         } as React.CSSProperties
       }
     >
       {toolbar && (
         <div
           className={
-            "absolute top-[calc(0px+var(--additional-top-padding))] left-[max(calc((100%-700px)/2),0.5rem)] z-10"
+            "absolute top-[calc(0px+var(--pe-top-padding))] left-[max(calc((100%-700px)/2),0.5rem)] z-10"
           }
         >
           {toolbar}
@@ -228,8 +229,7 @@ export default function ParagrahEditor({
           <ClientOnly>{() => <HoveringToolbar />}</ClientOnly>
           <Editable
             className={twMerge(
-              "mx-auto focus:outline-none focus:ring-0 px-[max(calc((100%-700px)/2),0.5rem)] min-w-[700px] pt-[calc(28px+var(--additional-top-padding))] pb-px leading-normal",
-              position === "last" && "pb-[var(--additional-bottom-padding)]"
+              "mx-auto focus:outline-none focus:ring-0 px-[max(calc((100%-700px)/2),0.5rem)] min-w-[700px] pt-[calc(28px+var(--pe-top-padding))] pb-[var(--pe-bottom-padding)] leading-normal"
             )}
             renderElement={ElementComponent}
             renderLeaf={TextComponent}
