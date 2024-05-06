@@ -1,8 +1,8 @@
 import { Button, Link, Pagination } from "@nextui-org/react";
 import type { MetaFunction } from "@remix-run/node";
-import { Form, useLoaderData, useSearchParams } from "@remix-run/react";
+import { useFetcher, useLoaderData, useSearchParams } from "@remix-run/react";
 import dayjs from "dayjs";
-import { Plus, Tag, Trash2 } from "lucide-react";
+import { Loader2, Plus, Tag, Trash2 } from "lucide-react";
 import { useEffect, useMemo, useState } from "react";
 import { twMerge } from "tailwind-merge";
 import DefaultLayout from "~/common/components/DefaultLayout";
@@ -100,6 +100,8 @@ export default function Dashboard() {
     };
   }, [headerRef, setHeaderHeight]);
 
+  const addQuestionFetcher = useFetcher();
+
   return (
     <DefaultLayout sidebarTop={<SideMenuV2 />} className="relative">
       <div
@@ -134,10 +136,12 @@ export default function Dashboard() {
 
         <div className="flex gap-4 px-[max(calc((100%-700px)/2),0.5rem)] min-w-[700px] w-full">
           {/* header toolbar */}
-          <Form method="post">
+          <addQuestionFetcher.Form method="post">
             <input type="hidden" name="intent" value="create_question" />
             <Button
               isIconOnly
+              isLoading={addQuestionFetcher.state !== "idle"}
+              spinner={<Loader2 className="w-5 h-5 animate-spin" />}
               variant="shadow"
               className="pointer-events-auto min-w-11"
               color="primary"
@@ -146,7 +150,7 @@ export default function Dashboard() {
               <span className="sr-only">단락 추가</span>
               <Plus className="w-4.5 h-4.5 " aria-hidden />
             </Button>
-          </Form>
+          </addQuestionFetcher.Form>
           {tags.length > 0 && (
             <Button
               as={Link}
