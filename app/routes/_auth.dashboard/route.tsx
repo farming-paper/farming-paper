@@ -102,6 +102,13 @@ export default function Dashboard() {
 
   const addQuestionFetcher = useFetcher();
 
+  const addQuestionFetcherData = useMemo(() => {
+    if (addQuestionFetcher.state === "idle" && addQuestionFetcher.data) {
+      return addQuestionFetcher.data as { data: string };
+    }
+    return null;
+  }, [addQuestionFetcher]);
+
   return (
     <DefaultLayout sidebarTop={<SideMenuV2 />} className="relative">
       <div
@@ -181,6 +188,7 @@ export default function Dashboard() {
           >
             <ParagrahEditor
               key={question.originalId || question.id}
+              created={addQuestionFetcherData?.data === question.publicId}
               autoSave
               toolbar={
                 <div className="flex transition opacity-0 group-hover:opacity-100 group-has-[*:focus]:opacity-100 group-has-[[aria-expanded=true]]:opacity-100">

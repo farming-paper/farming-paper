@@ -4,8 +4,18 @@ import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import type { Editor, Element } from "slate";
 import { Range, Transforms, createEditor } from "slate";
 import { withHistory } from "slate-history";
-import type { RenderElementProps, RenderLeafProps } from "slate-react";
-import { Editable, Slate, useSelected, withReact } from "slate-react";
+import type {
+  RenderElementProps,
+  RenderLeafProps,
+  RenderPlaceholderProps,
+} from "slate-react";
+import {
+  Editable,
+  ReactEditor,
+  Slate,
+  useSelected,
+  withReact,
+} from "slate-react";
 import { twMerge } from "tailwind-merge";
 import { ClientOnly } from "~/common/components/ClientOnly";
 import useThrottleFunc from "~/common/hooks/use-throttle-func";
@@ -106,6 +116,17 @@ const TextComponent = (props: RenderLeafProps) => {
   );
 };
 
+const RenderPlaceholder = (props: RenderPlaceholderProps) => (
+  <span
+    {...props.attributes}
+    style={{}}
+    className="absolute italic text-gray-300 pointer-events-none select-none"
+    contentEditable={false}
+  >
+    {props.children}
+  </span>
+);
+
 export default function ParagrahEditor({
   autoSave = false,
   onContentChange,
@@ -113,6 +134,7 @@ export default function ParagrahEditor({
   toolbar,
   className,
   style,
+  created,
 }: {
   autoSave?: boolean;
   onContentChange?: (content: QuestionContent) => void;
@@ -120,12 +142,20 @@ export default function ParagrahEditor({
   number?: React.ReactNode;
   className?: string;
   style?: React.CSSProperties;
+  created?: boolean;
 }) {
   const question = useQuestion();
   const editor = useMemo(
     () => withInlines(withHistory(withReact(createEditor()))),
     []
   );
+
+  useEffect(() => {
+    if (created) {
+      ReactEditor.focus(editor);
+    }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   const formRef = useRef<HTMLFormElement>(null);
   const onContentChangeRef = useRef(onContentChange);
@@ -250,16 +280,7 @@ export default function ParagrahEditor({
             renderLeaf={TextComponent}
             placeholder="학습한 내용을 주저리주저리 써보세요."
             onKeyDown={onKeyDown}
-            renderPlaceholder={(props) => (
-              <span
-                {...props.attributes}
-                style={{}}
-                className="absolute italic text-gray-300 pointer-events-none select-none"
-                contentEditable={false}
-              >
-                {props.children}
-              </span>
-            )}
+            renderPlaceholder={RenderPlaceholder}
           />
         </Slate>
         <input
