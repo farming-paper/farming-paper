@@ -104,7 +104,6 @@ export async function loader({ request }: LoaderFunctionArgs) {
     }),
     count,
     recentTags,
-    activeTagPublicIds: tags,
     allTags: allTags.map((tag): ITagWithCount => {
       const result: ITagWithCount = {
         name: tag.name || "",

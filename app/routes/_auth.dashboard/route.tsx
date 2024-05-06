@@ -1,4 +1,4 @@
-import { Button, ButtonGroup, Link, Pagination } from "@nextui-org/react";
+import { Button, Link, Pagination } from "@nextui-org/react";
 import type { MetaFunction } from "@remix-run/node";
 import { Form, useLoaderData, useSearchParams } from "@remix-run/react";
 import dayjs from "dayjs";
@@ -18,6 +18,7 @@ import useAddTagFilter from "~/tag/use-add-tag-filter";
 import useDeleteTagFilter from "~/tag/use-delete-tag-filter";
 import { useHeaderHeight } from "./headerHeight";
 import type { loader } from "./loader";
+import { searchParamsSchema } from "./searchParamsSchema";
 export { action } from "./action";
 export { loader } from "./loader";
 
@@ -25,25 +26,37 @@ export const meta: MetaFunction = () => {
   return [...defaultMeta, { title: "대시보드 | Farming Paper" }];
 };
 
+const emptyTags: string[] = [];
+
 export default function Dashboard() {
   const data = useLoaderData<typeof loader>();
   const [params, setParams] = useSearchParams();
+  const validatedParams = useMemo(() => {
+    const obj = Object.fromEntries(params);
+    const validation = searchParamsSchema.safeParse(obj);
+    if (!validation.success) {
+      return null;
+    }
 
-  const { count, recentTags, activeTagPublicIds } = data;
+    return validation.data;
+  }, [params]);
+
+  const page = validatedParams?.page || 1;
+  const tags = validatedParams?.tags || emptyTags;
+
+  const { count, recentTags, allTags } = data;
 
   const tagFilters = useMemo(() => {
-    const activeTagPublicIdsSet = new Set(activeTagPublicIds);
+    const tagsSet = new Set(tags);
     return recentTags.map((tag) => ({
       publicId: tag.public_id,
       name: tag.name || "",
-      active: activeTagPublicIdsSet.has(tag.public_id),
+      active: tagsSet.has(tag.public_id),
     }));
-  }, [activeTagPublicIds, recentTags]);
+  }, [tags, recentTags]);
 
   const addTagFilter = useAddTagFilter();
-
   const deleteTagFilter = useDeleteTagFilter();
-
   const questions: Question[] = useMemo(
     () =>
       data.questions.map(
@@ -66,11 +79,8 @@ export default function Dashboard() {
     [data.questions]
   );
 
-  const page = parseInt(params.get("page") || "1");
   const startIndex = count - (page - 1) * 10;
-
   const [headerRef, setHeaderRef] = useState<HTMLDivElement | null>(null);
-
   const [headerHeight, setHeaderHeight] = useHeaderHeight();
 
   useEffect(() => {
@@ -129,28 +139,30 @@ export default function Dashboard() {
             <Button
               isIconOnly
               variant="shadow"
-              className="text-white pointer-events-auto bg-primary min-w-11"
+              className="pointer-events-auto min-w-11"
+              color="primary"
               type="submit"
             >
               <span className="sr-only">단락 추가</span>
               <Plus className="w-4.5 h-4.5 " aria-hidden />
             </Button>
           </Form>
-          {(activeTagPublicIds || []).length > 0 && (
-            <div className="flex items-center gap-4">
-              <ButtonGroup variant="shadow">
-                <Button
-                  as={Link}
-                  className="text-white pointer-events-auto bg-primary min-w-11"
-                  href={`/solve?tags=${params.get("tags")}`}
-                >
-                  <span>
-                    Solve <span className="font-bold">{count}</span> Question
-                    {count > 1 ? "s" : ""}
-                  </span>
-                </Button>
-              </ButtonGroup>
-            </div>
+          {tags.length > 0 && (
+            <Button
+              as={Link}
+              className="text-white pointer-events-auto bg-primary min-w-11"
+              href={`/solve?tags=${params.get("tags")}`}
+              color="primary"
+              variant="shadow"
+            >
+              <span>
+                Solve <span className="font-bold">{count}</span> Question
+                {count > 1 ? "s" : ""}
+              </span>
+            </Button>
+          )}
+          {tags.length === 0 && (
+            <Button isDisabled>Click above tags for Solve</Button>
           )}
         </div>
       </div>
@@ -187,7 +199,7 @@ export default function Dashboard() {
                       </div>
                     )}
                     <SetTagModal
-                      tags={data.allTags}
+                      tags={allTags}
                       TriggerButton={({ onPress }) => (
                         <Button
                           onPress={onPress}
