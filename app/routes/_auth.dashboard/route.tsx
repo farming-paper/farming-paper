@@ -2,8 +2,9 @@ import { Button, Link, Pagination } from "@nextui-org/react";
 import type { MetaFunction } from "@remix-run/node";
 import { useFetcher, useLoaderData, useSearchParams } from "@remix-run/react";
 import dayjs from "dayjs";
+import { isKeyHotkey } from "is-hotkey";
 import { Loader2, Plus, Tag, Trash2 } from "lucide-react";
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { twMerge } from "tailwind-merge";
 import DefaultLayout from "~/common/components/DefaultLayout";
 import { DeleteQuestionModalWithButton } from "~/common/components/DeleteQuestionModalWithButton";
@@ -109,6 +110,25 @@ export default function Dashboard() {
     return null;
   }, [addQuestionFetcher]);
 
+  const addQuestionFetcherSubmitButtonRef = useRef<HTMLButtonElement | null>(
+    null
+  );
+
+  // mod+enter to create new question
+  useEffect(() => {
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (isKeyHotkey("mod+enter", event)) {
+        event.preventDefault();
+        addQuestionFetcherSubmitButtonRef.current?.click();
+      }
+    };
+
+    document.addEventListener("keydown", handleKeyDown);
+    return () => {
+      document.removeEventListener("keydown", handleKeyDown);
+    };
+  }, []);
+
   return (
     <DefaultLayout sidebarTop={<SideMenuV2 />} className="relative">
       <div
@@ -153,6 +173,7 @@ export default function Dashboard() {
               className="pointer-events-auto min-w-11"
               color="primary"
               type="submit"
+              ref={addQuestionFetcherSubmitButtonRef}
             >
               <span className="sr-only">단락 추가</span>
               <Plus className="w-4.5 h-4.5 " aria-hidden />
