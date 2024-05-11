@@ -14,6 +14,7 @@ import {
   getCorrectFromBlank,
   getIdFromPath,
 } from "~/question/utils";
+import { searchParamsSchema } from "./searchParamsSchema";
 
 export const formDataValidator = withZod(
   z.discriminatedUnion("intent", [
@@ -49,26 +50,24 @@ export const formDataValidator = withZod(
   ])
 );
 
-const requireSearchParams = (request: Request) => {
-  const url = new URL(request.url);
-  const tagsValidation = z.string().safeParse(url.searchParams.get("tags"));
-
-  if (!tagsValidation.success) {
-    // url.searchParams.delete("tags");
-    // throw new Response(null, { status: 301, headers: { Location: url.href } });
-    throw new Response(null, { status: 400 });
-  }
-
-  return {
-    tags: tagsValidation.data,
-  };
-};
-
-export default async function solveAction({ request }: ActionFunctionArgs) {
+export async function action({ request }: ActionFunctionArgs) {
   const { profile } = await requireAuth(request);
   const formData = await request.formData();
-  const { tags: tagsFromUrl } = requireSearchParams(request);
+  const searchParamsValidation = searchParamsSchema.safeParse(
+    Object.fromEntries(new URL(request.url).searchParams)
+  );
+
   const action = await formDataValidator.validate(formData);
+
+  if (!searchParamsValidation.success) {
+    return json(
+      {
+        data: null,
+        error: searchParamsValidation.error,
+      },
+      { status: 400 }
+    );
+  }
 
   if (action.error) {
     return json(
@@ -168,7 +167,7 @@ export default async function solveAction({ request }: ActionFunctionArgs) {
       const searchParams = new URLSearchParams();
       searchParams.set("incorrects", JSON.stringify(incorrects));
       searchParams.set("question_id", question.id.toString());
-      searchParams.set("tags", tagsFromUrl);
+      searchParams.set("tags", searchParamsValidation.data.tags.join(","));
       searchParams.set("log_id", logId.toString());
       return redirect(`/result?${searchParams.toString()}`);
     }

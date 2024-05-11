@@ -5,8 +5,7 @@ export default function DefaultLayout({
   children,
   footer,
   header,
-  sidebarBottom,
-  sidebarTop,
+
   className,
 }: {
   children: ReactNode;
@@ -17,17 +16,12 @@ export default function DefaultLayout({
   className?: string;
 }) {
   return (
-    <div className="flex">
-      <div className="sticky top-0 flex flex-col justify-between flex-none w-12 h-screen text-gray-300 bg-gray-700">
-        <div>{sidebarTop}</div>
-        <div>{sidebarBottom}</div>
-      </div>
-
-      <div className={twMerge("flex-1 min-h-screen", className)}>
+    <div className={twMerge("min-h-screen relative", className)}>
+      <div className="absolute top-0 left-0 right-0 z-10 pointer-events-none">
         {header}
-        {children}
-        {footer}
       </div>
+      {children}
+      {footer}
     </div>
   );
 }

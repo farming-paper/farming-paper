@@ -1,4 +1,10 @@
-import { Button, Link, Pagination } from "@nextui-org/react";
+import {
+  BreadcrumbItem,
+  Breadcrumbs,
+  Button,
+  Link,
+  Pagination,
+} from "@nextui-org/react";
 import type { MetaFunction } from "@remix-run/node";
 import { useFetcher, useLoaderData, useSearchParams } from "@remix-run/react";
 import dayjs from "dayjs";
@@ -130,7 +136,23 @@ export default function Dashboard() {
   }, []);
 
   return (
-    <DefaultLayout sidebarTop={<SideMenuV2 />} className="relative">
+    <DefaultLayout
+      header={
+        <Breadcrumbs
+          className="py-2 w-[700px] mx-auto pointer-events-auto"
+          itemClasses={{
+            item: "px-2 text-default-400",
+            separator: "px-0",
+          }}
+        >
+          <BreadcrumbItem href="/dashboard" className="text-default-500">
+            홈
+          </BreadcrumbItem>
+        </Breadcrumbs>
+      }
+      sidebarTop={<SideMenuV2 />}
+      className="relative"
+    >
       <div
         className="absolute left-0 right-0 z-10 flex flex-col items-center justify-center pointer-events-none mt-14"
         ref={setHeaderRef}

@@ -8,23 +8,23 @@ import { getObjBigintToNumber } from "~/util";
 import { searchParamsSchema } from "./searchParamsSchema";
 
 export async function loader({ request }: LoaderFunctionArgs) {
-  await requireAuth(request);
+  const { profile } = await requireAuth(request);
 
   const obj = Object.fromEntries(new URL(request.url).searchParams);
 
   const validation = searchParamsSchema.safeParse(obj);
   if (!validation.success) {
-    throw new Response(JSON.stringify({ error: validation.error }), {
-      status: 400,
-      headers: { "Content-Type": "application/json" },
-    });
+    throw new Response(null, { status: 400 });
   }
 
-  const { question_public_id } = validation.data;
+  const { incorrects, question_id } = validation.data;
+
+  const success = incorrects.length === 0;
 
   const question = await prisma.questions.findUnique({
     where: {
-      public_id: question_public_id,
+      id: question_id,
+      creator: profile.id,
     },
     select: {
       id: true,
@@ -43,6 +43,11 @@ export async function loader({ request }: LoaderFunctionArgs) {
   if (!question) {
     throw new Response(null, { status: 404 });
   }
+  const currentTags = validation.data.tags.split(",");
+  const tagNames = question.tags_questions_relation
+    .filter((relation) => currentTags.includes(relation.tags.public_id))
+    .map((relation) => relation.tags.name || "")
+    .filter((name) => name);
 
   return json({
     question: {
@@ -51,6 +56,9 @@ export async function loader({ request }: LoaderFunctionArgs) {
         question.content as Partial<QuestionContent>
       ),
     },
+    incorrects,
+    success,
     tags: validation.data.tags,
+    tagNames,
   });
 }
