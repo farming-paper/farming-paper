@@ -20,7 +20,8 @@
   "tailwindCSS.classAttributes": [
     "class",
     "classNames?",
+    ".+Classes",
     "ngClass",
-    ".+ClassName"
+    ".+ClassNames?"
   ]
 }
