@@ -294,7 +294,11 @@ export default function Dashboard() {
         total={Math.ceil(count / 10)}
         page={page}
         onChange={(page) => {
-          setParams({ page: page.toString() });
+          setParams((params) => {
+            const newParams = new URLSearchParams(params);
+            newParams.set("page", page.toString());
+            return newParams;
+          });
         }}
       />
       <GlobalLoading />
