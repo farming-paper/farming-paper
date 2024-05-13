@@ -7,7 +7,10 @@ function softmax(arr: number[]): number[] {
   return exps.map((x) => x / sum);
 }
 
-export function randomIndexBasedOnSoftmax(arr: number[]) {
+export function randomIndexBasedOnSoftmax(arr: number[]): {
+  index: number;
+  probability: number;
+} {
   const probabilities = softmax(arr);
   const cumulativeProbabilities = probabilities.reduce((acc, prob, index) => {
     if (index === 0) {
@@ -20,9 +23,15 @@ export function randomIndexBasedOnSoftmax(arr: number[]) {
 
   for (let i = 0; i < cumulativeProbabilities.length; i++) {
     if (random < cumulativeProbabilities[i]!) {
-      return i;
+      return {
+        index: i,
+        probability: probabilities[i]!,
+      };
     }
   }
 
-  return cumulativeProbabilities.length - 1;
+  return {
+    index: cumulativeProbabilities.length - 1,
+    probability: probabilities[cumulativeProbabilities.length - 1]!,
+  };
 }

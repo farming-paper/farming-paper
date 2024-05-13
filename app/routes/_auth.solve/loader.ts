@@ -101,7 +101,8 @@ export async function loader({ request }: LoaderFunctionArgs) {
     }).fill(1);
   }
 
-  const randomIndex = randomIndexBasedOnSoftmax(softmaxInputArray);
+  const { index: randomIndex, probability } =
+    randomIndexBasedOnSoftmax(softmaxInputArray);
 
   const question = questions[randomIndex]!;
 
@@ -121,5 +122,6 @@ export async function loader({ request }: LoaderFunctionArgs) {
     latestLog: latestLog ? getObjBigintToNumber(latestLog) : null,
     todayCount: logs.length,
     questionPoolCount: questions.length,
+    probability,
   });
 }

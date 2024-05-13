@@ -55,7 +55,7 @@ export function SolveBlank({
 
   return isClient ? (
     <div
-      className="inline-block mx-1 -mt-1 align-top"
+      className="inline-block mx-1 -mt-0.5 align-top"
       style={{
         width: `calc(${width}px + 1rem)`,
       }}
@@ -66,7 +66,8 @@ export function SolveBlank({
         classNames={{
           input: "text-base  ",
           //   base: "w-auto inline my-0.5 align-baseline",
-          inputWrapper: "group-data-[focus=true]:border-primary-500",
+          inputWrapper:
+            "group-data-[focus=true]:border-primary-500 h-7 min-h-7",
         }}
         // fullWidth={false}
         variant="bordered"

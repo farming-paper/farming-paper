@@ -31,6 +31,7 @@ export default function Solve() {
     todayCount,
     questionPoolCount,
     tagNames,
+    probability,
   } = useLoaderData<typeof loader>();
 
   const [params] = useSearchParams();
@@ -69,7 +70,7 @@ export default function Solve() {
   return (
     <DefaultLayout
       header={
-        <DefaultBreadcrumbs>
+        <DefaultBreadcrumbs className="max-w-[700px]">
           <BreadcrumbItem href="/dashboard">Home</BreadcrumbItem>
           <BreadcrumbItem>Solve({tagNames.join(",")})</BreadcrumbItem>
         </DefaultBreadcrumbs>
@@ -77,9 +78,11 @@ export default function Solve() {
       sidebarTop={<SideMenuV2 />}
     >
       <div className="box-border px-3 pt-10 mx-auto max-w-[700px] ">
-        <div className="mb-2 text-sm text-gray-400">
-          문제는 총 {questionPoolCount}개, 당신은 {todayCount} 문제를
-          풀었습니다. (최근 1달간. 문제 수정 시 초기화)
+        <div className="mb-6 text-sm text-gray-400">
+          문제는 총 {questionPoolCount}개이고 지금까지 {todayCount}번
+          풀었습니다(최근 1달간. 문제 수정 시 초기화). 이 문제가 나올 확률은{" "}
+          <span className="font-mono">{(probability * 100).toFixed(2)}%</span>{" "}
+          입니다.
         </div>
         <QuestionProvider question={question} updateContent>
           <Provider>
