@@ -1,4 +1,4 @@
-import { BreadcrumbItem, Breadcrumbs, Button, Link } from "@nextui-org/react";
+import { BreadcrumbItem, Button, Link } from "@nextui-org/react";
 import type { MetaFunction } from "@remix-run/node";
 import {
   useLoaderData,
@@ -9,6 +9,7 @@ import dayjs from "dayjs";
 import { Provider } from "jotai";
 import { useEffect, useMemo } from "react";
 import { toast } from "react-toastify";
+import DefaultBreadcrumbs from "~/common/components/DefaultBreadcrumbs";
 import DefaultLayout from "~/common/components/DefaultLayout";
 import SideMenuV2 from "~/common/components/SideMenuV2";
 import { defaultMeta } from "~/meta";
@@ -68,21 +69,15 @@ export default function Solve() {
   return (
     <DefaultLayout
       header={
-        <Breadcrumbs
-          className="py-2 w-[700px] mx-auto pointer-events-auto"
-          itemClasses={{
-            item: "px-2 text-default-400",
-            separator: "px-0",
-          }}
-        >
-          <BreadcrumbItem href="/dashboard">홈</BreadcrumbItem>
-          <BreadcrumbItem>문제 풀기({tagNames.join(",")})</BreadcrumbItem>
-        </Breadcrumbs>
+        <DefaultBreadcrumbs>
+          <BreadcrumbItem href="/dashboard">Home</BreadcrumbItem>
+          <BreadcrumbItem>Solve({tagNames.join(",")})</BreadcrumbItem>
+        </DefaultBreadcrumbs>
       }
       sidebarTop={<SideMenuV2 />}
     >
-      <div className="box-border px-4 pt-20 mx-auto max-w-[700px] ">
-        <div>
+      <div className="box-border px-3 pt-10 mx-auto max-w-[700px] ">
+        <div className="mb-2 text-sm text-gray-400">
           문제는 총 {questionPoolCount}개, 당신은 {todayCount} 문제를
           풀었습니다. (최근 1달간. 문제 수정 시 초기화)
         </div>

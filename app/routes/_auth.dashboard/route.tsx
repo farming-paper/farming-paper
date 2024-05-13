@@ -1,10 +1,4 @@
-import {
-  BreadcrumbItem,
-  Breadcrumbs,
-  Button,
-  Link,
-  Pagination,
-} from "@nextui-org/react";
+import { BreadcrumbItem, Button, Link, Pagination } from "@nextui-org/react";
 import type { MetaFunction } from "@remix-run/node";
 import { useFetcher, useLoaderData, useSearchParams } from "@remix-run/react";
 import dayjs from "dayjs";
@@ -12,13 +6,15 @@ import { isKeyHotkey } from "is-hotkey";
 import { Loader2, Plus, Tag, Trash2 } from "lucide-react";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { twMerge } from "tailwind-merge";
+import DefaultBreadcrumbs from "~/common/components/DefaultBreadcrumbs";
 import DefaultLayout from "~/common/components/DefaultLayout";
 import { DeleteQuestionModalWithButton } from "~/common/components/DeleteQuestionModalWithButton";
+import GlobalLoading from "~/common/components/GlobalLoading";
 import { SetTagModal } from "~/common/components/SetTagModal";
 import SideMenuV2 from "~/common/components/SideMenuV2";
 import { defaultMeta } from "~/meta";
 import { QuestionProvider } from "~/question/context";
-import ParagrahEditor from "~/question/edit-components/ParagraphEditor";
+import ParagraphEditor from "~/question/edit-components/ParagraphEditor";
 import type { Question } from "~/question/types";
 import TagFilterChip from "~/tag/component/tag-filter-chip";
 import useAddTagFilter from "~/tag/use-add-tag-filter";
@@ -138,17 +134,11 @@ export default function Dashboard() {
   return (
     <DefaultLayout
       header={
-        <Breadcrumbs
-          className="py-2 w-[700px] mx-auto pointer-events-auto"
-          itemClasses={{
-            item: "px-2 text-default-400",
-            separator: "px-0",
-          }}
-        >
+        <DefaultBreadcrumbs>
           <BreadcrumbItem href="/dashboard" className="text-default-500">
-            홈
+            Home
           </BreadcrumbItem>
-        </Breadcrumbs>
+        </DefaultBreadcrumbs>
       }
       sidebarTop={<SideMenuV2 />}
       className="relative"
@@ -158,7 +148,7 @@ export default function Dashboard() {
         ref={setHeaderRef}
       >
         {/* tags */}
-        <div className="flex px-[max(calc((100%-700px)/2),0.5rem)] min-w-[700px] w-full">
+        <div className="flex px-[max(calc((100%-700px)/2),0.75rem)] w-full">
           <div className="inline-flex flex-wrap gap-2.5 mb-4">
             {tagFilters.map((tag) => {
               if (tag.name) {
@@ -183,7 +173,7 @@ export default function Dashboard() {
           </div>
         </div>
 
-        <div className="flex gap-4 px-[max(calc((100%-700px)/2),0.5rem)] min-w-[700px] w-full">
+        <div className="flex gap-4 px-[max(calc((100%-700px)/2),0.75rem)] w-full">
           {/* header toolbar */}
           <addQuestionFetcher.Form method="post">
             <input type="hidden" name="intent" value="create_question" />
@@ -229,7 +219,7 @@ export default function Dashboard() {
             key={question.originalId || question.id}
             question={question}
           >
-            <ParagrahEditor
+            <ParagraphEditor
               key={question.originalId || question.id}
               created={addQuestionFetcherData?.data === question.publicId}
               autoSave
@@ -307,6 +297,7 @@ export default function Dashboard() {
           setParams({ page: page.toString() });
         }}
       />
+      <GlobalLoading />
     </DefaultLayout>
   );
 }

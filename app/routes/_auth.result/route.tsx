@@ -2,6 +2,7 @@ import { BreadcrumbItem, Breadcrumbs, Button, Link } from "@nextui-org/react";
 import type { MetaFunction } from "@remix-run/node";
 import { Form, useLoaderData, useSearchParams } from "@remix-run/react";
 import dayjs from "dayjs";
+import { ArrowRight } from "lucide-react";
 import { useMemo } from "react";
 import DefaultLayout from "~/common/components/DefaultLayout";
 import SideMenuV2 from "~/common/components/SideMenuV2";
@@ -46,28 +47,28 @@ export default function Result() {
     <DefaultLayout
       header={
         <Breadcrumbs
-          className="py-2 w-[700px] mx-auto pointer-events-auto"
+          className="p-2 max-w-[700px] mx-auto pointer-events-auto"
           itemClasses={{
             item: "px-2 text-default-400",
             separator: "px-0",
           }}
         >
-          <BreadcrumbItem href="/dashboard">홈</BreadcrumbItem>
+          <BreadcrumbItem href="/dashboard">Home</BreadcrumbItem>
           <BreadcrumbItem href={`/solve?tags=${tags}`}>
-            문제 풀기({data.tagNames.join(",")})
+            Solve({data.tagNames.join(",")})
           </BreadcrumbItem>
-          <BreadcrumbItem>결과</BreadcrumbItem>
+          <BreadcrumbItem>Result</BreadcrumbItem>
         </Breadcrumbs>
       }
       sidebarTop={<SideMenuV2 />}
     >
       <QuestionProvider question={question}>
-        <div className="box-border px-4 mx-auto pt-20 max-w-[700px] w-full">
-          <h1 className="mb-10 text-xl font-bold">
+        <div className="box-border px-3 mx-auto pt-10 max-w-[700px] w-full">
+          <h1 className="mb-4 text-xl font-bold">
             {success ? (
-              <span className="text-green-500">Correct</span>
+              <span className="text-green-800">Correct</span>
             ) : (
-              <span className="text-red-500">Incorrect</span>
+              <span className="text-red-800">Incorrect</span>
             )}
           </h1>
 
@@ -75,11 +76,16 @@ export default function Result() {
 
           <div className="flex flex-row-reverse flex-wrap items-center justify-between gap-4 mt-3">
             <div className="flex items-center">
-              <Button as={Link} href={`/solve?tags=${tags}`} color="primary">
+              <Button
+                as={Link}
+                href={`/solve?tags=${tags}`}
+                endContent={<ArrowRight size={16} />}
+                color="primary"
+              >
                 Next
               </Button>
             </div>
-            <div className="flex items-center gap-2">
+            <div className="flex flex-wrap items-center gap-2">
               {success ? (
                 <Form className="flex" method="post">
                   <input
@@ -107,7 +113,7 @@ export default function Result() {
               <Form className="flex" method="post">
                 <input type="hidden" name="intent" value="ignore" />
                 <Button variant="flat" type="submit">
-                  Ignore
+                  Ignore This Try
                 </Button>
               </Form>
 

@@ -52,5 +52,10 @@ export async function loader({ request }: LoaderFunctionArgs) {
       ),
     },
     tags: validation.data.tags,
+    tagNames: question.tags_questions_relation
+      .map((t) => t.tags)
+      .filter((t) => validation.data.tags.includes(t.public_id))
+      .map((t) => t.name)
+      .filter((t) => t),
   });
 }

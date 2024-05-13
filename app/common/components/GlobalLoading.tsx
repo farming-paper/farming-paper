@@ -1,6 +1,6 @@
 import { useNavigation } from "@remix-run/react";
+import { Loader2 } from "lucide-react";
 import { twMerge } from "tailwind-merge";
-import Loader from "./Loader";
 
 function GlobalLoading() {
   const navigation = useNavigation();
@@ -13,11 +13,11 @@ function GlobalLoading() {
       aria-valuetext={loading ? "Loading" : undefined}
       aria-hidden={!loading}
       className={twMerge(
-        "pointer-events-none fixed inset-0 z-50 p-4 transition-all duration-300 ease-out bg-white/70 flex items-center justify-center text-3xl",
+        "pointer-events-none fixed inset-0 z-50 p-4 transition-all duration-75 ease-out bg-white/70 flex items-center justify-center text-3xl text-primary-500",
         loading ? "opacity-100" : "opacity-0"
       )}
     >
-      <Loader />
+      <Loader2 className="w-8 h-8 animate-spin" />
     </div>
   );
 }

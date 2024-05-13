@@ -127,7 +127,7 @@ const RenderPlaceholder = (props: RenderPlaceholderProps) => (
   </span>
 );
 
-export default function ParagrahEditor({
+export default function ParagraphEditor({
   autoSave = false,
   onContentChange,
   number,
@@ -249,14 +249,14 @@ export default function ParagrahEditor({
       {toolbar && (
         <div
           className={
-            "absolute top-[calc(0px+var(--pe-top-padding))] left-[max(calc((100%-700px)/2),0.5rem)] z-10"
+            "absolute top-[calc(0px+var(--pe-top-padding))] left-[max(calc((100%-700px)/2),0.75rem)] z-10"
           }
         >
           {toolbar}
         </div>
       )}
       {number && (
-        <div className="absolute top-0 left-[max(calc((100%-700px)/2),0.5rem)] z-10">
+        <div className="absolute top-0 left-[max(calc((100%-700px)/2),0.75rem)] z-10">
           {number}
         </div>
       )}
@@ -274,7 +274,7 @@ export default function ParagrahEditor({
           <ClientOnly>{() => <HoveringToolbar />}</ClientOnly>
           <Editable
             className={twMerge(
-              "mx-auto focus:outline-none focus:ring-0 px-[max(calc((100%-700px)/2),0.5rem)] min-w-[700px] pt-[calc(28px+var(--pe-top-padding))] pb-[var(--pe-bottom-padding)] leading-normal"
+              "mx-auto focus:outline-none focus:ring-0 px-[max(calc((100%-700px)/2),0.75rem)] pt-[calc(28px+var(--pe-top-padding))] pb-[var(--pe-bottom-padding)] leading-normal"
             )}
             renderElement={ElementComponent}
             renderLeaf={TextComponent}

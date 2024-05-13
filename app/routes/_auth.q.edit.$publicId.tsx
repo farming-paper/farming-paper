@@ -1,5 +1,5 @@
 // BEST PRACTICE
-import { Button } from "@nextui-org/react";
+import { BreadcrumbItem, Button } from "@nextui-org/react";
 import type { MetaFunction } from "@remix-run/node";
 import { Form, useLoaderData } from "@remix-run/react";
 import type { LoaderFunctionArgs } from "@remix-run/server-runtime";
@@ -11,6 +11,7 @@ import { useMemo, useState } from "react";
 import { z } from "zod";
 import editSingleQuestionAction from "~/actions/editSingleQuestion";
 import { requireAuth } from "~/auth/get-session";
+import DefaultBreadcrumbs from "~/common/components/DefaultBreadcrumbs";
 import DefaultLayout from "~/common/components/DefaultLayout";
 import { DeleteQuestionModalWithButton } from "~/common/components/DeleteQuestionModalWithButton";
 import { SetTagModal } from "~/common/components/SetTagModal";
@@ -19,7 +20,7 @@ import { defaultMeta } from "~/meta";
 import prisma from "~/prisma-client.server";
 import { QuestionProvider } from "~/question/context";
 import { createQuestionContent } from "~/question/create";
-import ParagrahEditor from "~/question/edit-components/ParagraphEditor";
+import ParagraphEditor from "~/question/edit-components/ParagraphEditor";
 import type { Question, QuestionContent } from "~/question/types";
 import type { ITagWithCount } from "~/types";
 import { getObjBigintToNumber } from "~/util";
@@ -154,14 +155,28 @@ export default function Page() {
   }, [editingContent, question.content]);
 
   return (
-    <DefaultLayout sidebarTop={<SideMenuV2 />}>
-      <div
-        className="box-border px-10 mx-auto mt-20"
-        style={{ width: "calc(700px + 3rem)" }}
-      >
-        <h1 className="mb-10 text-xl font-bold">Edit Question</h1>
+    <DefaultLayout
+      header={
+        <DefaultBreadcrumbs>
+          <BreadcrumbItem href="/dashboard">Home</BreadcrumbItem>
+          <BreadcrumbItem
+            href={`/solve?tags=${loaded.activeTagPublicIds.join(",")}`}
+          >
+            Solve(
+            {loaded.allTags
+              .filter((tag) => loaded.activeTagPublicIds.includes(tag.publicId))
+              .map((tag) => tag.name)
+              .join(", ")}
+            )
+          </BreadcrumbItem>
+          <BreadcrumbItem>Edit</BreadcrumbItem>
+        </DefaultBreadcrumbs>
+      }
+      sidebarTop={<SideMenuV2 />}
+    >
+      <div className="box-border pt-10 mx-auto max-w-[700px]">
         <QuestionProvider question={question}>
-          <div className="flex items-center justify-between">
+          <div className="flex items-center justify-between mx-3">
             <div
               className="flex items-center py-1 text-xs text-gray-400 gap-2.5 overflow-hidden select-none"
               style={{ backgroundColor: "rgba(249, 250, 251, 0.3)" }}
@@ -189,17 +204,6 @@ export default function Page() {
                   </Button>
                 )}
               />
-              <DeleteQuestionModalWithButton
-                TriggerButton={({ onPress }) => (
-                  <Button
-                    onPress={onPress}
-                    variant="light"
-                    className="h-auto min-w-0 px-1 py-1 rounded-sm text-inherit"
-                  >
-                    <Trash2 className="w-3.5 h-3.5 " />
-                  </Button>
-                )}
-              />
             </div>
             <div>
               {isDirty && (
@@ -210,11 +214,13 @@ export default function Page() {
             </div>
           </div>
 
-          <ParagrahEditor
+          <ParagraphEditor
+            className="-mt-6"
             key={question.originalId || question.id}
             onContentChange={setEditingContent}
           />
-          <div className="flex flex-row-reverse mt-10">
+
+          <div className="flex flex-row-reverse justify-between mx-3 mt-10">
             <Form method="post" className="flex">
               <input
                 type="hidden"
@@ -230,6 +236,15 @@ export default function Page() {
                 Update
               </Button>
             </Form>
+            <div className="flex items-center gap-3">
+              <DeleteQuestionModalWithButton
+                TriggerButton={({ onPress }) => (
+                  <Button onPress={onPress} color="danger" isIconOnly>
+                    <Trash2 className="w-3.5 h-3.5 " />
+                  </Button>
+                )}
+              />
+            </div>
           </div>
         </QuestionProvider>
       </div>

@@ -44,7 +44,7 @@ export function SolveBlank({
     window.document.body.appendChild(span);
     const width = span.offsetWidth;
     span.remove();
-    return width * 2;
+    return width * 1.2;
   }, [element.children]);
 
   useEffect(() => {
@@ -54,19 +54,26 @@ export function SolveBlank({
   }, [path, setBlankSubmission, value]);
 
   return isClient ? (
-    <Input
-      size="sm"
-      value={value}
-      classNames={{
-        input: "w-auto text-base ",
-        base: "w-auto inline-flex my-0.5",
-        inputWrapper: "w-auto",
+    <div
+      className="inline-block mx-1 -mt-1 align-top"
+      style={{
+        width: `calc(${width}px + 1rem)`,
       }}
-      style={{ width: `${width}px` }}
-      fullWidth={false}
-      onValueChange={(v) => setValue(v)}
-      isRequired
-    />
+    >
+      <Input
+        size="sm"
+        value={value}
+        classNames={{
+          input: "text-base  ",
+          //   base: "w-auto inline my-0.5 align-baseline",
+          inputWrapper: "group-data-[focus=true]:border-primary-500",
+        }}
+        // fullWidth={false}
+        variant="bordered"
+        onValueChange={(v) => setValue(v)}
+        isRequired
+      />
+    </div>
   ) : null;
 }
 

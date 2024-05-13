@@ -1,5 +1,6 @@
 import { Button } from "@nextui-org/react";
 import { Form } from "@remix-run/react";
+import { ArrowRight } from "lucide-react";
 import { useBlankSubmissionMap } from "./SolveQuestionAtom";
 import { useQuestion } from "./context";
 
@@ -16,7 +17,11 @@ export default function SolveSubmitButton() {
         name="submission"
         value={JSON.stringify(submission)}
       />
-      <Button color="primary" type="submit">
+      <Button
+        color="primary"
+        type="submit"
+        endContent={<ArrowRight size={16} />}
+      >
         Submit
       </Button>
     </Form>

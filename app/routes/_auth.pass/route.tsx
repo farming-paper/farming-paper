@@ -1,8 +1,10 @@
-import { Button, Link } from "@nextui-org/react";
+import { BreadcrumbItem, Button, Link } from "@nextui-org/react";
 import type { MetaFunction } from "@remix-run/node";
 import { Form, useLoaderData } from "@remix-run/react";
 import dayjs from "dayjs";
+import { ArrowRight } from "lucide-react";
 import { useMemo } from "react";
+import DefaultBreadcrumbs from "~/common/components/DefaultBreadcrumbs";
 import DefaultLayout from "~/common/components/DefaultLayout";
 import SideMenuV2 from "~/common/components/SideMenuV2";
 import { defaultMeta } from "~/meta";
@@ -49,23 +51,35 @@ export default function Pass() {
   );
 
   return (
-    <DefaultLayout sidebarTop={<SideMenuV2 />}>
+    <DefaultLayout
+      header={
+        <DefaultBreadcrumbs>
+          <BreadcrumbItem href="/dashboard">Home</BreadcrumbItem>
+          <BreadcrumbItem href={`/solve?tags=${tags.join(",")}`}>
+            Solve({data.tagNames.join(",")})
+          </BreadcrumbItem>
+          <BreadcrumbItem>Pass</BreadcrumbItem>
+        </DefaultBreadcrumbs>
+      }
+      sidebarTop={<SideMenuV2 />}
+    >
       <QuestionProvider question={question}>
-        <div
-          className="box-border px-10 mx-auto mt-20"
-          style={{ width: "calc(700px + 3rem)" }}
-        >
+        <div className="box-border px-3 pt-10 mx-auto max-w-[700px] ">
           <ResultQuestion
             incorrects={emptyArray}
             correctClassname="text-black"
           />
-          <div className="flex flex-row-reverse justify-between mt-5">
-            <div>
-              <Button as={Link} href={`/solve?tags=${tags}`} color="primary">
-                Next
-              </Button>
-            </div>
-            <div className="flex justify-center gap-2">
+          <div className="flex flex-row-reverse flex-wrap justify-between gap-4 mt-3">
+            <Button
+              as={Link}
+              href={`/solve?tags=${tags}`}
+              color="primary"
+              endContent={<ArrowRight size={16} />}
+            >
+              Next
+            </Button>
+
+            <div className="flex flex-wrap items-center gap-2">
               <Form method="post">
                 <input
                   type="hidden"
@@ -82,6 +96,16 @@ export default function Pass() {
                   Regard as Correct
                 </Button>
               </Form>
+              <Button
+                href={`/q/edit/${question.publicId}?tags=${tags.join(
+                  ","
+                )}&back=solve`}
+                as={Link}
+                color="default"
+                variant="flat"
+              >
+                Edit
+              </Button>
             </div>
           </div>
         </div>
