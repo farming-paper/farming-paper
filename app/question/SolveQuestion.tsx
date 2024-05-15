@@ -1,5 +1,12 @@
 import { Input } from "@nextui-org/react";
-import { createContext, useContext, useEffect, useMemo, useState } from "react";
+import {
+  createContext,
+  useCallback,
+  useContext,
+  useEffect,
+  useMemo,
+  useState,
+} from "react";
 import type { Descendant, Text } from "slate";
 import { useBlankAtom, useSetBlankSubmission } from "./SolveQuestionAtom";
 import { useQuestion } from "./context";
@@ -25,8 +32,10 @@ export function SolveBlank({
   children?: React.ReactNode;
 }) {
   const [value, setValue] = useBlankAtom(getCorrectFromBlank(element));
+  const [width, setWidth] = useState(
+    element.children.map((leaf) => leaf.text).join("").length * 8
+  );
   const setBlankSubmission = useSetBlankSubmission();
-  const [isClient, setIsClient] = useState(false);
   const id = getIdFromPath(path);
   const ids = useContext(idsContext);
   const isLast = ids[ids.length - 1] === id;
@@ -34,23 +43,17 @@ export function SolveBlank({
   const currentIndex = ids.indexOf(id);
 
   useEffect(() => {
-    setIsClient(true);
-  }, []);
-
-  const width = useMemo(() => {
-    if (typeof window === "undefined") {
-      return 0;
-    }
     const span = window.document.createElement("span");
     span.innerText = element.children.map((leaf) => leaf.text).join("");
     span.style.visibility = "hidden";
     span.style.position = "fixed";
     span.style.whiteSpace = "nowrap";
     window.document.body.appendChild(span);
-    const width = span.offsetWidth;
+    const newWidth = span.offsetWidth;
     span.remove();
-    return width * 1.2;
-  }, [element.children]);
+    setWidth(newWidth * 1.2);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   useEffect(() => {
     if (typeof value === "string") {
@@ -58,7 +61,29 @@ export function SolveBlank({
     }
   }, [id, setBlankSubmission, value]);
 
-  return isClient ? (
+  const onKeydown = useCallback(
+    (e: React.KeyboardEvent<HTMLInputElement> | KeyboardEvent) => {
+      if (e.key === "Enter") {
+        e.preventDefault();
+
+        if (isLast) {
+          const solveSubmitButton = document.querySelector(
+            "#solve_submit_button[type=submit]"
+          ) as HTMLButtonElement | null;
+          solveSubmitButton?.click();
+        } else {
+          const nextId = ids[currentIndex + 1];
+          const nextInput = document.querySelector(
+            `input[data-blank-id="${nextId}"]`
+          ) as HTMLInputElement | null;
+          nextInput?.focus();
+        }
+      }
+    },
+    [currentIndex, ids, isLast]
+  );
+
+  return (
     <div
       className="inline-block mx-0.5 -mt-0.5 align-top"
       style={{
@@ -68,37 +93,20 @@ export function SolveBlank({
       <Input
         size="sm"
         value={value}
+        autoFocus={isFirst}
         classNames={{
-          input: "text-base  ",
+          input: "text-base",
           inputWrapper:
             "group-data-[focus=true]:border-primary-500 h-7 min-h-7",
         }}
         data-blank-id={id}
-        autoFocus={isFirst}
         variant="bordered"
         onValueChange={(v) => setValue(v)}
-        onKeyDown={(e) => {
-          if (e.key === "Enter") {
-            e.preventDefault();
-
-            if (isLast) {
-              const solveSubmitButton = document.querySelector(
-                "#solve_submit_button[type=submit]"
-              ) as HTMLButtonElement | null;
-              solveSubmitButton?.click();
-            } else {
-              const nextId = ids[currentIndex + 1];
-              const nextInput = document.querySelector(
-                `input[data-blank-id="${nextId}"]`
-              ) as HTMLInputElement | null;
-              nextInput?.focus();
-            }
-          }
-        }}
+        onKeyDown={onKeydown}
         isRequired
       />
     </div>
-  ) : null;
+  );
 }
 
 export const SolveText = ({ leaf }: { leaf: Text }) => {
