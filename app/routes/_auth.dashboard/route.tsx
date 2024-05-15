@@ -9,7 +9,6 @@ import { twMerge } from "tailwind-merge";
 import DefaultBreadcrumbs from "~/common/components/DefaultBreadcrumbs";
 import DefaultLayout from "~/common/components/DefaultLayout";
 import { DeleteQuestionModalWithButton } from "~/common/components/DeleteQuestionModalWithButton";
-import GlobalLoading from "~/common/components/GlobalLoading";
 import { SetTagModal } from "~/common/components/SetTagModal";
 import SideMenuV2 from "~/common/components/SideMenuV2";
 import { defaultMeta } from "~/meta";
@@ -301,7 +300,6 @@ export default function Dashboard() {
           });
         }}
       />
-      <GlobalLoading />
     </DefaultLayout>
   );
 }

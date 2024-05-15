@@ -70,14 +70,14 @@ export default function Solve() {
   return (
     <DefaultLayout
       header={
-        <DefaultBreadcrumbs className="max-w-[700px]">
+        <DefaultBreadcrumbs>
           <BreadcrumbItem href="/dashboard">Home</BreadcrumbItem>
           <BreadcrumbItem>Solve({tagNames.join(",")})</BreadcrumbItem>
         </DefaultBreadcrumbs>
       }
       sidebarTop={<SideMenuV2 />}
     >
-      <div className="box-border px-3 pt-10 mx-auto max-w-[700px] ">
+      <div className="box-content px-3 pt-10 mx-auto max-w-[700px]">
         <div className="mb-6 text-sm text-gray-400">
           문제는 총 {questionPoolCount}개이고 지금까지 {todayCount}번
           풀었습니다(최근 1달간. 문제 수정 시 초기화). 이 문제가 나올 확률은{" "}

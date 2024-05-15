@@ -3,7 +3,7 @@ import type { MetaFunction } from "@remix-run/node";
 import { Form, useLoaderData } from "@remix-run/react";
 import dayjs from "dayjs";
 import { ArrowRight } from "lucide-react";
-import { useMemo } from "react";
+import { useEffect, useMemo, useRef } from "react";
 import DefaultBreadcrumbs from "~/common/components/DefaultBreadcrumbs";
 import DefaultLayout from "~/common/components/DefaultLayout";
 import SideMenuV2 from "~/common/components/SideMenuV2";
@@ -50,6 +50,14 @@ export default function Pass() {
     [q]
   );
 
+  const nextButtonRef = useRef<HTMLButtonElement>(null);
+
+  useEffect(() => {
+    if (nextButtonRef.current) {
+      nextButtonRef.current.focus();
+    }
+  }, []);
+
   return (
     <DefaultLayout
       header={
@@ -64,7 +72,7 @@ export default function Pass() {
       sidebarTop={<SideMenuV2 />}
     >
       <QuestionProvider question={question}>
-        <div className="box-border px-3 pt-10 mx-auto max-w-[700px] ">
+        <div className="box-content px-3 pt-10 mx-auto max-w-[700px] ">
           <ResultQuestion
             incorrects={emptyArray}
             correctClassname="text-black"
@@ -75,6 +83,7 @@ export default function Pass() {
               href={`/solve?tags=${tags}`}
               color="primary"
               endContent={<ArrowRight size={16} />}
+              ref={nextButtonRef}
             >
               Next
             </Button>

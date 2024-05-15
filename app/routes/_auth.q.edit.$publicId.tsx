@@ -174,9 +174,9 @@ export default function Page() {
       }
       sidebarTop={<SideMenuV2 />}
     >
-      <div className="box-border pt-10 mx-auto max-w-[700px]">
+      <div className="box-content px-3 pt-10 mx-auto max-w-[700px]">
         <QuestionProvider question={question}>
-          <div className="flex items-center justify-between mx-3">
+          <div className="flex items-center justify-between">
             <div
               className="flex items-center py-1 text-xs text-gray-400 gap-2.5 overflow-hidden select-none"
               style={{ backgroundColor: "rgba(249, 250, 251, 0.3)" }}
@@ -215,12 +215,12 @@ export default function Page() {
           </div>
 
           <ParagraphEditor
-            className="-mt-6"
+            className="-mx-3 -mt-6"
             key={question.originalId || question.id}
             onContentChange={setEditingContent}
           />
 
-          <div className="flex flex-row-reverse justify-between mx-3 mt-10">
+          <div className="flex flex-row-reverse justify-between mt-10">
             <Form method="post" className="flex">
               <input
                 type="hidden"

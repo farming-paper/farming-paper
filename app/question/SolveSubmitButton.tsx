@@ -21,6 +21,7 @@ export default function SolveSubmitButton() {
         color="primary"
         type="submit"
         endContent={<ArrowRight size={16} />}
+        id="solve_submit_button"
       >
         Submit
       </Button>

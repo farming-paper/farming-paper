@@ -22,6 +22,7 @@ import {
 import { Analytics } from "@vercel/analytics/react";
 import { useEffect, useState } from "react";
 import reatToastifyMinCss from "react-toastify/dist/ReactToastify.min.css";
+import GlobalLoading from "./common/components/GlobalLoading";
 import { getClientSideSupabaseConfig } from "./config";
 import tailwindStyles from "./styles/app.css";
 import tailwindCss from "./styles/pretendard.css";
@@ -115,6 +116,7 @@ export default function Root() {
           position="top-center"
           transition={Slide}
         />
+        <GlobalLoading />
       </body>
     </html>
   );
