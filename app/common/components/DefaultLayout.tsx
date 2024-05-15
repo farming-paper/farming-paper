@@ -16,7 +16,7 @@ export default function DefaultLayout({
   className?: string;
 }) {
   return (
-    <div className={twMerge("min-h-screen relative", className)}>
+    <div className={twMerge("min-h-[100dvh] relative", className)}>
       <div className="absolute top-0 left-0 right-0 z-10 pointer-events-none">
         {header}
       </div>

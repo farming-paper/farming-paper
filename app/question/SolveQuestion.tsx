@@ -1,5 +1,5 @@
 import { Input } from "@nextui-org/react";
-import { useEffect, useMemo, useState } from "react";
+import { createContext, useContext, useEffect, useMemo, useState } from "react";
 import type { Descendant, Text } from "slate";
 import { useBlankAtom, useSetBlankSubmission } from "./SolveQuestionAtom";
 import { useQuestion } from "./context";
@@ -28,6 +28,10 @@ export function SolveBlank({
   const setBlankSubmission = useSetBlankSubmission();
   const [isClient, setIsClient] = useState(false);
   const id = getIdFromPath(path);
+  const ids = useContext(idsContext);
+  const isLast = ids[ids.length - 1] === id;
+  const isFirst = ids[0] === id;
+  const currentIndex = ids.indexOf(id);
 
   useEffect(() => {
     setIsClient(true);
@@ -56,7 +60,7 @@ export function SolveBlank({
 
   return isClient ? (
     <div
-      className="inline-block mx-1 -mt-0.5 align-top"
+      className="inline-block mx-0.5 -mt-0.5 align-top"
       style={{
         width: `calc(${width}px + 1rem)`,
       }}
@@ -66,13 +70,31 @@ export function SolveBlank({
         value={value}
         classNames={{
           input: "text-base  ",
-          //   base: "w-auto inline my-0.5 align-baseline",
           inputWrapper:
             "group-data-[focus=true]:border-primary-500 h-7 min-h-7",
         }}
-        // fullWidth={false}
+        data-blank-id={id}
+        autoFocus={isFirst}
         variant="bordered"
         onValueChange={(v) => setValue(v)}
+        onKeyDown={(e) => {
+          if (e.key === "Enter") {
+            e.preventDefault();
+
+            if (isLast) {
+              const solveSubmitButton = document.querySelector(
+                "#solve_submit_button[type=submit]"
+              ) as HTMLButtonElement | null;
+              solveSubmitButton?.click();
+            } else {
+              const nextId = ids[currentIndex + 1];
+              const nextInput = document.querySelector(
+                `input[data-blank-id="${nextId}"]`
+              ) as HTMLInputElement | null;
+              nextInput?.focus();
+            }
+          }
+        }}
         isRequired
       />
     </div>
@@ -121,10 +143,39 @@ export function SolveDescendant({
   return <SolveText leaf={descendant} />;
 }
 
+// traverse the question content and collect all the ids of the blanks
+function collectIds(descendant: Descendant, path: number[]): string[] {
+  if ("type" in descendant) {
+    switch (descendant.type) {
+      case "paragraph":
+        return descendant.children.flatMap((descendant, index) => {
+          return collectIds(descendant, [...path, index]);
+        });
+      case "blank":
+        return [getIdFromPath(path)];
+    }
+  }
+  return [];
+}
+
+const idsContext = createContext<string[]>([]);
+
 export default function SolveQuestion() {
   const question = useQuestion();
+  // traverse the question content and collect all the ids of the blanks
+  const ids = useMemo(() => {
+    return (
+      question.content.descendants?.flatMap((descendant, index) =>
+        collectIds(descendant, [index])
+      ) ?? []
+    );
+  }, [question.content.descendants]);
 
-  return question.content.descendants?.map((descendant, index) => (
-    <SolveDescendant key={index} descendant={descendant} path={[index]} />
-  ));
+  return (
+    <idsContext.Provider value={ids}>
+      {question.content.descendants?.map((descendant, index) => (
+        <SolveDescendant key={index} descendant={descendant} path={[index]} />
+      ))}
+    </idsContext.Provider>
+  );
 }

@@ -3,7 +3,7 @@ import type { MetaFunction } from "@remix-run/node";
 import { Form, useLoaderData, useSearchParams } from "@remix-run/react";
 import dayjs from "dayjs";
 import { ArrowRight } from "lucide-react";
-import { useMemo } from "react";
+import { useEffect, useMemo, useRef } from "react";
 import DefaultLayout from "~/common/components/DefaultLayout";
 import SideMenuV2 from "~/common/components/SideMenuV2";
 import { defaultMeta } from "~/meta";
@@ -43,11 +43,19 @@ export default function Result() {
     [q]
   );
 
+  const nextButtonRef = useRef<HTMLButtonElement>(null);
+
+  useEffect(() => {
+    if (nextButtonRef.current) {
+      nextButtonRef.current.focus();
+    }
+  }, []);
+
   return (
     <DefaultLayout
       header={
         <Breadcrumbs
-          className="p-2 max-w-[700px] mx-auto pointer-events-auto"
+          className="pointer-events-auto"
           itemClasses={{
             item: "px-2 text-default-400",
             separator: "px-0",
@@ -63,7 +71,7 @@ export default function Result() {
       sidebarTop={<SideMenuV2 />}
     >
       <QuestionProvider question={question}>
-        <div className="box-border px-3 mx-auto pt-10 max-w-[700px] w-full">
+        <div className="px-3 mx-auto pt-10 box-content max-w-[700px] w-full">
           <h1 className="mb-4 text-xl font-bold">
             {success ? (
               <span className="text-green-800">Correct</span>
@@ -81,6 +89,7 @@ export default function Result() {
                 href={`/solve?tags=${tags}`}
                 endContent={<ArrowRight size={16} />}
                 color="primary"
+                ref={nextButtonRef}
               >
                 Next
               </Button>
