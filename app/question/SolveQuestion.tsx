@@ -4,7 +4,7 @@ import type { Descendant, Text } from "slate";
 import { useBlankAtom, useSetBlankSubmission } from "./SolveQuestionAtom";
 import { useQuestion } from "./context";
 import type { BlankElement, ParagraphElement } from "./types";
-import { getCorrectFromBlank } from "./utils";
+import { getCorrectFromBlank, getIdFromPath } from "./utils";
 
 export function SolveParagraph({
   children,
@@ -27,6 +27,7 @@ export function SolveBlank({
   const [value, setValue] = useBlankAtom(getCorrectFromBlank(element));
   const setBlankSubmission = useSetBlankSubmission();
   const [isClient, setIsClient] = useState(false);
+  const id = getIdFromPath(path);
 
   useEffect(() => {
     setIsClient(true);
@@ -49,9 +50,9 @@ export function SolveBlank({
 
   useEffect(() => {
     if (typeof value === "string") {
-      setBlankSubmission(path, value);
+      setBlankSubmission(id, value);
     }
-  }, [path, setBlankSubmission, value]);
+  }, [id, setBlankSubmission, value]);
 
   return isClient ? (
     <div

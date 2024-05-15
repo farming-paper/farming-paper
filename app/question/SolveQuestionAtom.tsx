@@ -1,6 +1,5 @@
 import { atom, useAtom } from "jotai";
 import { useCallback } from "react";
-import { getIdFromPath } from "./utils";
 
 const _forType = atom("");
 
@@ -46,10 +45,10 @@ export const useSetBlankSubmission = () => {
   const [_, setBlankSubmissionMap] = useAtom(blankSubmissionMapAtom);
 
   const setBlankSubmission = useCallback(
-    (path: number[], submission: string) => {
+    (id: string, submission: string) => {
       setBlankSubmissionMap((prev) => ({
         ...prev,
-        [getIdFromPath(path)]: submission,
+        [id]: submission,
       }));
     },
     [setBlankSubmissionMap]
