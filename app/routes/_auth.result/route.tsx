@@ -71,7 +71,7 @@ export default function Result() {
       sidebarTop={<SideMenuV2 />}
     >
       <QuestionProvider question={question}>
-        <div className="px-3 mx-auto pt-10 box-content max-w-[700px] w-full">
+        <div className="px-3 mx-auto pt-10 box-content max-w-[700px]">
           <h1 className="mb-4 text-xl font-bold">
             {success ? (
               <span className="text-green-800">Correct</span>
