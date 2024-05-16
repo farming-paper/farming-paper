@@ -62,8 +62,8 @@ export function SolveBlank({
   }, [id, setBlankSubmission, value]);
 
   const onKeydown = useCallback(
-    (e: React.KeyboardEvent<HTMLInputElement> | KeyboardEvent) => {
-      if (e.key === "Enter") {
+    (e: React.KeyboardEvent<HTMLInputElement>) => {
+      if (e.key === "Enter" && !e.nativeEvent.isComposing) {
         e.preventDefault();
 
         if (isLast) {
