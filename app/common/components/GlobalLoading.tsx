@@ -5,7 +5,7 @@ import { twMerge } from "tailwind-merge";
 function GlobalLoading() {
   const navigation = useNavigation();
 
-  const loading = navigation.state !== "idle";
+  const loading = navigation.state !== "idle" && !navigation.formAction;
 
   return (
     <div
