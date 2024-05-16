@@ -75,7 +75,7 @@ export function SetTagModal({
                         <Button
                           startContent={<Plus className="w-4 h-4" />}
                           variant="light"
-                          className="justify-start"
+                          className="justify-start w-full"
                           type="submit"
                         >
                           "{search}" 태그 추가
