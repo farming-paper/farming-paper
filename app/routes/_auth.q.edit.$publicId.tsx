@@ -178,7 +178,7 @@ export default function Page() {
         <QuestionProvider question={question}>
           <div className="flex items-center justify-between">
             <div
-              className="flex items-center py-1 text-xs text-gray-400 gap-2.5 overflow-hidden select-none"
+              className="flex items-center py-1 text-xs text-gray-400 gap-2.5 overflow-hidden select-none z-10"
               style={{ backgroundColor: "rgba(249, 250, 251, 0.3)" }}
             >
               <span className="font-mono font-bold">
