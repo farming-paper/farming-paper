@@ -3,7 +3,7 @@ import type { MetaFunction } from "@remix-run/node";
 import { useFetcher, useLoaderData, useSearchParams } from "@remix-run/react";
 import dayjs from "dayjs";
 import { isKeyHotkey } from "is-hotkey";
-import { Loader2, Plus, Tag, Trash2 } from "lucide-react";
+import { ArrowRight, Loader2, Plus, Tag, Trash2 } from "lucide-react";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { twMerge } from "tailwind-merge";
 import DefaultBreadcrumbs from "~/common/components/DefaultBreadcrumbs";
@@ -195,6 +195,7 @@ export default function Dashboard() {
               as={Link}
               className="text-white pointer-events-auto bg-primary min-w-11"
               href={`/solve?tags=${params.get("tags")}`}
+              endContent={<ArrowRight size={16} />}
               color="primary"
               variant="shadow"
             >
