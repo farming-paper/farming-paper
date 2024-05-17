@@ -1,9 +1,10 @@
-import { BreadcrumbItem, Breadcrumbs, Button, Link } from "@nextui-org/react";
+import { BreadcrumbItem, Button, Link } from "@nextui-org/react";
 import type { MetaFunction } from "@remix-run/node";
 import { Form, useLoaderData, useSearchParams } from "@remix-run/react";
 import dayjs from "dayjs";
 import { ArrowRight } from "lucide-react";
 import { useEffect, useMemo, useRef } from "react";
+import DefaultBreadcrumbs from "~/common/components/DefaultBreadcrumbs";
 import DefaultLayout from "~/common/components/DefaultLayout";
 import SideMenuV2 from "~/common/components/SideMenuV2";
 import { defaultMeta } from "~/meta";
@@ -54,19 +55,13 @@ export default function Result() {
   return (
     <DefaultLayout
       header={
-        <Breadcrumbs
-          className="pointer-events-auto"
-          itemClasses={{
-            item: "px-2 text-default-400",
-            separator: "px-0",
-          }}
-        >
+        <DefaultBreadcrumbs>
           <BreadcrumbItem href="/dashboard">Home</BreadcrumbItem>
           <BreadcrumbItem href={`/solve?tags=${tags}`}>
             Solve({data.tagNames.join(",")})
           </BreadcrumbItem>
           <BreadcrumbItem>Result</BreadcrumbItem>
-        </Breadcrumbs>
+        </DefaultBreadcrumbs>
       }
       sidebarTop={<SideMenuV2 />}
     >
