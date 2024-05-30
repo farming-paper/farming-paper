@@ -1,12 +1,12 @@
+import type { JsonObject } from "@prisma/client/runtime/library";
 import { redirect } from "@remix-run/node";
 import type { LoaderFunctionArgs } from "@remix-run/server-runtime";
 import { createServerClient } from "@supabase/auth-helpers-remix";
 import { nanoid } from "nanoid";
 import { getClientSideSupabaseConfig } from "~/config";
+import prisma from "~/prisma-client.server";
 import { createQuestionContent } from "~/question/create";
 import type { QuestionContent } from "~/question/types";
-import { getServerSideSupabaseClient } from "~/supabase/client";
-import type { Database, Json } from "~/supabase/generated/supabase-types";
 
 export const loader = async ({ request }: LoaderFunctionArgs) => {
   const response = new Response();
@@ -21,14 +21,10 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
     });
   }
 
-  const supabaseClientForAuth = createServerClient<Database>(
-    supabaseUrl,
-    anonKey,
-    {
-      request,
-      response,
-    }
-  );
+  const supabaseClientForAuth = createServerClient(supabaseUrl, anonKey, {
+    request,
+    response,
+  });
 
   const authResponse = await supabaseClientForAuth.auth.exchangeCodeForSession(
     code
@@ -42,40 +38,33 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
     });
   }
 
-  const db = getServerSideSupabaseClient();
-
-  const existingUser = await db
-    .from("profiles")
-    .select("email", { count: "exact" })
-    .eq("email", email)
-    .is("deleted_at", null);
+  const existingUser = await prisma.profiles.findFirst({
+    where: {
+      email,
+      deleted_at: null,
+    },
+    select: {
+      _count: true,
+    },
+  });
 
   // 이미 가입한 사용자는 /dashboard 로 보냄.
-  if (typeof existingUser.count === "number" && existingUser.count > 0) {
+  if (typeof existingUser?._count === "number" && existingUser._count > 0) {
     return redirect("/dashboard?status=already_joined", {
       headers: response.headers,
     });
   }
 
-  const userRes = await db
-    .from("profiles")
-    .insert({
+  const user = await prisma.profiles.create({
+    data: {
       email,
       public_id: nanoid(),
-    })
-    .select("id")
-    .single();
+    },
+    select: {
+      id: true,
+    },
+  });
 
-  if (userRes.error) {
-    throw new Response(
-      "프로필 생성에 실패했습니다." + userRes.error?.message ?? "",
-      {
-        status: 401,
-      }
-    );
-  }
-
-  const user = userRes.data;
   const qs: Partial<QuestionContent>[] = [
     {
       type: "short_order",
@@ -203,22 +192,23 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
     },
   ];
 
-  const [questionsRes, tagsRes] = await Promise.all([
-    db
-      .from("questions")
-      .insert(
-        qs.map((questionContent) => {
-          return {
-            creator: user.id,
-            public_id: nanoid(),
-            content: createQuestionContent(questionContent) as unknown as Json,
-          };
-        })
-      )
-      .select("id"),
-    db
-      .from("tags")
-      .insert([
+  const [createdQuestions, createdTags] = await Promise.all([
+    prisma.questions.createManyAndReturn({
+      data: qs.map((questionContent) => {
+        return {
+          creator: user.id,
+          public_id: nanoid(),
+          content: createQuestionContent(
+            questionContent
+          ) as unknown as JsonObject,
+        };
+      }),
+      select: {
+        id: true,
+      },
+    }),
+    prisma.tags.createManyAndReturn({
+      data: [
         {
           creator: user.id,
           public_id: nanoid(),
@@ -229,59 +219,41 @@ export const loader = async ({ request }: LoaderFunctionArgs) => {
           public_id: nanoid(),
           name: "영어",
         },
-      ])
-      .select("id"),
+      ],
+      select: {
+        id: true,
+      },
+    }),
   ]);
 
-  if (questionsRes.error || tagsRes.error) {
-    throw new Response(
-      `질문 생성에 실패했습니다. ${questionsRes.error?.message ?? ""} ${
-        tagsRes.error?.message ?? ""
-      }`,
+  await prisma.tags_questions_relation.createMany({
+    data: [
       {
-        status: 400,
-      }
-    );
-  }
-
-  const createdQuestions = questionsRes.data;
-  const createdTags = tagsRes.data;
-
-  const questionTagsRes = await db.from("tags_questions_relation").insert([
-    {
-      q: createdQuestions[0]?.id ?? -1,
-      tag: createdTags[0]?.id ?? -1,
-    },
-    {
-      q: createdQuestions[1]?.id ?? -1,
-      tag: createdTags[0]?.id ?? -1,
-    },
-    {
-      q: createdQuestions[2]?.id ?? -1,
-      tag: createdTags[0]?.id ?? -1,
-    },
-    {
-      q: createdQuestions[3]?.id ?? -1,
-      tag: createdTags[1]?.id ?? -1,
-    },
-    {
-      q: createdQuestions[4]?.id ?? -1,
-      tag: createdTags[1]?.id ?? -1,
-    },
-    {
-      q: createdQuestions[5]?.id ?? -1,
-      tag: createdTags[1]?.id ?? -1,
-    },
-  ]);
-
-  if (questionTagsRes.error) {
-    throw new Response(
-      `질문 태그 연결에 실패했습니다. ${questionTagsRes.error?.message ?? ""}`,
+        q: createdQuestions[0]?.id ?? -1,
+        tag: createdTags[0]?.id ?? -1,
+      },
       {
-        status: 400,
-      }
-    );
-  }
+        q: createdQuestions[1]?.id ?? -1,
+        tag: createdTags[0]?.id ?? -1,
+      },
+      {
+        q: createdQuestions[2]?.id ?? -1,
+        tag: createdTags[0]?.id ?? -1,
+      },
+      {
+        q: createdQuestions[3]?.id ?? -1,
+        tag: createdTags[1]?.id ?? -1,
+      },
+      {
+        q: createdQuestions[4]?.id ?? -1,
+        tag: createdTags[1]?.id ?? -1,
+      },
+      {
+        q: createdQuestions[5]?.id ?? -1,
+        tag: createdTags[1]?.id ?? -1,
+      },
+    ],
+  });
 
   return redirect("/dashboard?status=entry", { headers: response.headers });
 };

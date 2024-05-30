@@ -1,6 +1,5 @@
 // Create reference instance
 import katex from "katex";
-import katexStyle from "katex/dist/katex.min.css";
 import { marked } from "marked";
 import React from "react";
 
@@ -14,10 +13,6 @@ const renderKatex = (text: string, displayMode: boolean) => {
     },
   });
 };
-
-export function links() {
-  return [{ rel: "stylesheet", href: katexStyle }];
-}
 
 marked.use({
   renderer: {

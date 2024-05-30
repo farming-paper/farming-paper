@@ -6,7 +6,7 @@ import { useQuestion } from "./context";
 import type { BlankElement, ParagraphElement } from "./types";
 import { getCorrectFromBlank, getIdFromPath } from "./utils";
 
-export function ResultParagraph({
+function ResultParagraph({
   children,
 }: {
   element: ParagraphElement;
@@ -24,7 +24,7 @@ function useStyleContext() {
   return useContext(styleContext);
 }
 
-export function ResultBlank({
+function ResultBlank({
   element,
   path,
 }: {
@@ -49,11 +49,11 @@ export function ResultBlank({
   );
 }
 
-export const ResultText = ({ leaf }: { leaf: Text }) => {
+const ResultText = ({ leaf }: { leaf: Text }) => {
   return <span>{leaf.text}</span>;
 };
 
-export function ResultDescendant({
+function ResultDescendant({
   descendant,
   path,
 }: {
@@ -93,7 +93,7 @@ export function ResultDescendant({
 
 const incorrectsAtom = atom<Map<string, string>>(new Map());
 
-export function useIncorrectSubmissionMap() {
+function useIncorrectSubmissionMap() {
   const [incorrects] = useAtom(incorrectsAtom);
   return incorrects;
 }

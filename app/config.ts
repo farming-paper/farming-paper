@@ -23,26 +23,3 @@ export function getClientSideSupabaseConfig() {
     anonKey,
   };
 }
-
-export const defaultDateFormat = "YYYY-MM-DD";
-
-export function getOxfordDictionaryApiCredentials() {
-  const appId = process.env.OXFORD_DICTIONARY_APP_ID || "";
-  const appKey = process.env.OXFORD_DICTIONARY_APP_KEY || "";
-  const url = "https://od-api.oxforddictionaries.com/api/v2";
-
-  return {
-    appId,
-    appKey,
-    url,
-  };
-}
-
-export function getPapagoApiCredentials() {
-  const clientId = process.env.PAPAGO_CLIENT_ID || "";
-  const clientSecret = process.env.PAPAGO_CLIENT_SECRET || "";
-  return {
-    clientId,
-    clientSecret,
-  };
-}

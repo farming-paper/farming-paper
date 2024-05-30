@@ -3,7 +3,7 @@ import { useCallback } from "react";
 
 const _forType = atom("");
 
-export type SolveBlankAtomType = typeof _forType;
+type SolveBlankAtomType = typeof _forType;
 
 const blankMapAtom = atom<
   Record</** correct */ string, /** user input */ SolveBlankAtomType>
@@ -13,7 +13,7 @@ const blankSubmissionMapAtom = atom<
   Record</** id based path */ string, /** user input */ string>
 >({});
 
-export const useGetBlankAtom = () => {
+const useGetBlankAtom = () => {
   const [blankMap, setBlankMap] = useAtom(blankMapAtom);
 
   const getBlankAtom = useCallback(

@@ -6,7 +6,7 @@ import { z } from "zod";
 import { requireAuth } from "~/auth/get-session";
 import prisma from "~/prisma-client.server";
 
-export const schema = withZod(
+const schema = withZod(
   z.discriminatedUnion("intent", [
     z.object({
       intent: z.literal("remove_question"),
@@ -34,7 +34,7 @@ export const schema = withZod(
   ])
 );
 
-export const searchParamsSchema = z.object({
+const searchParamsSchema = z.object({
   tags: z
     .string()
     .optional()

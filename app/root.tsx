@@ -26,7 +26,6 @@ import GlobalLoading from "./common/components/GlobalLoading";
 import { getClientSideSupabaseConfig } from "./config";
 import tailwindStyles from "./styles/app.css";
 import tailwindCss from "./styles/pretendard.css";
-import type { Database } from "./supabase/generated/supabase-types";
 import { withDurationLog } from "./util";
 
 export function links() {
@@ -66,9 +65,7 @@ export default function Root() {
   const { env, session } = useLoaderData<typeof loader>();
   const navigate = useNavigate();
 
-  const [supabase] = useState(() =>
-    createBrowserClient<Database>(env.url, env.anonKey)
-  );
+  const [supabase] = useState(() => createBrowserClient(env.url, env.anonKey));
 
   const authChangedFetcher = useFetcher();
 

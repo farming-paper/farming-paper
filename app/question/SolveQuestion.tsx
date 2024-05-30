@@ -13,7 +13,7 @@ import { useQuestion } from "./context";
 import type { BlankElement, ParagraphElement } from "./types";
 import { getCorrectFromBlank, getIdFromPath } from "./utils";
 
-export function SolveParagraph({
+function SolveParagraph({
   children,
 }: {
   element: ParagraphElement;
@@ -23,7 +23,7 @@ export function SolveParagraph({
   return <div className="mb-2">{children}</div>;
 }
 
-export function SolveBlank({
+function SolveBlank({
   element,
   path,
 }: {
@@ -109,11 +109,11 @@ export function SolveBlank({
   );
 }
 
-export const SolveText = ({ leaf }: { leaf: Text }) => {
+const SolveText = ({ leaf }: { leaf: Text }) => {
   return <span>{leaf.text}</span>;
 };
 
-export function SolveDescendant({
+function SolveDescendant({
   descendant,
   path,
 }: {

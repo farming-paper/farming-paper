@@ -2,10 +2,9 @@ import type { Session, SupabaseClient } from "@supabase/auth-helpers-remix";
 import { createServerClient } from "@supabase/auth-helpers-remix";
 import { LRUCache } from "lru-cache";
 import { getServerSideSupabaseConfig } from "~/config";
-import { getServerSideSupabaseClient } from "~/supabase/client";
-import type { Database } from "~/supabase/generated/supabase-types";
+import prisma from "~/prisma-client.server";
 import type { IProfile } from "~/types";
-import { removeNullDeep, withDurationLog } from "~/util";
+import { getObjBigintToNumber, removeNullDeep, withDurationLog } from "~/util";
 
 type ProfileFromDB = {
   id: number;
@@ -36,25 +35,30 @@ if (process.env.NODE_ENV === "production") {
   profileCache = global.__profileCache;
 }
 
-export async function getProfile(email: string): Promise<ProfileFromDB | null> {
+async function getProfile(email: string): Promise<ProfileFromDB | null> {
   const cached = profileCache.get(email);
   if (cached) {
     return cached;
   }
 
-  const db = getServerSideSupabaseClient();
+  const profile = await prisma.profiles.findFirst({
+    where: {
+      email,
+      deleted_at: null,
+    },
+    select: {
+      id: true,
+      public_id: true,
+      desc: true,
+      name: true,
+      photo: true,
+    },
+  });
 
-  const findProfileRes = await db
-    .from("profiles")
-    .select("id, public_id, desc, name, photo")
-    .eq("email", email)
-    .is("deleted_at", null)
-    .single();
-
-  if (findProfileRes.data) {
-    const profile: ProfileFromDB = findProfileRes.data;
-    profileCache.set(email, findProfileRes.data);
-    return profile;
+  if (profile) {
+    const profileObj = getObjBigintToNumber(profile);
+    profileCache.set(email, profileObj);
+    return profileObj;
   }
 
   profileCache.delete(email);
@@ -73,7 +77,7 @@ type GetSessionWithProfileResult =
       client: SupabaseClient;
     };
 
-export async function getSessionWithProfile({
+async function getSessionWithProfile({
   request,
   response,
 }: {
@@ -81,7 +85,7 @@ export async function getSessionWithProfile({
   response: Response;
 }): Promise<GetSessionWithProfileResult> {
   const { serviceRoleKey, url } = getServerSideSupabaseConfig();
-  const supabaseClient = createServerClient<Database>(url, serviceRoleKey, {
+  const supabaseClient = createServerClient(url, serviceRoleKey, {
     request,
     response,
   });
@@ -146,6 +150,6 @@ export async function requireAuth(request: Request) {
 }
 
 // TODO: 캐시 전략을 새로 짜기.
-export function deleteProfileCache({ email }: { email: string }) {
-  profileCache.delete(email);
-}
+// function deleteProfileCache({ email }: { email: string }) {
+//   profileCache.delete(email);
+// }

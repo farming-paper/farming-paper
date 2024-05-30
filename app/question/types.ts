@@ -1,5 +1,4 @@
 import type { Dayjs } from "dayjs";
-import type { RefObject } from "react";
 import type { BaseEditor, Descendant } from "slate";
 import type { HistoryEditor } from "slate-history";
 import type { ReactEditor } from "slate-react";
@@ -29,7 +28,7 @@ declare module "slate" {
   }
 }
 
-export interface IBaseQuestion {
+interface IBaseQuestion {
   id: string;
   message?: string;
   descendants?: Descendant[];
@@ -86,25 +85,6 @@ export type QuestionContent =
   | IPickMultiQuestion
   | IPickOrderQuestion;
 
-export interface IBaseProcessedArgs {
-  given: string;
-}
-
-// eslint-disable-next-line @typescript-eslint/no-empty-interface
-export interface ISuccessArgs extends IBaseProcessedArgs {}
-
-// eslint-disable-next-line @typescript-eslint/no-empty-interface
-export interface IFailArgs extends IBaseProcessedArgs {}
-
-export type QuestionInputProps<T extends QuestionContent = QuestionContent> = {
-  question: T;
-  disabled?: boolean;
-  inputRef?: RefObject<HTMLTextAreaElement> | RefObject<HTMLInputElement>;
-  antdInputRef?: RefObject<any>;
-  onSuccess?: (args: ISuccessArgs) => void;
-  onFail?: (args: IFailArgs) => void;
-};
-
 export type Question = {
   id: number;
   originalId: number | null;
@@ -113,14 +93,5 @@ export type Question = {
   updatedAt: Dayjs;
   createdAt: Dayjs;
   deletedAt: Dayjs | null;
-  tags: ITag[];
-};
-
-export type QuestionRaw = {
-  content: string;
-  publicId: string;
-  updatedAt: string;
-  createdAt: string;
-  deletedAt: string | null;
   tags: ITag[];
 };

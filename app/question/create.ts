@@ -1,5 +1,4 @@
 import { nanoid } from "nanoid";
-import type { Json } from "~/supabase/generated/supabase-types";
 import type {
   IPickDifferentQuestion,
   IPickMultiQuestion,
@@ -34,17 +33,11 @@ export function createQuestionContent(
   }
 }
 
-export function createQuestionFromJson(json: Json): QuestionContent {
-  return createQuestionContent(json as unknown as Partial<QuestionContent>);
-}
-
-export function removeUndefined<T>(tags?: (T | undefined)[]): T[] {
+function removeUndefined<T>(tags?: (T | undefined)[]): T[] {
   return tags?.filter((tag): tag is T => Boolean(tag)) || [];
 }
 
-export function createShortQuestion(
-  args?: Partial<IShortQuestion>
-): IShortQuestion {
+function createShortQuestion(args?: Partial<IShortQuestion>): IShortQuestion {
   return {
     id: nanoid(),
     correct: "",
@@ -54,7 +47,7 @@ export function createShortQuestion(
   };
 }
 
-export function createShortOrderQuestion(
+function createShortOrderQuestion(
   args?: Partial<IShortOrderQuestion>
 ): IShortOrderQuestion {
   return {
@@ -68,7 +61,7 @@ export function createShortOrderQuestion(
   };
 }
 
-export function createShortMultiAnswerQuestion(
+function createShortMultiAnswerQuestion(
   args?: Partial<IShortMultiAnswerQuestion>
 ): IShortMultiAnswerQuestion {
   return {
@@ -80,7 +73,7 @@ export function createShortMultiAnswerQuestion(
   };
 }
 
-export function createPickOrderQuestion(
+function createPickOrderQuestion(
   args?: Partial<IPickOrderQuestion>
 ): IPickOrderQuestion {
   return {
@@ -93,9 +86,7 @@ export function createPickOrderQuestion(
   };
 }
 
-export function createPickQuestion(
-  args?: Partial<IPickQuestion>
-): IPickQuestion {
+function createPickQuestion(args?: Partial<IPickQuestion>): IPickQuestion {
   return {
     id: nanoid(),
     correct: "",
@@ -106,7 +97,7 @@ export function createPickQuestion(
   };
 }
 
-export function createPickMultiQuestion(
+function createPickMultiQuestion(
   args?: Partial<IPickMultiQuestion>
 ): IPickMultiQuestion {
   return {
@@ -119,7 +110,7 @@ export function createPickMultiQuestion(
   };
 }
 
-export function createPickDifferentQuestion(
+function createPickDifferentQuestion(
   args?: Partial<IPickDifferentQuestion>
 ): IPickDifferentQuestion {
   return {

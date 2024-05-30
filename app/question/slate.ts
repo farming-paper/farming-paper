@@ -4,7 +4,7 @@ import { lexer } from "marked";
 import type { Descendant } from "slate";
 import type { CustomElement, CustomText } from "./types";
 
-export function convertMarkdownToText(token: Token): CustomText {
+function convertMarkdownToText(token: Token): CustomText {
   switch (token.type) {
     case "text": {
       return { text: token.text };
@@ -24,7 +24,7 @@ export function convertMarkdownToText(token: Token): CustomText {
   }
 }
 
-export function convertMarkdownToElement(
+function convertMarkdownToElement(
   token: Token
 ): CustomElement | CustomElement[] | null {
   switch (token.type) {
