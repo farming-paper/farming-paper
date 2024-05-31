@@ -101,7 +101,6 @@ function SolveBlank({
         variant="bordered"
         onValueChange={(v) => setValue(v)}
         onKeyDown={onKeydown}
-        isRequired
       />
     </div>
   );
