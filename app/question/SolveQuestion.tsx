@@ -86,9 +86,7 @@ function SolveBlank({
   return (
     <div
       className="inline-block mx-0.5 -mt-0.5 align-top"
-      style={{
-        width: `calc(${width}px + 1rem)`,
-      }}
+      style={{ width: `calc(${width}px + 2rem)` }}
     >
       <Input
         size="sm"
