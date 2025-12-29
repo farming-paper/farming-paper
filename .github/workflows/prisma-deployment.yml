@@ -6,19 +6,19 @@ on:
 
 jobs:
   prisma-deploy:
-    runs-on: ubuntu-22.04
+    runs-on: ubuntu-24.04
 
     steps:
       - name: Checkout repo
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
 
       - name: Setup Node
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v6
 
       - name: Setup pnpm
         uses: pnpm/action-setup@v3
         with:
-          version: 9.0.4
+          version: 10.26.2
 
       - name: Install dependencies
         run: pnpm install
