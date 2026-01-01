@@ -4,5 +4,6 @@
   "rangeStrategy": "bump",
   "prHourlyLimit": 0,
   "prConcurrentLimit": 0,
-  "updateNotScheduled": false
+  "updateNotScheduled": false,
+  "enabled": false
 }
